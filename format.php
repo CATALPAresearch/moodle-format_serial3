@@ -15,33 +15,41 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Topics course format.  Display the whole course as "topics" made of modules.
+ * Serial3 course format display logic
  *
- * @package format_topics
- * @copyright 2006 The Open University
- * @author Niels Seidel, N.D.Freear@open.ac.uk, and others.
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    format_serial3
+ * @copyright  2024
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
+use format_serial3\blocking;
+use core\context\course as context_course;
+use core_courseformat\output\local\content as content_output;
+
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
-// Horrible backwards compatible parameter aliasing..
+// Backwards compatible parameter aliasing.
 if ($topic = optional_param('topic', 0, PARAM_INT)) {
     $url = $PAGE->url;
     $url->param('section', $topic);
     debugging('Outdated topic param passed to course/view.php', DEBUG_DEVELOPER);
     redirect($url);
 }
-// End backwards-compatible aliasing..
 
+// Get course context.
 $context = context_course::instance($course->id);
-// Retrieve course format option fields and add them to the $course object.
-$course = course_get_format($course)->get_course();
 
-if (($marker >=0) && has_capability('moodle/course:setcurrentsection', $context) && confirm_sesskey()) {
+
+
+// Retrieve course format option fields and add them to the $course object.
+$courseformat = course_get_format($course);
+$course = $courseformat->get_course();
+
+// Handle section marker.
+if (($marker >= 0) && has_capability('moodle/course:setcurrentsection', $context) && confirm_sesskey()) {
     $course->marker = $marker;
     course_set_marker($course->id, $marker);
 }
@@ -49,80 +57,69 @@ if (($marker >=0) && has_capability('moodle/course:setcurrentsection', $context)
 // Make sure section 0 is created.
 course_create_sections_if_missing($course, 0);
 
-/*
-if (format_serial3\blocking::tool_policy_accepted()) {
-    $PAGE->requires->js_call_amd('format_serial3/serial3', 'init', array('courseid'=>$course->id));//, array(array('courseid'=>$course->id, 'user'=>$user_data)));
-} else{
-    $PAGE->requires->js_call_amd('format_serial3/serial3Cleaner', 'init');
-}
-*/
-
-
 /**
- * A Attribute to store if the user is a moderator for the course
+ * Check if the current user is a moderator for the course
+ *
+ * @return bool True if user is moderator, false otherwise
  */
-$_moderator = null;
-$courseid;
-$found;
-$islogged;
-
-/**
- * A Method to test if the user is a moderator for the course
- */
-
-function checkModeratorStatus(){
-    try{
-        global $USER, $COURSE;
-        $context = context_course::instance($COURSE->id);
-        $loggedIn = isloggedin();
-        $roles = get_user_roles($context, $USER->id);
-        $found = false;
-        if(is_siteadmin($USER->id)){
+function format_serial3_check_moderator_status(): bool {
+    global $USER, $COURSE;
+    
+    try {
+        // Site admins are always moderators.
+        if (is_siteadmin($USER->id)) {
             return true;
         }
-        foreach($roles as $key => $value){
-            if(isset($value->shortname)){
-                if($value->shortname === "manager" || $value->shortname === "coursecreator" || $value->shortname === "teacher" || $value->shortname === "editingteacher"){
-                    $found = true;
-                    break;
-                }
+        
+        // Must be logged in.
+        if (!isloggedin()) {
+            return false;
+        }
+        
+        $context = context_course::instance($COURSE->id);
+        $roles = get_user_roles($context, $USER->id);
+        
+        // Check for moderator-level roles.
+        $moderatorroles = ['manager', 'coursecreator', 'teacher', 'editingteacher'];
+        
+        foreach ($roles as $role) {
+            if (isset($role->shortname) && in_array($role->shortname, $moderatorroles)) {
+                return true;
             }
         }
-        if($found === true && $loggedIn === true){
-            return true;
-        }
+        
         return false;
-    } catch(Exception $ex){
-        var_dump($ex);
+        
+    } catch (Exception $ex) {
+        debugging('Error checking moderator status: ' . $ex->getMessage(), DEBUG_DEVELOPER);
         return false;
     }
 }
 
-echo '<pre>';
-//print_r($course->sectioncollapsenabled);
-//print_r($course);
-echo '</pre>';
+
+// Initialize JavaScript module with course data.
 $PAGE->requires->js_call_amd('format_serial3/app-lazy', 'init', [
     'courseid' => $COURSE->id,
     'fullPluginName' => 'format_serial3',
     'userid' => $USER->id,
-    'isModerator' => checkModeratorStatus(),
-    'policyAccepted' => format_serial3\blocking::tool_policy_accepted(),
-    'sectioncollapsenabled' => $course->sectioncollapsenabled ? $course->sectioncollapsenabled : 0,
-    'sectioninitiallycollapsed' => $course->sectioninitiallycollapsed ? $course->sectioninitiallycollapsed : 0
+    'isModerator' => format_serial3_check_moderator_status(),
+    'policyAccepted' => blocking::tool_policy_accepted(),
+    'sectioncollapsenabled' => !empty($course->sectioncollapsenabled) ? (int)$course->sectioncollapsenabled : 0,
+    'sectioninitiallycollapsed' => !empty($course->sectioninitiallycollapsed) ? (int)$course->sectioninitiallycollapsed : 0,
 ]);
 
-echo html_writer::start_tag('div', array('class' => ''))
-    . '<div id="app"></div>' . html_writer::end_tag('div')
-;
+// Output the Vue.js app container.
+echo html_writer::start_tag('div', ['class' => 'format-serial3-container']);
+echo html_writer::tag('div', '', ['id' => 'app']);
+echo html_writer::end_tag('div');
 
+// Get the course format renderer.
 $renderer = $PAGE->get_renderer('format_serial3');
 
-if (!empty($displaysection)) {
-    $renderer->print_single_section_page($course, null, null, null, null, $displaysection);
-} else {
-    $renderer->print_multiple_section_page($course, null, null, null, null);
-}
+// Render the course content using the new method.
+$outputclass = $courseformat->get_output_classname('content');
+$widget = new $outputclass($courseformat);
+echo $renderer->render($widget);
 
-// Include course format js module
+// Include course format JavaScript module (if still needed for legacy support).
 $PAGE->requires->js('/course/format/serial3/format.js');

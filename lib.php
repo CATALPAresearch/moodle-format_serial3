@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains main class for the course format Topic
+ * This file contains main class for the course format Serial3
  *
  * @since     Moodle 2.0
- * @package   format_topics
+ * @package   format_serial3
  * @copyright 2009 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,15 +26,28 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
 
+use core_courseformat\base as format_base;
+use core\output\inplace_editable;
+use context_course;
+use moodle_url;
+use navigation_node;
+use stdClass;
+use lang_string;
+use MoodleQuickForm;
+use cm_info;
+use section_info;
+use global_navigation;
+
 /**
- * Main class for the Topics course format
+ * Main class for the Serial3 course format
  *
- * @package    format_topics
+ * @package    format_serial3
  * @copyright  2012 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_serial3 extends format_base {
 
+    /** @var bool Survey enabled flag */
     private $SURVEY_ENABLED = true;
 
     /**
@@ -42,7 +55,7 @@ class format_serial3 extends format_base {
      *
      * @return bool
      */
-    public function uses_sections() {
+    public function uses_sections(): bool {
         return true;
     }
 
@@ -54,7 +67,7 @@ class format_serial3 extends format_base {
      * @param int|stdClass $section Section object from database or just field section.section
      * @return string Display name that the course format prefers, e.g. "Topic 2"
      */
-    public function get_section_name($section) {
+    public function get_section_name($section): string {
         $section = $this->get_section($section);
         if ((string)$section->name !== '') {
             return format_string($section->name, true,
@@ -74,7 +87,7 @@ class format_serial3 extends format_base {
      * @param stdClass $section Section object from database or just field course_sections section
      * @return string The default value for the section name.
      */
-    public function get_default_section_name($section) {
+    public function get_default_section_name($section): string {
         if ($section->section == 0) {
             // Return the general section.
             return get_string('section0name', 'format_serial3');
@@ -95,8 +108,7 @@ class format_serial3 extends format_base {
      *     'sr' (int) used by multipage formats to specify to which section to return
      * @return null|moodle_url
      */
-    public function get_view_url($section, $options = array()) {
-        global $CFG;
+    public function get_view_url($section, $options = array()): ?moodle_url {
         $course = $this->get_course();
         $url = new moodle_url('/course/view.php', array('id' => $course->id));
 
@@ -137,7 +149,7 @@ class format_serial3 extends format_base {
      *
      * @return stdClass
      */
-    public function supports_ajax() {
+    public function supports_ajax(): stdClass {
         $ajaxsupport = new stdClass();
         $ajaxsupport->capable = true;
         return $ajaxsupport;
@@ -149,34 +161,40 @@ class format_serial3 extends format_base {
      * @param global_navigation $navigation
      * @param navigation_node $node The course node within the navigation
      */
-    public function extend_course_navigation($navigation, navigation_node $node) {    
+    public function extend_course_navigation($navigation, navigation_node $node): void {    
 
         // SURVEY START
         
-        global $COURSE, $DB, $CFG, $USER;
+        global $COURSE, $DB, $CFG, $USER, $PAGE;
 
-        $perm = new format_serial3\permission\course($USER->id, $COURSE->id);
+        $perm = new \format_serial3\permission\course($USER->id, $COURSE->id);
 
-        if($this->SURVEY_ENABLED === true && !$perm->isAnyKindOfModerator()){             
-            $records = $DB->get_records_sql('SELECT * FROM '.$CFG->prefix.'limesurvey_assigns WHERE course_id = ?', array($COURSE->id));                   
-            foreach($records as $record){                
-                if($DB->record_exists_sql('SELECT * FROM '.$CFG->prefix.'limesurvey_submissions WHERE user_id = ? AND survey_id = ?', array($USER->id, $record->survey_id)) === false){
-                    if(isset($record->startdate) && !is_null($record->startdate) && is_int(+$record->startdate)){
-                        if($record->startdate > time()){
+        if ($this->SURVEY_ENABLED === true && !$perm->isAnyKindOfModerator()) {             
+            $records = $DB->get_records_sql(
+                'SELECT * FROM {limesurvey_assigns} WHERE course_id = ?', 
+                array($COURSE->id)
+            );                   
+            foreach ($records as $record) {                
+                $submissionexists = $DB->record_exists_sql(
+                    'SELECT * FROM {limesurvey_submissions} WHERE user_id = ? AND survey_id = ?', 
+                    array($USER->id, $record->survey_id)
+                );
+                if ($submissionexists === false) {
+                    if (isset($record->startdate) && !is_null($record->startdate) && is_int(+$record->startdate)) {
+                        if ($record->startdate > time()) {
                             continue;
                         }
                     }
-                    if(isset($record->stopdate) && !is_null($record->stopdate) && is_int(+$record->stopdate)){
-                        if($record->stopdate < time()){
+                    if (isset($record->stopdate) && !is_null($record->stopdate) && is_int(+$record->stopdate)) {
+                        if ($record->stopdate < time()) {
                             continue;
                         }
                     }
-                    if(isset($record->warndate) && !is_null($record->warndate) && is_int(+$record->warndate)){
-                        if($record->warndate > time()){
+                    if (isset($record->warndate) && !is_null($record->warndate) && is_int(+$record->warndate)) {
+                        if ($record->warndate > time()) {
                             continue;
                         }
                     }
-                    //if((!isset($record->startdate) || !is_int(+$record->startdate)) && (!isset($record->stopdate) || !is_int(+$record->stopdate)) && (!isset($record->warndate) || !is_int(+$record->warndate))) continue;
                     $redirectToSurvey = new moodle_url('/course/format/serial3/survey.php', array('c' => $COURSE->id));
                     redirect($redirectToSurvey);
                 }
@@ -185,8 +203,7 @@ class format_serial3 extends format_base {
       
         // SURVEY END
         
-        global $PAGE;
-        // if section is specified in course/view.php, make sure it is expanded in navigation
+        // If section is specified in course/view.php, make sure it is expanded in navigation.
         if ($navigation->includesectionnum === false) {
             $selectedsection = optional_param('section', null, PARAM_INT);
             if ($selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
@@ -195,7 +212,7 @@ class format_serial3 extends format_base {
             }
         }
 
-        // check if there are callbacks to extend course navigation
+        // Check if there are callbacks to extend course navigation.
         parent::extend_course_navigation($navigation, $node);
 
         // We want to remove the general section if it is empty.
@@ -219,7 +236,7 @@ class format_serial3 extends format_base {
      *
      * @return array This will be passed in ajax respose
      */
-    function ajax_section_move() {
+    public function ajax_section_move(): array {
         global $PAGE;
         $titles = array();
         $course = $this->get_course();
@@ -239,7 +256,7 @@ class format_serial3 extends format_base {
      * @return array of default blocks, must contain two keys BLOCK_POS_LEFT and BLOCK_POS_RIGHT
      *     each of values is an array of block names (for left and right side columns)
      */
-    public function get_default_blocks() {
+    public function get_default_blocks(): array {
         return array(
             BLOCK_POS_LEFT => array(),
             BLOCK_POS_RIGHT => array()
@@ -249,14 +266,17 @@ class format_serial3 extends format_base {
     /**
      * Definitions of the additional options that this course format uses for course
      *
-     * Topics format uses the following options:
+     * Serial3 format uses the following options:
      * - coursedisplay
      * - hiddensections
+     * - dashboardsectionexclude
+     * - sectioncollapsenabled
+     * - sectioninitiallycollapsed
      *
      * @param bool $foreditform
      * @return array of options
      */
-    public function course_format_options($foreditform = false) {
+    public function course_format_options($foreditform = false): array {
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
             $courseconfig = get_config('moodlecourse');
@@ -270,21 +290,23 @@ class format_serial3 extends format_base {
                     'type' => PARAM_INT,
                 ),
                 'dashboardsectionexclude' => array(
-                    'default' => '',//$courseconfig->dashboardsectionexclude,
+                    'default' => '',
                     'type' => PARAM_TEXT,
                 ),
                 'sectioncollapsenabled' => array(
-                    'default' => property_exists($courseconfig, "sectioncollapsenabled") ? $courseconfig->sectioncollapsenabled : 0,
+                    'default' => property_exists($courseconfig, "sectioncollapsenabled") ? 
+                        $courseconfig->sectioncollapsenabled : 0,
                     'type' => PARAM_INT,
                 ),
                 'sectioninitiallycollapsed' => array(
-                    'default' => property_exists($courseconfig, "sectioninitiallycollapsed") ? $courseconfig->sectioninitiallycollapsed : 0,
+                    'default' => property_exists($courseconfig, "sectioninitiallycollapsed") ? 
+                        $courseconfig->sectioninitiallycollapsed : 0,
                     'type' => PARAM_INT,
                 ),
                 
             );
         }
-        if ($foreditform) { //&& !isset($courseformatoptions['coursedisplay']['label'])
+        if ($foreditform) {
             $courseformatoptionsedit = array(
                 'hiddensections' => array(
                     'label' => new lang_string('hiddensections'),
@@ -320,7 +342,6 @@ class format_serial3 extends format_base {
                     'help' => 'sectioncollapsenabled',
                     'help_component' => 'moodle',
                 ),
-                // TODO: make this checkbox dependent of the previous.
                 'sectioninitiallycollapsed' => array( 
                     'label' =>  get_string('sectioninitiallycollapsed', 'format_serial3'),
                     'element_type' => 'advcheckbox',
@@ -342,7 +363,7 @@ class format_serial3 extends format_base {
      * @param bool $forsection 'true' if this is a section edit form, 'false' if this is course edit form.
      * @return array array of references to the added form elements.
      */
-    public function create_edit_form_elements(&$mform, $forsection = false) {
+    public function create_edit_form_elements(&$mform, $forsection = false): array {
         global $COURSE;
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
@@ -375,7 +396,7 @@ class format_serial3 extends format_base {
      *     this object contains information about the course before update
      * @return bool whether there were any changes to the options values
      */
-    public function update_course_format_options($data, $oldcourse = null) {
+    public function update_course_format_options($data, $oldcourse = null): bool {
         $data = (array)$data;
         
         if ($oldcourse !== null) {
@@ -387,7 +408,7 @@ class format_serial3 extends format_base {
                         $data[$key] = $oldcourse[$key];
                     } else if ($key === 'sectioncollapsenabled') {
                         $data['sectioncollapsenabled'] = 0;
-                    }  else if ($key === 'sectioninitiallycollapsed') {
+                    } else if ($key === 'sectioninitiallycollapsed') {
                         $data['sectioninitiallycollapsed'] = 0;
                     }
                 }
@@ -396,7 +417,6 @@ class format_serial3 extends format_base {
         return $this->update_format_options($data);
     }
 
-    
     /**
      * Whether this format allows to delete sections
      *
@@ -405,7 +425,7 @@ class format_serial3 extends format_base {
      * @param int|stdClass|section_info $section
      * @return bool
      */
-    public function can_delete_section($section) {
+    public function can_delete_section($section): bool {
         return true;
     }
 
@@ -420,7 +440,8 @@ class format_serial3 extends format_base {
      * @return \core\output\inplace_editable
      */
     public function inplace_editable_render_section_name($section, $linkifneeded = true,
-                                                         $editable = null, $edithint = null, $editlabel = null) {
+                                                         $editable = null, $edithint = null, 
+                                                         $editlabel = null): inplace_editable {
         if (empty($edithint)) {
             $edithint = new lang_string('editsectionname', 'format_serial3');
         }
@@ -436,7 +457,7 @@ class format_serial3 extends format_base {
      *
      * @return bool
      */
-    public function supports_news() {
+    public function supports_news(): bool {
         return true;
     }
 
@@ -448,16 +469,24 @@ class format_serial3 extends format_base {
      * @param stdClass|section_info $section section where this module is located or will be added to
      * @return bool
      */
-    public function allow_stealth_module_visibility($cm, $section) {
+    public function allow_stealth_module_visibility($cm, $section): bool {
         // Allow the third visibility state inside visible sections or in section 0.
         return !$section->section || $section->visible;
     }
 
-    public function section_action($section, $action, $sr) {
+    /**
+     * Perform custom action on section
+     *
+     * @param stdClass|section_info $section
+     * @param string $action
+     * @param int $sr
+     * @return null|array
+     */
+    public function section_action($section, $action, $sr): ?array {
         global $PAGE;
 
         if ($section->section && ($action === 'setmarker' || $action === 'removemarker')) {
-            // Format 'topics' allows to set and remove markers in addition to common section actions.
+            // Format 'serial3' allows to set and remove markers in addition to common section actions.
             require_capability('moodle/course:setcurrentsection', context_course::instance($this->courseid));
             course_set_marker($this->courseid, ($action === 'setmarker') ? $section->section : 0);
             return null;
@@ -479,7 +508,7 @@ class format_serial3 extends format_base {
  * @param mixed $newvalue
  * @return \core\output\inplace_editable
  */
-function format_serial3_inplace_editable($itemtype, $itemid, $newvalue) {
+function format_serial3_inplace_editable($itemtype, $itemid, $newvalue): inplace_editable {
     global $DB, $CFG;
     require_once($CFG->dirroot . '/course/lib.php');
     if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
@@ -489,6 +518,3 @@ function format_serial3_inplace_editable($itemtype, $itemid, $newvalue) {
         return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
 }
-
-
-

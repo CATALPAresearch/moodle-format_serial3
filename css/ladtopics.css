@@ -24,7 +24,7 @@
 /* Bad hack xxx: removes box above the timeline */
 
 body#page-course-view-serial3 #region-main-box:nth-child(1) {
-  display: inline-block;
+  /*display: inline-block;*/
   max-height: none;
   min-height: 1px;
 }

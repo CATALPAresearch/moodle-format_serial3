@@ -14,11 +14,10 @@
   "dependencies": {
     "gridstack": "^10.1.1",
     "javascript-time-ago": "^2.5.9",
-    "vue": "^2.6.10",
+    "vue": "^2.7.16",
     "vue-grid-layout": "^2.4.0",
-    "vue-router": "^3.0.5",
-    "vue2-teleport": "^1.0.1",
-    "vuex": "^3.1.0"
+    "vue-router": "^3.5.0",
+    "vuex": "^3.6.2"
   },
   "browserslist": [
     "> 1%",
@@ -30,20 +29,23 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.20.2",
     "babel-loader": "^9.1.0",
+    "copy-webpack-plugin": "^13.0.1",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.2",
+    "del": "^6.1.1",
     "file-loader": "*",
-    "filemanager-webpack-plugin": "*",
+    "filemanager-webpack-plugin": "^3.0.0",
     "fstream": "^1.0.12",
     "nodemon": "^2.0.13",
     "sass": "^1.56.1",
     "sass-loader": "^13.2.0",
     "tar": "^6.1.12",
-    "vue-loader": "^15.10.1",
-    "vue-template-compiler": "^2.7.14",
+    "vue-loader": "^15.10.0",
+    "vue-template-compiler": "^2.7.16",
+    "vue2-teleport": "^1.1.4",
     "webpack": "^5.75.0",
     "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.0.0",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^5.2.2"
   }
 }

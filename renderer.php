@@ -23,18 +23,18 @@
  * @since Moodle 2.3
  */
 
-
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/course/format/renderer.php');
+
+use core_courseformat\output\section_renderer;
 
 /**
- * Basic renderer for topics format.
+ * Basic renderer for serial3 format.
  *
- * @copyright 2012 Dan Poltawski
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    format_serial3
+ * @copyright  2012 Dan Poltawski
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_serial3_renderer extends format_section_renderer_base {
-
+class format_serial3_renderer extends section_renderer {
     /**
      * Constructor method, calls the parent constructor
      *
@@ -96,18 +96,16 @@ class format_serial3_renderer extends format_section_renderer_base {
 
     /**
      * Generate the starting container html for a list of sections
+     *
      * @return string HTML to output.
      */
-    protected function start_section_list() {
-        global $CFG, $DB, $PAGE, $COURSE;
-        $format_options = format_base::instance($PAGE->course)->get_format_options();
+    protected function start_section_list(): string {
+        global $CFG, $PAGE;
+        
+        $format_options = course_get_format($PAGE->course)->get_format_options();
         require_once($CFG->libdir.'/completionlib.php');
-
-        return
-//            html_writer::start_tag('div', array('class' => ''))
-//            . '' . html_writer::end_tag('div')
-            html_writer::start_tag('ul', array('class' => 'topics'))
-            ;
+        
+        return html_writer::start_tag('ul', array('class' => 'topics'));
     }
 
     /**
