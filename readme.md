@@ -1,10 +1,10 @@
 # SERIAL 3 - SElf Regulation induced by Adaptive Learning, version 3
 
-Serial 3 is a *Learning Analytics Dashboard* for Moodle courses. The dashboard consists of several widgets
+Serial 3 is a _Learning Analytics Dashboard_ for Moodle courses. The dashboard consists of several widgets
 that can be selected and arranged to the users liking.
 
-
 **Features**
+
 - Progress Chart
 - Learner goals and Indicators
 - Recommendations
@@ -18,14 +18,13 @@ that can be selected and arranged to the users liking.
 - Add a time tracking tool and display
 - Add all menu bar functionality
 
-
 # Installation
 
-1. `git clone`  the repository to /your-moodle/course/format/
+1. `git clone` the repository to /your-moodle/course/format/
 2. Open the page https://<moodle>/admin/index.php?cache=1 and follow the install instructions for the plugin.
-3. Open a course of you choice and go to the *course settings* (watch out for the little cog-icon). Set the 'course
+3. Open a course of you choice and go to the _course settings_ (watch out for the little cog-icon). Set the 'course
    format' to 'Serial 3'.
-   
+
 ```bash
 # push code to test system
 rsync -r ./* aple-test:/var/moodle/htdocs/moodle/course/format/serial3 --exclude={'.env','node_modules','*.git','.DS_Store','.gitignore','.vscode'}
@@ -34,13 +33,15 @@ rsync -r ./* aple-test:/var/moodle/htdocs/moodle/course/format/serial3 --exclude
 
 # Development
 
-* run `npm install` to install all dependencies
-* change to folder `vue` and run in terminal `npm run build` to transpile changes from in vue to js
+- run `npm install` to install all dependencies
+- change to folder `vue` and run in terminal `npm run build` to transpile changes from in vue to js
 
 **Dependencies**
-* vue.js, vuex
-* d3.js
-* vue-grid-layout library (https://jbaysolutions.github.io/vue-grid-layout/)
+
+- Moodle v4.5 or newer
+- vue.js v2, vuex
+- d3.js
+- vue-grid-layout library (https://jbaysolutions.github.io/vue-grid-layout/)
 
 **Getting started**
 
@@ -51,7 +52,7 @@ db/services.php: Here your are defining the webservice by referencing the involv
 classes and functions)
 
 version.php: Every time you are changing the webservice description in service.php you need to increment the version by
-1 and update the plugin in moodle (See the *notifications* page in the administration panel)
+1 and update the plugin in moodle (See the _notifications_ page in the administration panel)
 
 amd/scr: This is the folder where all custome javascript is located. You should not change any file there since it is the output folder for transpiled and optimized code.
 
@@ -69,16 +70,15 @@ are stored that are being called by 'App.vue'.
 
 /vue/scripts: This folder contains utility functions.
 
-/vue/data: This data contains data used in the dashboard stored as json. This data includes the adaptation-rules and 
+/vue/data: This data contains data used in the dashboard stored as json. This data includes the adaptation-rules and
 thresholds.
 
 A good sheet sheet: http://tech.solin.eu/doku.php?id=moodle:course_construction
 
-
-
 ## Contributors
-* Niels Seidel
-* Marc Burchart
-* Heike Karolyi
-* Valerie Meyer
-* Slavisa Radovic
+
+- Niels Seidel
+- Marc Burchart
+- Heike Karolyi
+- Valerie Meyer
+- Slavisa Radovic
