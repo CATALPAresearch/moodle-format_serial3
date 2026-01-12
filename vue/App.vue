@@ -37,12 +37,13 @@
       </div>
     </div>
     <div id="widgetGrid" class="grid-stack vue-grid-layout">
-      <div class="grid-stack-item vue-grid-item border p-3" 
+      <div
+        class="grid-stack-item vue-grid-item border p-3"
         v-for="(item, index) in layout"
         :id="'widget-' + item.c"
         :gs-w="item.w"
         :gs-h="item.h"
-        >
+      >
         <div class="grid-stack-item-content">
           <span
             v-if="editMode & !item.fixed"
@@ -56,7 +57,9 @@
         </div>
       </div>
     </div>
-    <welcome-video v-show="(new Date().getTime()) < (new Date('2024.04.31').getTime())"></welcome-video>
+    <welcome-video
+      v-show="new Date().getTime() < new Date('2024.04.31').getTime()"
+    ></welcome-video>
   </div>
 </template>
 
@@ -72,8 +75,9 @@ import Recommendations from "./components/widgets/Recommendations.vue";
 import TaskList from "./components/widgets/TaskList.vue";
 import LearningStrategies from "./components/widgets/LearningStrategies.vue";
 import CourseOverview from "./components/widgets/CourseOverview.vue";
-import 'gridstack/dist/gridstack.min.css';
-import { GridStack } from 'gridstack';
+import TeacherActivity from "./components/widgets/TeacherActivity.vue";
+import "gridstack/dist/gridstack.min.css";
+import { GridStack } from "gridstack";
 import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
@@ -88,6 +92,7 @@ export default {
     TaskList,
     CourseOverview,
     LearningStrategies,
+    TeacherActivity,
     //QuizStatistics
   },
 
@@ -96,15 +101,24 @@ export default {
       courseid: -1,
       context: {},
       logger: null,
-      
+
       grid: undefined,
       count: 0,
       info: "",
       timerId: undefined,
-      
+
       editMode: false,
-      
+
       defaultLayout: [
+        {
+          x: 0,
+          y: 0,
+          w: 12,
+          h: 5,
+          i: "10",
+          name: "Lehrenden Dashboard",
+          c: "TeacherActivity",
+        } /*,
         {
           x: 0,
           y: 0,
@@ -150,7 +164,7 @@ export default {
           name: "Feedback",
           c: "Recommendations",
         },
-        /*{
+        {
           x: 0,
           y: 22,
           w: 14,
@@ -158,10 +172,20 @@ export default {
           i: "12",
           name: "Kursübersicht",
           c: "CourseOverview",
-        },*/
+        },*/,
       ],
 
       allComponents: [
+        {
+          x: 0,
+          y: 0,
+          w: 6,
+          h: 5,
+          i: "10",
+          name: "Lehrenden Dashboard",
+          c: "TeacherActivity",
+        },
+        ,
         {
           x: 0,
           y: 0,
@@ -259,18 +283,17 @@ export default {
 
     this.context.courseId = this.$store.state.courseid; // TODO
 
-    
-    this.grid = GridStack.init({ 
+    this.grid = GridStack.init({
       column: 12,
       cellHeight: 80,
       animate: false, // show immediate (animate: true is nice for user dragging though)
       columnOpts: {
-        breakpointForWindow: false,  // test window vs grid size
+        breakpointForWindow: false, // test window vs grid size
         //breakpoints: [{w:300, c:6},{w:400, c:8},{w:600, c:12},{w:1100, c:12}]
         //breakpoints: [{w:220, c:1},{w:600, c:6}, {w:800, c:12}]
-        breakpoints: [{w:600, c:1}]
+        breakpoints: [{ w: 600, c: 1 }],
       },
-      float: true 
+      float: true,
     });
     this.$nextTick(function () {
       this.initObserver();
@@ -307,7 +330,7 @@ export default {
   methods: {
     ...mapGetters(["setResearchCondition"]),
     ...mapActions(["log"]),
-    
+
     initObserver() {
       if (
         "IntersectionObserver" in window &&
@@ -346,11 +369,11 @@ export default {
         };
 
         let observer = new IntersectionObserver(handleScrolling, options);
-        var element =  document.querySelector("#widgetGrid");
-        if (typeof(element) != 'undefined' && element != null){
+        var element = document.querySelector("#widgetGrid");
+        if (typeof element != "undefined" && element != null) {
           observer.observe(element);
         }
-        
+
         $("#widgetGrid .vue-grid-item").each(function (i, val) {
           if (typeof $(this).attr("id") == "string") {
             let element = "#" + $(this).attr("id");
@@ -386,12 +409,15 @@ export default {
       this.$store.dispatch("dashboardSettings/saveDashboardSettings", settings);
       this.toggleEditMode();
     },
-    
   },
 };
 </script>
 
 <style lang="scss">
+body#page-course-view-serial3 #region-main-box:nth-child(1) {
+  display: inline !important;
+}
+
 .vue-grid-layout {
   background: #eee;
   position: relative;
