@@ -10,7 +10,7 @@
                     v-if="research_condition == 'control_group'"
                     src="https://nise81.com/1801-Intro-WS2023_Kontrollgruppe.mp4" type="video/mp4"></source>
                 
-                Leider können wir Ihnen das Begrüßungsvideo nicht zeigen, da Ihr Browser keine Videos unterstützt.
+                {{ strings.welcomeVideoUnsupported }}
             </video>
         </div>
         <div v-else></div>
@@ -24,7 +24,7 @@ export default {
     name: "WelcomeVideo",
 
     computed: {
-        ...mapState(['courseid', 'userid', 'research_condition']),
+        ...mapState(['courseid', 'userid', 'research_condition', 'strings']),
     },
 
     methods: {
