@@ -33,7 +33,7 @@ export default {
         "assignment",
         "quiz",
         "assign",
-        "safran"
+        "safran",
       ];
 
       const filtered_activities = Object.keys(data)
@@ -48,7 +48,7 @@ export default {
       const filtered_sections = Object.keys(filtered_activities)
         .filter(
           (key) =>
-            !excluded_sections.includes(filtered_activities[key].sectionname)
+            !excluded_sections.includes(filtered_activities[key].sectionname),
         )
         .reduce(function (filtered_object, key) {
           if (key in filtered_activities) {
@@ -83,7 +83,7 @@ export default {
     },
     getUrlById: (state) => (id) => {
       const activity = Object.values(state.courseData).find(
-        (object) => object.id === id
+        (object) => object.id === id,
       );
       if (activity != undefined) {
         return activity.url;
@@ -91,7 +91,7 @@ export default {
       return "#";
     },
     getTotalNumberOfActivities: function (state) {
-      return Object.keys(state.courseData).length;
+      return state.courseData ? Object.keys(state.courseData).length : 0;
     },
   },
 
@@ -103,15 +103,22 @@ export default {
           course: Number(rootState.courseid),
           activityid: this.activity.id,
           rating: newVal,
-        }
+        },
       );
       if (response.success) {
         commit("updateActivity", newVal);
       } else {
         if (response.data) {
-          console.error(this.name, "Faulty response of webservice /set_user_understanding/", response.data);
+          console.error(
+            this.name,
+            "Faulty response of webservice /set_user_understanding/",
+            response.data,
+          );
         } else {
-          console.error(this.name, "No connection to webservice /set_user_understanding/");
+          console.error(
+            this.name,
+            "No connection to webservice /set_user_understanding/",
+          );
         }
       }
     },

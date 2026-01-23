@@ -48,7 +48,7 @@
           <span
             v-if="editMode & !item.fixed"
             class="remove"
-            title="Element aus Dashboard entfernen"
+            :title="strings.dashboardRemoveItem"
             @click="removeItem(item.i)"
           >
             <i class="fa fa-close"></i>
@@ -273,10 +273,10 @@ export default {
     this.$store.commit("setResearchCondition");
     if (this.research_condition == "control_group") {
       this.allComponents = this.allComponents.filter(
-        (component) => component.i != "9"
+        (component) => component.i != "9",
       );
       this.defaultLayout = this.defaultLayout.filter(
-        (component) => component.i != "9"
+        (component) => component.i != "9",
       );
     }
     this.courseid = this.$store.state.courseid;
@@ -303,7 +303,7 @@ export default {
   computed: {
     filteredComponents() {
       return this.allComponents.filter(
-        ({ i: id1 }) => !this.layout.some(({ i: id2 }) => id2 === id1)
+        ({ i: id1 }) => !this.layout.some(({ i: id2 }) => id2 === id1),
       );
     },
 
@@ -374,17 +374,19 @@ export default {
           observer.observe(element);
         }
 
-        $("#widgetGrid .vue-grid-item").each(function (i, val) {
-          if (typeof $(this).attr("id") == "string") {
-            let element = "#" + $(this).attr("id");
-            observer.observe(document.querySelector(element));
+        const gridItems = document.querySelectorAll(
+          "#widgetGrid .vue-grid-item",
+        );
+        gridItems.forEach(function (item) {
+          if (typeof item.id === "string" && item.id) {
+            observer.observe(item);
           }
         });
       }
     },
     addItem(e) {
       const newItem = this.allComponents.find(
-        (element) => element.i === e.target.value
+        (element) => element.i === e.target.value,
       );
       this.layout.push(newItem);
       this.$el.querySelector("#addDashboardItems").selectedIndex = 0;
