@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for format_serial3.
  *
  * @package    format_serial3
- * @copyright  2026
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -35,7 +35,7 @@ use core_privacy\local\request\transform;
 /**
  * Privacy provider for format_serial3.
  *
- * @copyright  2026
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements

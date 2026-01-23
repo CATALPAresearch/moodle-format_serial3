@@ -18,7 +18,7 @@
  * Serial3 course format display logic
  *
  * @package    format_serial3
- * @copyright  2024
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

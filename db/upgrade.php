@@ -15,17 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Upgrade scripts for course format "Topics"
+ * Upgrade scripts for course format "Serial3"
  *
- * @package    format_topics
- * @copyright  2017 Marina Glancy
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/course/format/serial3/db/upgradelib.php');
+
 /**
- * Upgrade script for format_topics
+ * Upgrade script for format_serial3
  *
  * @param int $oldversion the version we are upgrading from
  * @return bool result
@@ -33,6 +35,16 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_format_serial3_upgrade($oldversion) {
     global $CFG, $DB;
 
-    
+    $dbman = $DB->get_manager();
+
+    // Add upgrade steps here as needed.
+    // Each upgrade step should check the version and perform necessary database changes.
+    //
+    // Example:
+    // if ($oldversion < 2026012301) {
+    //     // Perform upgrade actions.
+    //     upgrade_plugin_savepoint(true, 2026012301, 'format', 'serial3');
+    // }
+
     return true;
 }

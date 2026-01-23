@@ -17,8 +17,8 @@
 /**
  * Renderer for outputting the topics course format.
  *
- * @package format_topics
- * @copyright 2012 Dan Poltawski
+ * @package format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.3
  */
@@ -31,7 +31,7 @@ use core_courseformat\output\section_renderer;
  * Basic renderer for serial3 format.
  *
  * @package    format_serial3
- * @copyright  2012 Dan Poltawski
+* @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_serial3_renderer extends section_renderer {

@@ -17,8 +17,8 @@
 /**
  * Upgrade scripts for course format "Topics"
  *
- * @package    format_topics
- * @copyright  2017 Marina Glancy
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * This method finds all courses in 'topics' format that have actual number of sections
  * bigger than their 'numsections' course format option.
- * For each such course we call {@link format_topics_upgrade_hide_extra_sections()} and
+ * For each such course we call {@link format_serial3_upgrade_hide_extra_sections()} and
  * either delete or hide "orphaned" sections.
  */
 function format_serial3_upgrade_remove_numsections() {

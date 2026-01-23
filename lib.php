@@ -19,7 +19,7 @@
  *
  * @since     Moodle 2.0
  * @package   format_serial3
- * @copyright 2009 Sam Hemelryk
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -42,7 +42,7 @@ use global_navigation;
  * Main class for the Serial3 course format
  *
  * @package    format_serial3
- * @copyright  2012 Marina Glancy
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_serial3 extends format_base {

@@ -19,7 +19,7 @@
  * Strings for component 'format_serial3', language 'de'
  *
  * @package    format_serial3
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
