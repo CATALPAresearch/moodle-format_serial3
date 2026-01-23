@@ -16,11 +16,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'format_topics', language 'en', branch 'MOODLE_20_STABLE'
+ * Strings for component 'format_serial3', language 'en'
  *
- * @package   format_topics
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    format_serial3
+ * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['addsections'] = 'Add topics';
@@ -79,10 +79,139 @@ $string['delete'] = 'Delete';
 $string['todoAddNewItem'] = 'Add new item..';
 $string['dashboardTitle'] = 'Semester Overview';
 $string['dashboardAddItem'] = 'Add dashboard item';
+$string['dashboardRemoveItem'] = 'Remove item from dashboard';
 
-$string['informationTitle'] = 'Informationen über die Semesterübersicht';
+$string['informationTitle'] = 'Information about the Semester Overview';
 $string['informationContent'] = 'In einem typischen Fernstudiumskurs wie diesem stehen Ihnen viele verschiedene Lernmaterialien zur Verfügung, die Sie über einen längeren Zeitraum bis zur Klausur durchgearbeitet und verstanden haben müssen.<br> 
 Mit der Semesterübersicht unterstützen wir Sie dabei die Übersicht zu behalten, Ihre Lernziele zu erreichen, Termine nicht zu verpassen und einen Lernplan zu erstellen. Sie erhalten je Kurseinheit eine Übersicht über Ihren Lernfortschritt, d.h. die bislang bearbeiteten Aufgaben und gelesenen Texte sowie die dabei erzielten Ergebnisse. Sie können Ihren Wissensstand zudem selbst einschätzen, Ihre TODOs planen und unter Anleitung reflektieren, wie Sie in der letzten Kurseinheit eigentlich gelernt haben. ';
 $string['linkTitle'] = 'Helpful links and contacts';
 $string['linkContent'] = 'Here all relevant links and emails are displayed. For example, exercise system, student advisory service, examination office, news group.';
 
+// Widget: CourseOverview
+$string['widgetCourseOverviewTitle'] = 'Course Overview';
+$string['widgetCourseOverviewAllUnits'] = 'All Course Units';
+$string['widgetCourseOverviewUnit'] = 'Unit';
+$string['widgetCourseOverviewCompleted'] = 'completed';
+$string['widgetCourseOverviewReflectionButton'] = 'Reflection';
+$string['widgetCourseOverviewReflectionTitle'] = 'Final Reflection on Unit {$a}';
+$string['widgetCourseOverviewReflectionClose'] = 'Close';
+$string['widgetCourseOverviewReflectionSave'] = 'Save';
+$string['widgetCourseOverviewReflectionError'] = 'Sorry, an error occurred. We are working on it. Please be patient.';
+
+// Widget: Deadlines
+$string['widgetDeadlinesTitle'] = 'Deadlines';
+$string['widgetDeadlinesAllTerms'] = 'All Deadlines';
+$string['widgetDeadlinesAssignments'] = 'Assignments';
+$string['widgetDeadlinesQuizzes'] = 'Tests';
+$string['widgetDeadlinesCalendar'] = 'Calendar';
+
+// Widget: IndicatorDisplay
+$string['widgetIndicatorTitle'] = 'Learning Goals';
+$string['widgetIndicatorMyGoal'] = 'My goal for this course is:';
+$string['widgetIndicatorGoalMaster'] = 'to master the course';
+$string['widgetIndicatorGoalPassing'] = 'to pass the course';
+$string['widgetIndicatorGoalOverview'] = 'to get an overview';
+$string['widgetIndicatorGoalPractice'] = 'to acquire practical/job-relevant knowledge';
+$string['widgetIndicatorYourStatus'] = 'Your Status';
+$string['widgetIndicatorMissesGoal'] = 'Misses the goal (still)';
+$string['widgetIndicatorNearGoal'] = 'Near the goal';
+$string['widgetIndicatorInTarget'] = 'In the target area';
+$string['widgetIndicatorCompetence'] = 'Competence';
+$string['widgetIndicatorSelfAssessment'] = 'Self-Assessment';
+$string['widgetIndicatorResults'] = 'Results';
+$string['widgetIndicatorTimeManagement'] = 'Time Management';
+$string['widgetIndicatorUnderstanding'] = 'Understanding overall';
+$string['widgetIndicatorUnderstandingIndiv'] = 'Understanding individual';
+$string['widgetIndicatorAllActivities'] = 'all activities, in %';
+$string['widgetIndicatorCompletedActivities'] = 'completed activities, in %';
+$string['widgetIndicatorTotalPoints'] = 'Total Points';
+$string['widgetIndicatorInPercent'] = 'in %';
+
+// Widget: LearningStrategies
+$string['widgetLearningStrategiesTitle'] = 'Learning Strategies';
+
+// Widget: ProgressChartAdaptive
+$string['widgetProgressTitle'] = 'Overview of the Course and Course Units';
+$string['widgetProgressAllUnits'] = 'All Course Units';
+$string['widgetProgressNotCompleted'] = 'Not completed';
+$string['widgetProgressPoorlyUnderstood'] = 'Poorly understood';
+$string['widgetProgressMostlyUnderstood'] = 'Mostly understood';
+$string['widgetProgressFullyUnderstood'] = 'Fully understood';
+
+// Widget: QuizStatistics
+$string['widgetQuizStatsTitle'] = 'Results';
+$string['widgetQuizStatsAllResults'] = 'All Results';
+$string['widgetQuizStatsTests'] = 'Tests';
+$string['widgetQuizStatsAssignments'] = 'Assignments';
+$string['widgetQuizStatsAllUnits'] = 'All Course Units';
+$string['widgetQuizStatsCompareWithCourse'] = 'Compare with Course';
+$string['widgetQuizStatsYou'] = 'You';
+$string['widgetQuizStatsCourseAverage'] = 'Course Average';
+
+// Widget: Recommendations
+$string['widgetRecommendationsTitle'] = 'Feedback and Learning Recommendations';
+$string['widgetRecommendationsNoFeedback'] = 'There is no feedback for you at the moment. Apparently, your learning is going well.';
+
+// Widget: TaskList
+$string['widgetTaskListTitle'] = 'Tasks';
+$string['widgetTaskListCompleted'] = 'tasks completed';
+$string['widgetTaskListAddNew'] = 'Add new item..';
+
+// MenuBar
+$string['menuBarEditDashboard'] = 'Edit Dashboard';
+$string['menuBarDashboardInfo'] = 'Information about the Dashboard';
+$string['menuBarHelpfulLinks'] = 'Helpful Links';
+$string['menuBarViewNewsgroupPosts'] = 'View Newsgroup Posts';
+$string['menuBarContactInstructor'] = 'Contact Course Instructor';
+
+// PopoverContent
+$string['popoverRateUnderstanding'] = 'Rate your understanding of this activity:';
+$string['popoverNotYetViewed'] = 'Not yet viewed';
+$string['popoverPoorlyUnderstood'] = 'Poorly understood';
+$string['popoverMostlyUnderstood'] = 'Mostly understood';
+$string['popoverFullyUnderstood'] = 'Fully understood';
+$string['popoverAskForHelp'] = 'Ask for help';
+$string['popoverGoTo'] = 'Go to {$a}';
+$string['popoverAddToTaskList'] = 'Add to task list';
+
+// RecommendationItem
+$string['recommendationHelpful'] = 'This feedback is helpful to me.';
+$string['recommendationApplicable'] = 'I want to implement this feedback.';
+$string['recommendationNotApplicable'] = 'This does not apply to me.';
+$string['recommendationLater'] = 'Not now, later.';
+
+// SurveyPrompt
+$string['surveyPromptMessage'] = 'Please take 10 minutes for our survey so that we can better adapt the learning offer to your needs. <br><br>Thank you very much!';
+$string['surveyPromptParticipate'] = 'Participate in the survey now!';
+$string['surveyPromptLater'] = 'Not now, but later.';
+
+// WelcomeVideo
+$string['welcomeVideoUnsupported'] = 'Unfortunately, we cannot show you the welcome video because your browser does not support videos.';
+
+// Privacy API.
+$string['privacy:metadata:serial3_tasks'] = 'Information about user tasks in the course.';
+$string['privacy:metadata:serial3_tasks:userid'] = 'The ID of the user who owns the task.';
+$string['privacy:metadata:serial3_tasks:task'] = 'The text of the task.';
+$string['privacy:metadata:serial3_tasks:completed'] = 'Whether the task has been completed.';
+$string['privacy:metadata:serial3_tasks:duedate'] = 'The due date for the task.';
+$string['privacy:metadata:serial3_tasks:timemodified'] = 'The time when the task was last modified.';
+
+$string['privacy:metadata:serial3_overview'] = 'User understanding ratings for course activities.';
+$string['privacy:metadata:serial3_overview:userid'] = 'The ID of the user.';
+$string['privacy:metadata:serial3_overview:activityid'] = 'The ID of the activity being rated.';
+$string['privacy:metadata:serial3_overview:rating'] = 'The user\'s understanding rating for the activity.';
+
+$string['privacy:metadata:serial3_learner_goal'] = 'User learning goals for courses.';
+$string['privacy:metadata:serial3_learner_goal:userid'] = 'The ID of the user.';
+$string['privacy:metadata:serial3_learner_goal:goal'] = 'The learning goal text.';
+$string['privacy:metadata:serial3_learner_goal:timemodified'] = 'The time when the goal was last modified.';
+
+$string['privacy:metadata:serial3_dashboard_settings'] = 'User dashboard layout preferences.';
+$string['privacy:metadata:serial3_dashboard_settings:userid'] = 'The ID of the user.';
+$string['privacy:metadata:serial3_dashboard_settings:settings'] = 'JSON-encoded dashboard settings.';
+
+$string['privacy:metadata:serial3_reflections'] = 'User reflections on course sections.';
+$string['privacy:metadata:serial3_reflections:userid'] = 'The ID of the user.';
+$string['privacy:metadata:serial3_reflections:reflection'] = 'The reflection text.';
+$string['privacy:metadata:serial3_reflections:timecreated'] = 'The time when the reflection was created.';
+$string['privacy:metadata:serial3_reflections:timemodified'] = 'The time when the reflection was last modified.';
