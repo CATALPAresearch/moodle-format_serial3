@@ -1,5 +1,5 @@
-import ProgressChartAdaptive from './ProgressChartAdaptive.vue';
+import ProgressChartAdaptive from "./ProgressChartAdaptive.vue";
 
 export default {
-  component: ProgressChartAdaptive
+  component: ProgressChartAdaptive,
 };

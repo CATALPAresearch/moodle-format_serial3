@@ -1,5 +1,5 @@
-import QuizStatistics from './QuizStatistics.vue';
+import QuizStatistics from "./QuizStatistics.vue";
 
 export default {
-  component: QuizStatistics
+  component: QuizStatistics,
 };

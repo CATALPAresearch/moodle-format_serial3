@@ -9,12 +9,12 @@ const routes = [
     component: () => import("../App.vue"),
   },
   // Widget routes are merged here
-  ...learningStrategiesRoutes
+  ...learningStrategiesRoutes,
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
 });
 
 export default router;

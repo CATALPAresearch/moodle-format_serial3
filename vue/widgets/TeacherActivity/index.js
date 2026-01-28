@@ -1,5 +1,5 @@
-import TeacherActivity from './TeacherActivity.vue';
+import TeacherActivity from "./TeacherActivity.vue";
 
 export default {
-  component: TeacherActivity
+  component: TeacherActivity,
 };

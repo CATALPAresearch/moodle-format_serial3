@@ -1,5 +1,5 @@
-import Deadlines from './Deadlines.vue';
+import Deadlines from "./Deadlines.vue";
 
 export default {
-  component: Deadlines
+  component: Deadlines,
 };

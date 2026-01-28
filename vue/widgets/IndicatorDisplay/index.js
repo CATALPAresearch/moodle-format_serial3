@@ -1,5 +1,5 @@
-import IndicatorDisplay from './IndicatorDisplay.vue';
+import IndicatorDisplay from "./IndicatorDisplay.vue";
 
 export default {
-  component: IndicatorDisplay
+  component: IndicatorDisplay,
 };
