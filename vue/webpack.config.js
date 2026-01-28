@@ -172,10 +172,18 @@ module.exports = (env, options) => {
         new TerserPlugin({
           parallel: true,
           terserOptions: {
-            mangle: true,
-            keep_fnames: false,
-            toplevel: true,
+            compress: {
+              passes: 1, // Reduce passes from default 2 to 1
+              drop_console: false, // Skip removing console logs for faster build
+            },
+            mangle: {
+              safari10: true, // Faster mangling
+            },
+            format: {
+              comments: false, // Remove comments
+            },
           },
+          extractComments: false, // Don't extract comments to separate file
         }),
       ],
     };
