@@ -1,5 +1,4 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 import moodleAjax from "core/ajax";
 import moodleStorage from "core/localstorage";
 import Notification from "core/notification";
@@ -12,9 +11,7 @@ import learnermodel from "./learnermodel";
 import Communication from "../scripts/communication";
 import recommendations from "./recommendations";
 
-Vue.use(Vuex);
-
-export const store = new Vuex.Store({
+export const store = createStore({
   name: "store",
   modules: {
     dashboardSettings,
@@ -37,7 +34,7 @@ export const store = new Vuex.Store({
     surveyLink: "",
     questionnaireid: {
       2: 1000,
-	  3: 1000,
+      3: 1000,
       5: 0,
       8: 0,
       9: 0,
@@ -236,12 +233,15 @@ export const store = new Vuex.Store({
       } else {
         if (response.data) {
           console.error(
-			this.name,
+            this.name,
             "Faulty response of webservice /set_learner_goal/",
-            response.data
+            response.data,
           );
         } else {
-          console.error(this.name, "No connection to webservice /set_learner_goal/");
+          console.error(
+            this.name,
+            "No connection to webservice /set_learner_goal/",
+          );
         }
       }
     },
@@ -262,12 +262,15 @@ export const store = new Vuex.Store({
       } else {
         if (response.data) {
           console.error(
-			this.name,
+            this.name,
             "Faulty response of webservice /set_learner_goal/",
-            response.data
+            response.data,
           );
         } else {
-          console.error(this.name, "No connection to webservice /set_learner_goal/");
+          console.error(
+            this.name,
+            "No connection to webservice /set_learner_goal/",
+          );
         }
       }
     },

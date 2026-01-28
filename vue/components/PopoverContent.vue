@@ -64,7 +64,11 @@
     </div>
     <div class="py-1">
       <a :href="activity.url" @click="clickLink()">
-        {{ strings.popoverGoTo.replace("{$a}", activity.name) }}
+        {{
+          strings.popoverGoTo
+            ? strings.popoverGoTo.replace("{$a}", activity.name)
+            : ""
+        }}
         <i aria-hidden="true" class="fa fa-arrow-right"></i>
       </a>
     </div>

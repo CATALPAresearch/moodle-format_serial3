@@ -1,4 +1,4 @@
-import { groupBy } from "../scripts/util";
+import { groupBy, groupByToArray } from "../scripts/util";
 import Communication from "../scripts/communication";
 
 export default {
@@ -69,16 +69,16 @@ export default {
 
   getters: {
     getSections: function (state) {
-      return groupBy(state.courseData, "section");
+      return groupByToArray(state.courseData, "section");
     },
     getActivities: function (state) {
       return groupBy(state.courseData, "type");
     },
-    getCurrentActivities: function (state) {
+    getCurrentActivities: function (state, getters) {
       if (state.currentSection === -1) {
-        return state.getActivities;
+        return getters.getActivities;
       } else {
-        return groupBy(state.getSections[state.currentSection], "type");
+        return groupBy(getters.getSections[state.currentSection], "type");
       }
     },
     getUrlById: (state) => (id) => {

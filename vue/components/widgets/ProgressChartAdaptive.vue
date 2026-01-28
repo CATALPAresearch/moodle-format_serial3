@@ -42,10 +42,10 @@
             class="section-selection mr-2"
           >
             <p
-              :title="section[0].sectionname"
+              :title="section[0]?.sectionname || ''"
               class="section-names mb-1 small pl-1"
             >
-              {{ section[0].sectionname }}
+              {{ section[0]?.sectionname || "" }}
             </p>
             <div class="progress">
               <div
@@ -89,52 +89,58 @@
         class="row"
       >
         <span
-          v-if="isIncludedActivity(getActivities[type][0].type)"
+          v-if="
+            getActivities[type]?.[0] &&
+            isIncludedActivity(getActivities[type][0].type)
+          "
           class="col-3"
           >{{ mapActivityNames[getActivities[type][0].modulename] }}</span
         >
         <div class="col-9">
-          <span
-            v-if="isIncludedActivity(activity.type)"
+          <template
             v-for="activity in currentActivities[type]"
             :key="activity.id"
-            class="position-relative"
           >
-            <button
-              id="'popover' + activity.id"
-              ref="popoverButton"
-              v-popover-html="popoverContent(activity)"
-              class="subject-progress__popover popoverx"
-              data-placement="bottom"
-              data-toggle="popover"
-              @click="
-                log({
-                  key: 'activity-popover-show',
-                  value: { id: activity.id, name: activity.name },
-                })
-              "
-              type="button"
-              :title="
-                activity.completion !== 0
-                  ? activity.name + ' (bereits bearbeitet)'
-                  : activity.name
-              "
+            <span
+              v-if="activity && isIncludedActivity(activity.type)"
+              class="position-relative"
             >
-              <span
-                :class="{
-                  'rect--grey': activity.rating === 0,
-                  'rect--weak': activity.rating === 1,
-                  'rect--ok': activity.rating === 2,
-                  'rect--strong': activity.rating === 3,
-                  'activity-completed': activity.completion !== 0,
-                }"
-                :title="activity.name"
-                data-toggle="tooltip"
-                data-placement="top"
-                class="completion-rect"
-              ></span>
-            </button>
-          </span>
+              <button
+                id="'popover' + activity.id"
+                ref="popoverButton"
+                v-popover-html="popoverContent(activity)"
+                class="subject-progress__popover popoverx"
+                data-placement="bottom"
+                data-toggle="popover"
+                @click="
+                  log({
+                    key: 'activity-popover-show',
+                    value: { id: activity.id, name: activity.name },
+                  })
+                "
+                type="button"
+                :title="
+                  activity.completion !== 0
+                    ? activity.name + ' (bereits bearbeitet)'
+                    : activity.name
+                "
+              >
+                <span
+                  :class="{
+                    'rect--grey': activity.rating === 0,
+                    'rect--weak': activity.rating === 1,
+                    'rect--ok': activity.rating === 2,
+                    'rect--strong': activity.rating === 3,
+                    'activity-completed': activity.completion !== 0,
+                  }"
+                  :title="activity.name"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  class="completion-rect"
+                ></span>
+              </button>
+            </span>
+          </template>
         </div>
       </div>
       <div class="legend d-flex justify-content-start mt-3">
@@ -169,7 +175,7 @@
 import Communication from "../../scripts/communication";
 import WidgetHeading from "../WidgetHeading.vue";
 import RecommendationItem from "../RecommendationItem.vue";
-import Vue from "vue";
+import { createApp } from "vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 import { groupBy } from "../../scripts/util";
 import PopoverContent from "../PopoverContent.vue";
@@ -182,8 +188,13 @@ export default {
 
   directives: {
     popoverHtml: {
-      bind: function (el, binding) {
-        
+      mounted: function (el, binding) {
+        const $ = window.jQuery;
+        if (!$) {
+          console.error("jQuery is not available");
+          return;
+        }
+
         $(el).popover({
           html: true,
           sanitize: false,
@@ -191,19 +202,18 @@ export default {
             return binding.value;
           },
         });
-        
+
         $(el).on("shown.bs.popover", function () {
           var popover = $(el).siblings(".popoverx");
           popover.on("click", function (event) {
             event.stopPropagation();
           });
-          
         });
 
         $(el).on("show.bs.popover", function () {
-          $(".popoverx").popover('hide');
+          $(".popoverx").popover("hide");
         });
-        
+
         $(document).on("click.popover", function (event) {
           var isClickInsidePopover =
             $(event.target).closest(".popoverx").length > 0 ||
@@ -214,15 +224,16 @@ export default {
             $(document).off("click.popover");
           }
         });
-        
+
         $(el).on("hidden.bs.popover", function () {
           var popover = $(el).siblings(".popover");
           popover.off("click");
-          
         });
-      
       },
-      unbind: function (el) {
+      unmounted: function (el) {
+        const $ = window.jQuery;
+        if (!$) return;
+
         $(document).ready(function () {
           $(el).popover("dispose");
           $(el).off("shown.bs.popover");
@@ -265,12 +276,12 @@ export default {
         if (val === -1) {
           this.$store.commit(
             "overview/setCurrentActivities",
-            this.getActivities
+            this.getActivities,
           );
         } else {
           this.$store.commit(
             "overview/setCurrentActivities",
-            groupBy(this.getSections[this.currentSection], "type")
+            groupBy(this.getSections[this.currentSection], "type"),
           );
         }
       },
@@ -279,7 +290,7 @@ export default {
 
   created() {
     import("../PopoverContent.vue").then((component) => {
-      this.popoverComponent = Vue.extend(component.default);
+      this.popoverComponent = component.default;
     });
   },
 
@@ -290,14 +301,32 @@ export default {
 
   computed: {
     calculateProgress() {
-      const x = this.getSections.map(
-        (a) => a.filter(({ rating }) => rating !== 0).length
+      console.log("XXX calculateProgress - getSections:", this.getSections);
+      console.log(
+        "XXX calculateProgress - getSections.length:",
+        this.getSections?.length,
       );
+      if (!this.getSections || this.getSections.length === 0) {
+        console.log("XXX calculateProgress - returning 0 (no sections)");
+        return 0;
+      }
+      const x = this.getSections.map(
+        (a) => a.filter(({ rating }) => rating !== 0).length,
+      );
+      console.log("XXX calculateProgress - x:", x);
       const sum = x.reduce((total, current) => {
         return total + current;
       }, 0);
+      console.log("XXX calculateProgress - sum:", sum);
       const total = this.getTotalActivites();
-      return Math.floor((sum / total) * 100);
+      console.log("XXX calculateProgress - total:", total);
+      if (total === 0) {
+        console.log("XXX calculateProgress - returning 0 (total is 0)");
+        return 0;
+      }
+      const result = Math.floor((sum / total) * 100);
+      console.log("XXX calculateProgress - result:", result);
+      return result;
     },
 
     currentActivities() {
@@ -315,7 +344,7 @@ export default {
         activityTypes: (state) => state.overview.activityTypes,
         courseData: (state) => state.overview.courseData,
         research_condition: (state) => state.research_condition,
-      }
+      },
     ),
     ...mapGetters("overview", [
       "getSections",
@@ -338,54 +367,55 @@ export default {
     popoverContent(activity) {
       let _this = this;
       if (this.popoverComponent) {
-        const PopoverComponent = Vue.extend(this.popoverComponent);
+        const container = document.createElement("div");
+        const app = createApp(this.popoverComponent, {
+          activity: activity,
+          courseid: this.$store.getters.getCourseid,
+          onUnderstandingUpdated: (understanding, activityId) => {
+            if (_this.courseData.hasOwnProperty(activityId)) {
+              _this.courseData[activityId].rating = Number(understanding);
+              _this.log({
+                key: "activity-popover-rate-understanding",
+                value: {
+                  id: _this.courseData[activityId].id,
+                  name: _this.courseData[activityId].name,
+                  understanding: understanding,
+                },
+              });
 
-        const popover = new PopoverComponent({
-          propsData: {
-            activity: activity,
-            courseid: this.$store.getters.getCourseid,
-          },
-        }).$mount();
-
-        popover.$on("understanding-updated", (understanding, activityId) => {
-          if(this.courseData.hasOwnProperty(activityId)){
-            this.courseData[activityId].rating = Number(understanding);
-            _this.log({
-              key: "activity-popover-rate-understanding",
-              value: {
-                id: this.courseData[activityId].id,
-                name: this.courseData[activityId].name,
-                understanding: understanding,
-              },
-            });
-
-            if (understanding === 0) {
-              this.courseData[activityId].completion = 0;
-            } else {
-              this.courseData[activityId].completion = 1;
+              if (understanding === 0) {
+                _this.courseData[activityId].completion = 0;
+              } else {
+                _this.courseData[activityId].completion = 1;
+              }
             }
-          }
+          },
+          onAddToTaskList: (task) => {
+            _this.log({
+              key: "activity-popover-addToTaskList",
+              value: { id: task.id, name: task.name },
+            });
+            delete task.id;
+            delete task.name;
+            _this.addItem(task);
+          },
+          onLogg: (payload) => {
+            _this.log(payload);
+          },
         });
 
-        popover.$on("add-to-task-list", (task) => {
-          _this.log({
-            key: "activity-popover-addToTaskList",
-            value: { id: task.id, name: task.name },
-          });
-          delete task.id;
-          delete task.name;
-          this.addItem(task);
-        });
+        // Share the store with the popover component
+        app.use(_this.$store);
+        app.mount(container);
 
-        popover.$on("logg", (payload) => {
-          _this.log(payload);
-        });
-
-        return popover.$el;
+        return container;
       }
     },
 
     calculateSectionProgress(section) {
+      if (!section || section.length === 0) {
+        return 0;
+      }
       const sum = section.filter(({ rating }) => rating !== 0).length;
       const total = section.length;
       return Math.floor((sum / total) * 100);
@@ -396,6 +426,9 @@ export default {
     },
 
     getTotalActivites() {
+      if (!this.getSections || this.getSections.length === 0) {
+        return 0;
+      }
       const y = this.getSections.map((a) => a.length);
       return y.reduce((total, current) => {
         return total + current;
@@ -460,24 +493,35 @@ export default {
       if (response.success) {
         response.data = JSON.parse(response.data);
         //console.log('input debug::', JSON.parse(response.data.debug));
-        console.log('XXX input completions::', JSON.parse(response.data.completions));
+        console.log(
+          "XXX input completions::",
+          JSON.parse(response.data.completions),
+        );
 
         this.$store.commit(
           "overview/setCourseData",
-          JSON.parse(response.data.completions)
+          JSON.parse(response.data.completions),
         );
+        console.log("XXX after setCourseData - courseData:", this.courseData);
+        console.log(
+          "XXX after setCourseData - getActivities:",
+          this.getActivities,
+        );
+        console.log("XXX after setCourseData - getSections:", this.getSections);
+
         this.$store.commit("overview/setCurrentActivities", this.getActivities);
         this.$store.commit(
           "overview/setActivityTypes",
-          Object.keys(this.getActivities)
+          Object.keys(this.getActivities),
         );
         this.total = this.getTotalActivites();
+        console.log("XXX total activities:", this.total);
       } else {
         if (response.data) {
           console.error(
             this.name,
             "Faulty response of webservice /overview/",
-            response.data
+            response.data,
           );
         } else {
           console.error(this.name, "No connection to webservice /overview/");
@@ -485,17 +529,22 @@ export default {
       }
 
       const completionData = this.$store.state.learnermodel.userUnderstanding;
+      console.log("XXX completionData:", completionData);
       for (let key in completionData) {
         let activityid = completionData[key]["activityid"];
-        if(this.courseData.hasOwnProperty(activityid)){
+        if (this.courseData.hasOwnProperty(activityid)) {
           this.courseData[activityid]["completion"] = Number(
-            completionData[key]["completed"]
+            completionData[key]["completed"],
           );
           this.courseData[activityid]["rating"] = Number(
-            completionData[key]["rating"]
+            completionData[key]["rating"],
           );
         }
       }
+      console.log(
+        "XXX after applying completionData - courseData:",
+        this.courseData,
+      );
     },
   },
 };

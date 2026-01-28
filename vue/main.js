@@ -1,4 +1,4 @@
-import Vue from "vue";
+import { createApp } from "vue";
 import { store } from "./store/store";
 import App from "./App.vue";
 import Communication from "./scripts/communication";
@@ -10,7 +10,7 @@ function init(
   isModerator,
   policyAccepted,
   sectionCollapsEnabled = false,
-  sectionInitiallyCollapsed = false
+  sectionInitiallyCollapsed = false,
 ) {
   // We need to overwrite the variable for lazy loading.
   __webpack_public_path__ = M.cfg.wwwroot + "/course/format/serial3/amd/build/";
@@ -42,11 +42,9 @@ function init(
     $(".activity.modtype_usenet").hide();
     $(".activity.modtype_safran").hide();
   } else {
-    new Vue({
-      el: "#app",
-      store,
-      render: (h) => h(App),
-    });
+    const app = createApp(App);
+    app.use(store);
+    app.mount("#app");
   }
 
   // Setting: Collapsable Sections
@@ -54,20 +52,20 @@ function init(
   if (sectionCollapsEnabled) {
     $(".course-content .topics li.section div.content h3").attr(
       "style",
-      "cursor: pointer;"
+      "cursor: pointer;",
     );
 
     if (sectionInitiallyCollapsed) {
       $(
-        ".course-content .topics li.section div.content ul.section"
+        ".course-content .topics li.section div.content ul.section",
       ).slideToggle("fast");
       $(".course-content .topics #section-0 div.summary").slideToggle("fast");
       $(".course-content .topics li.section div.content h3").prepend(
-        '<i style="display:inline-block; font-size:1.2em; padding: 0 4px 0 0px; width: 18px;" class="section-toggle-icon fa fa-caret-right">'
+        '<i style="display:inline-block; font-size:1.2em; padding: 0 4px 0 0px; width: 18px;" class="section-toggle-icon fa fa-caret-right">',
       );
     } else {
       $(".course-content .topics li.section div.content h3").prepend(
-        '<i style="display:inline-block; font-size:1.2em; padding: 0 4px 0 0px; width: 18px;" class="section-toggle-icon fa fa-caret-down">'
+        '<i style="display:inline-block; font-size:1.2em; padding: 0 4px 0 0px; width: 18px;" class="section-toggle-icon fa fa-caret-down">',
       );
     }
 

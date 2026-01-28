@@ -1,6 +1,10 @@
 <template>
   <div class="position-relative h-100 d-flex flex-column teaching-dashboard">
-    <widget-heading icon="fa-chalkboard-user" :info-content="info" title="Teaching Dashboard">
+    <widget-heading
+      icon="fa-chalkboard-user"
+      :info-content="info"
+      title="Teaching Dashboard"
+    >
     </widget-heading>
     <!-- 
 DONE feedback4 93 % ... benachrichtigt werden, wenn die Lehrperson meine Übungsaufgaben korrigiert hat.
@@ -32,16 +36,23 @@ DONE forum6 51 % ... eine Vorhersage erhalten, wann ich eine Antwort der Lehrper
     <div class="row">
       <div class="col-3">
         <div class="bold">Assignments</div>
-        <div class="alert alert-success">Two assignements have been corrected. <span class="btn btn-secondary">View</span>
+        <div class="alert alert-success">
+          Two assignements have been corrected.
+          <span class="btn btn-secondary">View</span>
         </div>
-        <div>8/10 assignements have been corrected. The remaining assignments shall be corrected with the next week.
+        <div>
+          8/10 assignements have been corrected. The remaining assignments shall
+          be corrected with the next week.
         </div>
       </div>
       <div class="col-3">
         <div class="bold">Forum</div>
-        <div class="alert alert-warning" style="position:relative;">
-          No teacher will propably reply to your <a>post</a> from May 5 any time soon
-          <div style="position:absolute; top:0; right:2px;"><i class="fa fa-close"></i></div>
+        <div class="alert alert-warning" style="position: relative">
+          No teacher will propably reply to your <a>post</a> from May 5 any time
+          soon
+          <div style="position: absolute; top: 0; right: 2px">
+            <i class="fa fa-close"></i>
+          </div>
         </div>
         <ul>
           <li><a>New post</a> by Mr. B**** available</li>
@@ -60,31 +71,86 @@ DONE forum6 51 % ... eine Vorhersage erhalten, wann ich eine Antwort der Lehrper
         <button class="btn btn-link">Show more</button>
       </div>
     </div>
-    <hr>
+    <hr />
     <div class="row">
       <div class="col-3">
         <div
-          style="display: inline-block; width: 30px; padding-top:4px;  height: 30px; text-align: center; vertical-align: middle; background-color: blueviolet; color: aliceblue; font-weight: 700; font-size: large;">
-          34</div><div class="btn-label">Teachers' views of aggregated course data,<br>last viewed tody</div>
+          style="
+            display: inline-block;
+            width: 30px;
+            padding-top: 4px;
+            height: 30px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: blueviolet;
+            color: aliceblue;
+            font-weight: 700;
+            font-size: large;
+          "
+        >
+          34
+        </div>
+        <div class="btn-label">
+          Teachers' views of aggregated course data,<br />last viewed tody
+        </div>
       </div>
       <div class="col-3">
         <div
-          style="display: inline-block; padding-top:4px; width: 30px; height: 30px; text-align: center; vertical-align: middle; background-color: blueviolet; color: aliceblue; font-weight: 700; font-size: large;">
-          2</div><div class="btn-label">Teachers' views of my personal data,<br>last viewed May 23</div> 
+          style="
+            display: inline-block;
+            padding-top: 4px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: blueviolet;
+            color: aliceblue;
+            font-weight: 700;
+            font-size: large;
+          "
+        >
+          2
+        </div>
+        <div class="btn-label">
+          Teachers' views of my personal data,<br />last viewed May 23
+        </div>
       </div>
       <div class="col-3">
-        <div class="fa fa-eye"
-          style="display: inline-block; padding-top:6px; width: 30px; height: 30px; text-align: center; padding:auto; background-color: blueviolet; color: aliceblue; font-weight: 700; font-size: large;">
-          </div><div class="btn-label">View list of data features collected</div>
+        <div
+          class="fa fa-eye"
+          style="
+            display: inline-block;
+            padding-top: 6px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            padding: auto;
+            background-color: blueviolet;
+            color: aliceblue;
+            font-weight: 700;
+            font-size: large;
+          "
+        ></div>
+        <div class="btn-label">View list of data features collected</div>
       </div>
       <div class="col-3">
-        <div class="fa fa-download"
-          style="display: inline-block; padding-top:6px; width: 30px; height: 30px; text-align: center; background-color: blueviolet; color: aliceblue; font-weight: 700; font-size: large;">
-          </div><div class="btn-label">Download data collected about me</div>
+        <div
+          class="fa fa-download"
+          style="
+            display: inline-block;
+            padding-top: 6px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            background-color: blueviolet;
+            color: aliceblue;
+            font-weight: 700;
+            font-size: large;
+          "
+        ></div>
+        <div class="btn-label">Download data collected about me</div>
       </div>
     </div>
-
-  </div>
   </div>
 </template>
 
@@ -126,7 +192,7 @@ export default {
         "get_all_teachers_of_course",
         {
           courseid: this.$store.state.courseid,
-        }
+        },
       );
 
       if (response.success) {
@@ -139,7 +205,7 @@ export default {
         "get_last_access_of_teachers_of_course",
         {
           courseid: this.$store.state.courseid,
-        }
+        },
       );
 
       if (response.success) {
@@ -152,7 +218,7 @@ export default {
         "get_added_or_changed_course_resources",
         {
           courseid: this.$store.state.courseid,
-        }
+        },
       );
 
       if (response.success) {
@@ -165,12 +231,12 @@ export default {
         "get_deleted_course_resources",
         {
           courseid: this.$store.state.courseid,
-        }
+        },
       );
 
       if (response.success) {
         this.courseDeletedResourceList = Object.values(
-          JSON.parse(response.data)
+          JSON.parse(response.data),
         );
       }
     },
@@ -181,7 +247,7 @@ export default {
         {
           courseid: this.$store.state.courseid,
           userid: this.$store.state.userid,
-        }
+        },
       );
       if (response.success) {
         this.newForumDiscussions = Object.values(JSON.parse(response.data));
@@ -243,12 +309,12 @@ export default {
 @import "../../scss/variables.scss";
 @import "../../scss/scrollbar.scss";
 
-.teaching-dashboard a{
-  color:#003366 !important;
+.teaching-dashboard a {
+  color: #003366 !important;
   text-decoration: underline;
 }
 
-.btn-label{
+.btn-label {
   font-weight: bold;
   padding: 0px 2px;
   display: inline-table;
@@ -259,7 +325,7 @@ export default {
   float: left;
   height: 52px;
   width: 52px;
-  background: url('../../../img/date.png') no-repeat;
+  background: url("../../../img/date.png") no-repeat;
   margin-right: 10px;
   padding-top: 0px;
   line-height: normal;
