@@ -1,5 +1,5 @@
-import { groupBy, groupByToArray } from "../scripts/util";
-import Communication from "../scripts/communication";
+import { groupBy, groupByToArray } from "../../scripts/util";
+import Communication from "../../scripts/communication";
 
 export default {
   namespaced: true,

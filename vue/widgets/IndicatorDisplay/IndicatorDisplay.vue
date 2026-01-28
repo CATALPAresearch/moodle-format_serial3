@@ -89,7 +89,7 @@
 <script>
 import * as d3 from "../../js/d3.min.js";
 import "../../js/bullet.js";
-import WidgetHeading from "../WidgetHeading.vue";
+import WidgetHeading from "../../components/WidgetHeading.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {

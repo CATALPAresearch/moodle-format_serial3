@@ -173,12 +173,12 @@
 
 <script>
 import Communication from "../../scripts/communication";
-import WidgetHeading from "../WidgetHeading.vue";
-import RecommendationItem from "../RecommendationItem.vue";
+import WidgetHeading from "../../components/WidgetHeading.vue";
+import RecommendationItem from "../../components/RecommendationItem.vue";
 import { createApp } from "vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 import { groupBy } from "../../scripts/util";
-import PopoverContent from "../PopoverContent.vue";
+import PopoverContent from "../../components/PopoverContent.vue";
 //import { treemapSquarify } from '../../../lib/src/d3.v4';
 
 export default {
@@ -289,7 +289,7 @@ export default {
   },
 
   created() {
-    import("../PopoverContent.vue").then((component) => {
+    import("../../components/PopoverContent.vue").then((component) => {
       this.popoverComponent = component.default;
     });
   },

@@ -5,20 +5,23 @@ import Notification from "core/notification";
 import Logger from "../scripts/logger";
 
 import dashboardSettings from "./dashboardSettings";
-import taskList from "./taskList";
-import overview from "./overview";
 import learnermodel from "./learnermodel";
 import Communication from "../scripts/communication";
-import recommendations from "./recommendations";
+
+// Import widget stores
+import taskListStore from "../widgets/TaskList/store";
+import recommendationsStore from "../widgets/Recommendations/store";
+import overviewStore from "../widgets/CourseOverview/store";
 
 export const store = createStore({
   name: "store",
   modules: {
     dashboardSettings,
     learnermodel,
-    overview,
-    taskList,
-    recommendations,
+    // Widget stores
+    overview: overviewStore,
+    taskList: taskListStore,
+    recommendations: recommendationsStore,
   },
 
   state: {

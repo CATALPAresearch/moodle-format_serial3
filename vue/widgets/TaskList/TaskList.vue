@@ -69,7 +69,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import WidgetHeading from '../WidgetHeading.vue';
+import WidgetHeading from '../../components/WidgetHeading.vue';
 
 export default {
     name: 'TaskList',

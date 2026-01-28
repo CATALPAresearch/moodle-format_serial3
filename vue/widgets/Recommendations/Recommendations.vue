@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import WidgetHeading from "../WidgetHeading.vue";
-import RecommendationItem from "../RecommendationItem.vue";
+import WidgetHeading from "../../components/WidgetHeading.vue";
+import RecommendationItem from "../../components/RecommendationItem.vue";
 // import recommendationRules from '../../data/recommendations.json';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import TimeAgo from 'javascript-time-ago'

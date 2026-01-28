@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import WidgetHeading from "../WidgetHeading.vue";
+import WidgetHeading from "../../components/WidgetHeading.vue";
 import * as d3 from "../../js/d3.min.js";
 import {mapGetters, mapState} from 'vuex';
 import Communication from "../../scripts/communication";

@@ -67,36 +67,40 @@
 </template>
 
 <script>
-import AppDeadlines from "./components/widgets/Deadlines.vue";
-import IndicatorDisplay from "./components/widgets/IndicatorDisplay.vue";
+// Core components
 import MenuBar from "./components/MenuBar.vue";
 import WelcomeVideo from "./components/WelcomeVideo.vue";
 import SurveyPrompt from "./components/SurveyPrompt.vue";
-//import QuizStatistics from "./components/widgets/QuizStatistics.vue";
-import ProgressChartAdaptive from "./components/widgets/ProgressChartAdaptive.vue";
-import Recommendations from "./components/widgets/Recommendations.vue";
-import TaskList from "./components/widgets/TaskList.vue";
-import LearningStrategies from "./components/widgets/LearningStrategies.vue";
-import CourseOverview from "./components/widgets/CourseOverview.vue";
-import TeacherActivity from "./components/widgets/TeacherActivity.vue";
+
+// Widget imports - now from organized widget folders
+import AppDeadlines from "./widgets/Deadlines";
+import IndicatorDisplay from "./widgets/IndicatorDisplay";
+import ProgressChartAdaptive from "./widgets/ProgressChartAdaptive";
+import Recommendations from "./widgets/Recommendations";
+import TaskList from "./widgets/TaskList";
+import LearningStrategies from "./widgets/LearningStrategies";
+import CourseOverview from "./widgets/CourseOverview";
+import TeacherActivity from "./widgets/TeacherActivity";
+//import QuizStatistics from "./widgets/QuizStatistics";
+
 import "gridstack/dist/gridstack.min.css";
 import { GridStack } from "gridstack";
 import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
-    AppDeadlines,
-    IndicatorDisplay,
+    AppDeadlines: AppDeadlines.component,
+    IndicatorDisplay: IndicatorDisplay.component,
     MenuBar,
     WelcomeVideo,
     SurveyPrompt,
-    ProgressChartAdaptive,
-    Recommendations,
-    TaskList,
-    CourseOverview,
-    LearningStrategies,
-    TeacherActivity,
-    //QuizStatistics
+    ProgressChartAdaptive: ProgressChartAdaptive.component,
+    Recommendations: Recommendations.component,
+    TaskList: TaskList.component,
+    CourseOverview: CourseOverview.component,
+    LearningStrategies: LearningStrategies.component,
+    TeacherActivity: TeacherActivity.component,
+    //QuizStatistics: QuizStatistics.component
   },
 
   data() {

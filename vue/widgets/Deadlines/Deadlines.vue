@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import WidgetHeading from "../WidgetHeading.vue";
+import WidgetHeading from "../../components/WidgetHeading.vue";
 import Communication from "../../scripts/communication";
 import { mapActions } from 'vuex';
 
