@@ -43,6 +43,9 @@
         :id="'widget-' + item.c"
         :gs-w="item.w"
         :gs-h="item.h"
+        :gs-min-h="item.h"
+        :gs-no-resize="!editMode"
+        gs-resize-handles="s"
       >
         <div class="grid-stack-item-content">
           <span
@@ -115,32 +118,32 @@ export default {
           y: 0,
           w: 12,
           h: 5,
-          i: "10",
-          name: "Lehrenden Dashboard",
-          c: "TeacherActivity",
-        } /*,
-        {
-          x: 0,
-          y: 0,
-          w: 6,
-          h: 5,
-          i: "10",
+          i: "1",
           name: "Adaptiver Überblick",
           c: "ProgressChartAdaptive",
         },
         {
-          x: 6,
-          y: 0,
-          w: 6,
+          x: 0,
+          y: 5,
+          w: 12,
           h: 5,
           i: "2",
           name: "Lernziele",
           c: "IndicatorDisplay",
         },
         {
-          x: 5,
-          y: 12,
-          w: 4,
+          x: 0,
+          y: 10,
+          w: 6,
+          h: 4,
+          i: "9",
+          name: "Feedback",
+          c: "Recommendations",
+        },
+        {
+          x: 6,
+          y: 10,
+          w: 3,
           h: 4,
           i: "3",
           name: "Aufgabenliste",
@@ -148,7 +151,7 @@ export default {
         },
         {
           x: 9,
-          y: 12,
+          y: 10,
           w: 3,
           h: 4,
           i: "4",
@@ -157,22 +160,22 @@ export default {
         },
         {
           x: 0,
-          y: 12,
-          w: 5,
-          h: 4,
-          i: "9",
-          name: "Feedback",
-          c: "Recommendations",
-        },
-        {
-          x: 0,
-          y: 22,
-          w: 14,
+          y: 14,
+          w: 12,
           h: 5,
           i: "12",
           name: "Kursübersicht",
           c: "CourseOverview",
-        },*/,
+        },
+        {
+          x: 0,
+          y: 19,
+          w: 12,
+          h: 5,
+          i: "10",
+          name: "Aktivitäten der Lehrenden",
+          c: "TeacherActivity",
+        },
       ],
 
       allComponents: [
@@ -185,13 +188,12 @@ export default {
           name: "Lehrenden Dashboard",
           c: "TeacherActivity",
         },
-        ,
         {
           x: 0,
           y: 0,
           w: 8,
           h: 12,
-          i: "10",
+          i: "1",
           name: "Überblick über den Kurs und die Kurseinheiten",
           c: "ProgressChartAdaptive",
         },
@@ -256,7 +258,7 @@ export default {
           x: 0,
           y: 0,
           w: 12,
-          h: 10,
+          h: 4,
           i: "11",
           name: "Lernstrategien",
           c: "LearningStrategies",
@@ -286,6 +288,7 @@ export default {
     this.grid = GridStack.init({
       column: 12,
       cellHeight: 80,
+      minRow: 1,
       animate: false, // show immediate (animate: true is nice for user dragging though)
       columnOpts: {
         breakpointForWindow: false, // test window vs grid size
@@ -294,6 +297,10 @@ export default {
         breakpoints: [{ w: 600, c: 1 }],
       },
       float: true,
+      disableResize: false,
+      resizable: {
+        handles: "e, se, s, sw, w",
+      },
     });
     this.$nextTick(function () {
       this.initObserver();
@@ -437,6 +444,15 @@ body#page-course-view-serial3 #region-main-box:nth-child(1) {
 .vue-grid-item .no-drag {
   height: 100%;
   width: 100%;
+}
+
+.grid-stack-item-content {
+  overflow: auto !important;
+  inset: 0px !important;
+}
+
+.grid-stack > .grid-stack-item > .grid-stack-item-content {
+  overflow: auto;
 }
 
 .vue-grid-item .minMax {
