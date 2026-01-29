@@ -272,6 +272,8 @@ class format_serial3 extends format_base {
      * - dashboardsectionexclude
      * - sectioncollapsenabled
      * - sectioninitiallycollapsed
+     * - enabled_widgets (JSON array of enabled widget IDs)
+     * - widget_settings_* (JSON settings for each widget)
      *
      * @param bool $foreditform
      * @return array of options
@@ -303,7 +305,10 @@ class format_serial3 extends format_base {
                         $courseconfig->sectioninitiallycollapsed : 0,
                     'type' => PARAM_INT,
                 ),
-                
+                'enabled_widgets' => array(
+                    'default' => '',
+                    'type' => PARAM_TEXT,
+                ),
             );
         }
         if ($foreditform) {
@@ -349,9 +354,60 @@ class format_serial3 extends format_base {
                     'help_component' => 'moodle',
                 ),
             );
+            
+            // Add widget configuration to edit form
+            $this->add_widget_settings_to_form($courseformatoptionsedit);
+            
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
         return $courseformatoptions;
+    }
+    
+    /**
+     * Add widget settings to course format options
+     *
+     * @param array &$options Reference to options array
+     */
+    private function add_widget_settings_to_form(array &$options): void {
+        require_once(__DIR__ . '/classes/widget_manager.php');
+        $widgets = \format_serial3\widget_manager::get_available_widgets();
+        
+        // Add header for widget settings
+        $options['widgets_header'] = array(
+            'label' => get_string('widgets_header', 'format_serial3'),
+            'element_type' => 'header',
+        );
+        
+        // Add enabled widgets multiselect
+        $widgetoptions = array();
+        foreach ($widgets as $widgetid => $widget) {
+            $widgetoptions[$widgetid] = $widget['name'];
+        }
+        
+        $options['enabled_widgets'] = array(
+            'label' => get_string('enabled_widgets', 'format_serial3'),
+            'help' => 'enabled_widgets',
+            'help_component' => 'format_serial3',
+            'element_type' => 'autocomplete',
+            'element_attributes' => array(
+                $widgetoptions,
+                array('multiple' => true)
+            ),
+        );
+        
+        // Add link to dedicated settings page instead of adding all fields here
+        $courseid = $this->get_course()->id;
+        if ($courseid > 0) {
+            $settingsurl = new \moodle_url('/course/format/serial3/widgets.php', array('id' => $courseid));
+            $options['widgets_settings_link'] = array(
+                'label' => get_string('widget_settings_advanced', 'format_serial3'),
+                'element_type' => 'static',
+                'element_attributes' => array(
+                    \html_writer::link($settingsurl, get_string('widget_settings_advanced_link', 'format_serial3'),
+                        array('target' => '_blank', 'class' => 'btn btn-secondary'))
+                ),
+            );
+        }
     }
 
     /**
@@ -398,6 +454,16 @@ class format_serial3 extends format_base {
      */
     public function update_course_format_options($data, $oldcourse = null): bool {
         $data = (array)$data;
+        
+        // Filter out widget settings - these are handled separately via widget_manager
+        $filtereddata = [];
+        foreach ($data as $key => $value) {
+            // Only include keys that don't start with 'widget_settings_'
+            if (strpos($key, 'widget_settings_') !== 0) {
+                $filtereddata[$key] = $value;
+            }
+        }
+        $data = $filtereddata;
         
         if ($oldcourse !== null) {
             $oldcourse = (array)$oldcourse;

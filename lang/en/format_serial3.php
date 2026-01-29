@@ -215,3 +215,36 @@ $string['privacy:metadata:serial3_reflections:userid'] = 'The ID of the user.';
 $string['privacy:metadata:serial3_reflections:reflection'] = 'The reflection text.';
 $string['privacy:metadata:serial3_reflections:timecreated'] = 'The time when the reflection was created.';
 $string['privacy:metadata:serial3_reflections:timemodified'] = 'The time when the reflection was last modified.';
+
+// Widget settings
+$string['widget_settings'] = 'Widget settings';
+$string['widgets_header'] = 'Dashboard widgets';
+$string['enabled_widgets'] = 'Enabled widgets';
+$string['enabled_widgets_help'] = 'Select which widgets should be available to students in this course. Teachers can always see all widgets.';
+$string['widget_settings_advanced'] = 'Advanced widget settings';
+$string['widget_settings_advanced_link'] = 'Configure individual widget settings';
+
+// Widget names and descriptions
+$string['widget_progresschartadaptive'] = 'Adaptive progress overview';
+$string['widget_progresschartadaptive_desc'] = 'Shows course progress with activity ratings and section completion.';
+$string['widget_indicatordisplay'] = 'Learning goals';
+$string['widget_indicatordisplay_desc'] = 'Displays learning goal indicators and performance metrics.';
+$string['widget_recommendations'] = 'Feedback and recommendations';
+$string['widget_recommendations_desc'] = 'Provides personalized learning recommendations based on activity.';
+$string['widget_tasklist'] = 'Task list';
+$string['widget_tasklist_desc'] = 'Personal task management with due dates and completion tracking.';
+$string['widget_learningstrategies'] = 'Learning strategies';
+$string['widget_learningstrategies_desc'] = 'Browse and learn about different learning strategies.';
+$string['widget_courseoverview'] = 'Course overview';
+$string['widget_courseoverview_desc'] = 'Overview of course structure and activities.';
+$string['widget_deadlines'] = 'Deadlines';
+$string['widget_deadlines_desc'] = 'Shows upcoming deadlines and important dates.';
+$string['widget_teacheractivity'] = 'Teacher activity';
+$string['widget_teacheractivity_desc'] = 'Displays recent teacher activity in the course.';
+$string['widget_quizstatistics'] = 'Quiz statistics';
+$string['widget_quizstatistics_desc'] = 'Shows quiz performance statistics and analytics.';
+
+// Widget-specific settings
+$string['widget_learningstrategies_showcategories'] = 'Show strategy categories';
+$string['widget_deadlines_daysahead'] = 'Days to show ahead';
+

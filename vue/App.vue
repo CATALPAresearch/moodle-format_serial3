@@ -33,7 +33,10 @@
             {{ strings.save }}
           </button>
         </div>
-        <menu-bar @editmode="toggleEditMode"></menu-bar>
+        <menu-bar
+          @editmode="toggleEditMode"
+          @widgetsUpdated="reloadWidgetConfig"
+        ></menu-bar>
       </div>
     </div>
     <div id="widgetGrid" class="grid-stack vue-grid-layout">
@@ -71,6 +74,7 @@
 import MenuBar from "./components/MenuBar.vue";
 import WelcomeVideo from "./components/WelcomeVideo.vue";
 import SurveyPrompt from "./components/SurveyPrompt.vue";
+import Communication from "./scripts/communication";
 
 // Widget imports - now from organized widget folders
 import AppDeadlines from "./widgets/Deadlines";
@@ -115,6 +119,7 @@ export default {
       timerId: undefined,
 
       editMode: false,
+      widgetConfig: null, // Stores enabled widgets and their settings
 
       defaultLayout: [
         {
@@ -271,20 +276,28 @@ export default {
     };
   },
 
-  created() {
+  async created() {
+    await this.loadWidgetConfig();
+
+    // Filter components based on enabled widgets
+    if (this.widgetConfig) {
+      const enabledWidgetIds = this.widgetConfig.widgets
+        .filter((w) => w.enabled)
+        .map((w) => w.id);
+      this.allComponents = this.allComponents.filter((component) =>
+        this.isWidgetEnabled(component.c, enabledWidgetIds),
+      );
+      this.defaultLayout = this.defaultLayout.filter((component) =>
+        this.isWidgetEnabled(component.c, enabledWidgetIds),
+      );
+    }
+
     this.loadDashboard();
   },
 
   mounted: function () {
     this.$store.commit("setResearchCondition");
-    if (this.research_condition == "control_group") {
-      this.allComponents = this.allComponents.filter(
-        (component) => component.i != "9",
-      );
-      this.defaultLayout = this.defaultLayout.filter(
-        (component) => component.i != "9",
-      );
-    }
+
     this.courseid = this.$store.state.courseid;
 
     this.context.courseId = this.$store.state.courseid; // TODO
@@ -319,14 +332,21 @@ export default {
     },
 
     layout() {
-      return this.defaultLayout; // xxx
       let r =
         this.dashboardSettings && this.dashboardSettings.length > 0
           ? this.dashboardSettings
           : this.defaultLayout;
-      if (this.research_condition == "control_group") {
-        r = r.filter((component) => component.i != "9");
+
+      // Filter by widget configuration
+      if (this.widgetConfig) {
+        const enabledWidgetIds = this.widgetConfig.widgets
+          .filter((w) => w.enabled)
+          .map((w) => w.id);
+        r = r.filter((component) =>
+          this.isWidgetEnabled(component.c, enabledWidgetIds),
+        );
       }
+
       return r;
     },
 
@@ -341,6 +361,50 @@ export default {
   methods: {
     ...mapGetters(["setResearchCondition"]),
     ...mapActions(["log"]),
+
+    async loadWidgetConfig() {
+      try {
+        Communication.setPluginName("format_serial3");
+        const response = await Communication.webservice("get_widget_config", {
+          courseid: this.$store.state.courseid,
+        });
+
+        if (response.success) {
+          this.widgetConfig = response;
+          console.log("Widget configuration loaded:", response);
+        }
+      } catch (error) {
+        console.error("Failed to load widget configuration:", error);
+        // Continue without widget filtering if config fails to load
+      }
+    },
+
+    isWidgetEnabled(componentName, enabledWidgetIds) {
+      // Map component names to widget IDs (must match backend widget IDs in lowercase)
+      const widgetMap = {
+        TaskList: "tasklist",
+        AppDeadlines: "deadlines",
+        ProgressChartAdaptive: "progresschartadaptive",
+        Recommendations: "recommendations",
+        IndicatorDisplay: "indicatordisplay",
+        LearningStrategies: "learningstrategies",
+        CourseOverview: "courseoverview",
+        TeacherActivity: "teacheractivity",
+        QuizStatistics: "quizstatistics",
+      };
+
+      const widgetId = widgetMap[componentName];
+      // If widget not in map or no enabled list, show it (fail-safe)
+      return (
+        !widgetId || !enabledWidgetIds || enabledWidgetIds.includes(widgetId)
+      );
+    },
+
+    async reloadWidgetConfig() {
+      // Reload the page to apply new widget configuration
+      // This is simpler than trying to dynamically update all arrays
+      window.location.reload();
+    },
 
     initObserver() {
       if (

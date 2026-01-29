@@ -272,4 +272,22 @@ $functions = [
 		'ajax' 				=> true,
 		'loginrequired' 	=> true
 	],
+	'format_serial3_get_widget_config' => [
+		'classname' 		=> 'format_serial3_widgets_external',
+		'methodname' 		=> 'get_widget_config',
+		'classpath' 		=> 'course/format/serial3/ws/widgets.php',
+		'description' 		=> 'Get widget configuration for a course',
+		'type' 				=> 'read',
+		'ajax' 				=> true,
+		'loginrequired' 	=> true
+	],
+	'format_serial3_save_widget_config' => [
+		'classname' 		=> 'format_serial3_widgets_external',
+		'methodname' 		=> 'save_widget_config',
+		'classpath' 		=> 'course/format/serial3/ws/widgets.php',
+		'description' 		=> 'Save widget configuration for a course',
+		'type' 				=> 'write',
+		'ajax' 				=> true,
+		'loginrequired' 	=> true
+	],
 ];
