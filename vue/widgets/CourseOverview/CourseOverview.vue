@@ -426,9 +426,7 @@
               color: getReflectionButtonFontColor(section.id),
               'background-color': getReflectionButtonColor(section.id),
             }"
-            data-toggle="modal"
-            data-target="#refelctionModal"
-            @click="setCurrentReflectionSection(index)"
+            @click="openReflectionModal(index)"
           >
             <span class="d-none d-md-block">Reflexion</span>
           </button>
@@ -477,12 +475,15 @@
     <!-- MODAL POPUP for REFLECTIONS -->
     <Teleport to="body">
       <div
-        class="modal fade"
+        v-if="showReflectionModal"
+        class="modal fade show"
         id="refelctionModal"
         tabindex="-1"
         role="dialog"
         aria-labelledby="refelctionModalLabel"
-        aria-hidden="true"
+        :aria-hidden="!showReflectionModal"
+        style="display: block"
+        @click.self="closeReflectionModal"
       >
         <div
           class="modal-dialog modal-lg modal-dialog-centered"
@@ -497,7 +498,7 @@
                 <button
                   type="button"
                   class="close"
-                  data-dismiss="modal"
+                  @click="closeReflectionModal"
                   aria-label="Schließen"
                 >
                   <span aria-hidden="true">&times;</span>
@@ -589,7 +590,7 @@
                 <button
                   type="button"
                   class="btn btn-link mr-4"
-                  data-dismiss="modal"
+                  @click="closeReflectionModal"
                 >
                   Schließen
                 </button>
@@ -599,6 +600,7 @@
           </form>
         </div>
       </div>
+      <div v-if="showReflectionModal" class="modal-backdrop fade show"></div>
     </Teleport>
   </div>
 </template>
@@ -619,6 +621,7 @@ export default {
 
   data: function () {
     return {
+      showReflectionModal: false,
       currentGoal: "mastery", // dummy
       color: {
         default: "#CED4DA", //'#7cc0d8',
@@ -687,13 +690,6 @@ export default {
   mounted: function () {
     this.loadData();
     this.loadReflection();
-    // Initialize Bootstrap dropdown if jQuery is available
-    this.$nextTick(() => {
-      const $ = window.jQuery;
-      if ($) {
-        $("#dropdownMenuButton").dropdown();
-      }
-    });
   },
 
   computed: {
@@ -1049,6 +1045,15 @@ export default {
     setCurrentReflectionSection: function (id) {
       this.currentReflectionSection = id;
     },
+    openReflectionModal: function (id) {
+      this.setCurrentReflectionSection(id);
+      this.showReflectionModal = true;
+      document.body.classList.add("modal-open");
+    },
+    closeReflectionModal: function () {
+      this.showReflectionModal = false;
+      document.body.classList.remove("modal-open");
+    },
     loadReflection: async function () {
       const response = await Communication.webservice("reflectionread", {
         courseid: this.courseid,
@@ -1084,8 +1089,7 @@ export default {
         this.loadReflection();
         this.reflection = "";
         this.reflectionError = false;
-        const $ = window.jQuery;
-        if ($) $("#refelctionModal").modal("hide");
+        this.closeReflectionModal();
       } else {
         this.reflectionError = true;
         if (response.data) {
