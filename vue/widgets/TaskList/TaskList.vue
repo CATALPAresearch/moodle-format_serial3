@@ -140,6 +140,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import WidgetHeading from "../../components/WidgetHeading.vue";
+import mockDataHelper from "../../utils/mockDataHelper";
 
 export default {
   name: "TaskList",
@@ -182,8 +183,25 @@ export default {
     ]),
     ...mapActions(["log"]),
 
-    loadData() {
-      // dummy function needed for widget standardization to refresh all widgets
+    async loadData() {
+      // Check for mock data
+      if (mockDataHelper.isMockDataEnabled(this.$store)) {
+        const result = await mockDataHelper.loadWidgetData(
+          this.$store,
+          "TaskList",
+          null,
+        );
+
+        if (result.success && result.isMockData) {
+          console.log("[Mock Data] Using mock data for TaskList");
+          // Load tasks into the store
+          if (result.data.tasks) {
+            this.$store.commit("taskList/setItems", result.data.tasks);
+          }
+          return;
+        }
+      }
+      // Real data is loaded from store automatically
       return 0;
     },
     updateDate(item) {

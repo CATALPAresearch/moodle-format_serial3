@@ -1,0 +1,294 @@
+{
+  "excellent": {
+    "calendar": [
+      {
+        "id": 1,
+        "name": "Final Exam",
+        "timestart": 1775001599,
+        "timeclose": 1775001599,
+        "courseid": 123,
+        "type": "calendar"
+      },
+      {
+        "id": 2,
+        "name": "Project Presentation",
+        "timestart": 1775606399,
+        "timeclose": 1775606399,
+        "courseid": 123,
+        "type": "assignment"
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Research Paper",
+        "timestart": 1774310399,
+        "timeclose": 1774310399,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 100,
+        "submitted": true
+      }
+    ]
+  },
+  "average": {
+    "calendar": [
+      {
+        "id": 1,
+        "name": "Quiz 3",
+        "timestart": 1770854399,
+        "timeclose": 1770854399,
+        "courseid": 123,
+        "type": "quiz"
+      },
+      {
+        "id": 2,
+        "name": "Assignment 4",
+        "timestart": 1771459199,
+        "timeclose": 1771459199,
+        "courseid": 123,
+        "type": "assignment"
+      },
+      {
+        "id": 3,
+        "name": "Reading Discussion",
+        "timestart": 1771199999,
+        "timeclose": 1771199999,
+        "courseid": 123,
+        "type": "calendar"
+      },
+      {
+        "id": 4,
+        "name": "Midterm Exam",
+        "timestart": 1772063999,
+        "timeclose": 1772063999,
+        "courseid": 123,
+        "type": "calendar"
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Essay 1",
+        "timestart": 1770854399,
+        "timeclose": 1770854399,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 100,
+        "submitted": false
+      },
+      {
+        "id": 2,
+        "name": "Problem Set 3",
+        "timestart": 1771459199,
+        "timeclose": 1771459199,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 50,
+        "submitted": false
+      }
+    ]
+  },
+  "struggling": {
+    "calendar": [
+      {
+        "id": 1,
+        "name": "Quiz 1 (Catch Up)",
+        "timestart": 1770335999,
+        "timeclose": 1770335999,
+        "courseid": 123,
+        "type": "quiz"
+      },
+      {
+        "id": 2,
+        "name": "Assignment 1 (Resubmit)",
+        "timestart": 1770508799,
+        "timeclose": 1770508799,
+        "courseid": 123,
+        "type": "assignment"
+      },
+      {
+        "id": 3,
+        "name": "Assignment 2 (Urgent)",
+        "timestart": 1770854399,
+        "timeclose": 1770854399,
+        "courseid": 123,
+        "type": "assignment"
+      },
+      {
+        "id": 4,
+        "name": "Quiz 2 (Due Soon)",
+        "timestart": 1771027199,
+        "timeclose": 1771027199,
+        "courseid": 123,
+        "type": "quiz"
+      },
+      {
+        "id": 5,
+        "name": "Assignment 3",
+        "timestart": 1771459199,
+        "timeclose": 1771459199,
+        "courseid": 123,
+        "type": "assignment"
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Assignment 1 (Resubmit)",
+        "timestart": 1770508799,
+        "timeclose": 1770508799,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 100,
+        "submitted": false
+      },
+      {
+        "id": 2,
+        "name": "Assignment 2 (Urgent)",
+        "timestart": 1770854399,
+        "timeclose": 1770854399,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 100,
+        "submitted": false
+      },
+      {
+        "id": 3,
+        "name": "Upcoming Assignment",
+        "timestart": 1771459199,
+        "timeclose": 1771459199,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 100,
+        "submitted": false
+      }
+    ]
+  },
+  "procrastinator": {
+    "calendar": [
+      {
+        "id": 1,
+        "name": "Assignment Due Tomorrow",
+        "timestart": 1769947200,
+        "timeclose": 1769947200,
+        "courseid": 123,
+        "type": "assignment"
+      },
+      {
+        "id": 2,
+        "name": "Quiz Tonight",
+        "timestart": 1769860800,
+        "timeclose": 1769860800,
+        "courseid": 123,
+        "type": "quiz"
+      },
+      {
+        "id": 3,
+        "name": "Group Project",
+        "timestart": 1770033600,
+        "timeclose": 1770033600,
+        "courseid": 123,
+        "type": "assignment"
+      },
+      {
+        "id": 4,
+        "name": "Paper Due Next Week",
+        "timestart": 1771027199,
+        "timeclose": 1771027199,
+        "courseid": 123,
+        "type": "assignment"
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Last Minute Essay",
+        "timestart": 1769947200,
+        "timeclose": 1769947200,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 100,
+        "submitted": false
+      },
+      {
+        "id": 2,
+        "name": "Rush Assignment",
+        "timestart": 1769860800,
+        "timeclose": 1769860800,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 50,
+        "submitted": false
+      },
+      {
+        "id": 3,
+        "name": "Paper Due Next Week",
+        "timestart": 1771027199,
+        "timeclose": 1771027199,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 75,
+        "submitted": false
+      }
+    ]
+  },
+  "edge_cases": {
+    "calendar": [
+      {
+        "id": 1,
+        "name": "",
+        "timestart": 1738454400,
+        "timeclose": 1738454400,
+        "courseid": 123,
+        "type": "calendar"
+      },
+      {
+        "id": 2,
+        "name": "Event in distant future",
+        "timestart": 2524608000,
+        "timeclose": 2524608000,
+        "courseid": 123,
+        "type": "assignment"
+      },
+      {
+        "id": 3,
+        "name": "Event in distant past",
+        "timestart": 946684800,
+        "timeclose": 946684800,
+        "courseid": 123,
+        "type": "quiz"
+      },
+      {
+        "id": 4,
+        "name": "Event with extremely long name that tests the maximum character limits and display capabilities",
+        "timestart": 1738454400,
+        "timeclose": 1738454400,
+        "courseid": 123,
+        "type": "calendar"
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Assignment with null grade",
+        "timestart": 1738454400,
+        "timeclose": 1738454400,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": null,
+        "submitted": true
+      },
+      {
+        "id": 2,
+        "name": "Assignment with zero max grade",
+        "timestart": 1738540800,
+        "timeclose": 1738540800,
+        "courseid": 123,
+        "type": "assignment",
+        "grademax": 0,
+        "submitted": false
+      }
+    ]
+  }
+}

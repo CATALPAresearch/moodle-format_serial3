@@ -1,0 +1,201 @@
+{
+  "excellent": {
+    "quizzes": [
+      {
+        "id": 1,
+        "name": "Quiz 1",
+        "grade": 95,
+        "maxgrade": 100,
+        "timemodified": 1737676800
+      },
+      {
+        "id": 2,
+        "name": "Quiz 2",
+        "grade": 92,
+        "maxgrade": 100,
+        "timemodified": 1738281600
+      },
+      {
+        "id": 3,
+        "name": "Quiz 3",
+        "grade": 88,
+        "maxgrade": 100,
+        "timemodified": 1738886400
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Assignment 1",
+        "grade": 94,
+        "maxgrade": 100,
+        "timemodified": 1737849600
+      },
+      {
+        "id": 2,
+        "name": "Assignment 2",
+        "grade": 91,
+        "maxgrade": 100,
+        "timemodified": 1738454400
+      }
+    ]
+  },
+  "average": {
+    "quizzes": [
+      {
+        "id": 1,
+        "name": "Quiz 1",
+        "grade": 72,
+        "maxgrade": 100,
+        "timemodified": 1737849600
+      },
+      {
+        "id": 2,
+        "name": "Quiz 2",
+        "grade": 68,
+        "maxgrade": 100,
+        "timemodified": 1738454400
+      },
+      {
+        "id": 3,
+        "name": "Quiz 3",
+        "grade": null,
+        "maxgrade": 100,
+        "timemodified": null
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Assignment 1",
+        "grade": 75,
+        "maxgrade": 100,
+        "timemodified": 1737936000
+      },
+      {
+        "id": 2,
+        "name": "Assignment 2",
+        "grade": null,
+        "maxgrade": 100,
+        "timemodified": null
+      }
+    ]
+  },
+  "struggling": {
+    "quizzes": [
+      {
+        "id": 1,
+        "name": "Quiz 1",
+        "grade": 45,
+        "maxgrade": 100,
+        "timemodified": 1738108800
+      },
+      {
+        "id": 2,
+        "name": "Quiz 2",
+        "grade": null,
+        "maxgrade": 100,
+        "timemodified": null
+      },
+      {
+        "id": 3,
+        "name": "Quiz 3",
+        "grade": null,
+        "maxgrade": 100,
+        "timemodified": null
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Assignment 1",
+        "grade": null,
+        "maxgrade": 100,
+        "timemodified": null
+      },
+      {
+        "id": 2,
+        "name": "Assignment 2",
+        "grade": null,
+        "maxgrade": 100,
+        "timemodified": null
+      }
+    ]
+  },
+  "procrastinator": {
+    "quizzes": [
+      {
+        "id": 1,
+        "name": "Quiz 1",
+        "grade": 65,
+        "maxgrade": 100,
+        "timemodified": 1738281600
+      },
+      {
+        "id": 2,
+        "name": "Quiz 2",
+        "grade": null,
+        "maxgrade": 100,
+        "timemodified": null
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Assignment 1",
+        "grade": 62,
+        "maxgrade": 100,
+        "timemodified": 1738368000
+      },
+      {
+        "id": 2,
+        "name": "Assignment 2",
+        "grade": null,
+        "maxgrade": 100,
+        "timemodified": null
+      }
+    ]
+  },
+  "edge_cases": {
+    "quizzes": [
+      { "id": 1, "name": "", "grade": 0, "maxgrade": 0, "timemodified": 0 },
+      {
+        "id": 2,
+        "name": "Quiz with grade over max",
+        "grade": 150,
+        "maxgrade": 100,
+        "timemodified": 1738281600
+      },
+      {
+        "id": 3,
+        "name": "Quiz with negative grade",
+        "grade": -10,
+        "maxgrade": 100,
+        "timemodified": 1738454400
+      },
+      {
+        "id": 4,
+        "name": "Quiz with extremely long name that tests the maximum character limits and display capabilities of the system",
+        "grade": 85,
+        "maxgrade": 100,
+        "timemodified": 1738540800
+      }
+    ],
+    "assignments": [
+      {
+        "id": 1,
+        "name": "Assignment with null values",
+        "grade": null,
+        "maxgrade": null,
+        "timemodified": null
+      },
+      {
+        "id": 2,
+        "name": "Assignment future date",
+        "grade": 90,
+        "maxgrade": 100,
+        "timemodified": 2524608000
+      }
+    ]
+  }
+}

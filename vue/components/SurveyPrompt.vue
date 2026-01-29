@@ -46,7 +46,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import Communication from "../scripts/communication";
+import Communication from "../utils/communication";
 
 export default {
   name: "SurveyPrompt",

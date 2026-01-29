@@ -1,0 +1,29 @@
+{
+  "scenarios": [
+    {
+      "id": "excellent",
+      "name": "Excellent Student",
+      "description": "High performance, ahead of schedule, all activities completed"
+    },
+    {
+      "id": "average",
+      "name": "Average Student",
+      "description": "Typical progress, some activities completed, on track"
+    },
+    {
+      "id": "struggling",
+      "name": "Struggling Student",
+      "description": "Behind schedule, low completion rate, needs support"
+    },
+    {
+      "id": "procrastinator",
+      "name": "Procrastinator",
+      "description": "Last-minute completion, overdue tasks, cramming behavior"
+    },
+    {
+      "id": "edge_cases",
+      "name": "Edge Cases",
+      "description": "Unusual patterns, extreme values, boundary conditions"
+    }
+  ]
+}

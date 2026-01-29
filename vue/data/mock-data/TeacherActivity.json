@@ -1,0 +1,142 @@
+{
+  "excellent": {
+    "teachers": [
+      { "id": 1, "name": "Dr. Smith" },
+      { "id": 2, "name": "Prof. Johnson" }
+    ],
+    "lastAccess": [
+      { "teacherid": 1, "lastaccess": 1738454400 },
+      { "teacherid": 2, "lastaccess": 1738540800 }
+    ],
+    "resources": [
+      {
+        "id": 1,
+        "name": "Lecture Notes Week 3",
+        "timemodified": 1738368000,
+        "type": "resource"
+      },
+      {
+        "id": 2,
+        "name": "Additional Reading",
+        "timemodified": 1738281600,
+        "type": "resource"
+      }
+    ],
+    "forums": [
+      {
+        "id": 1,
+        "name": "Course Discussion",
+        "timemodified": 1738454400,
+        "postcount": 15
+      },
+      {
+        "id": 2,
+        "name": "Q&A Forum",
+        "timemodified": 1738540800,
+        "postcount": 8
+      }
+    ]
+  },
+  "average": {
+    "teachers": [{ "id": 1, "name": "Dr. Smith" }],
+    "lastAccess": [{ "teacherid": 1, "lastaccess": 1738281600 }],
+    "resources": [
+      {
+        "id": 1,
+        "name": "Lecture Slides",
+        "timemodified": 1738108800,
+        "type": "resource"
+      },
+      {
+        "id": 2,
+        "name": "Study Guide",
+        "timemodified": 1737936000,
+        "type": "resource"
+      }
+    ],
+    "forums": [
+      {
+        "id": 1,
+        "name": "General Discussion",
+        "timemodified": 1738195200,
+        "postcount": 5
+      }
+    ]
+  },
+  "struggling": {
+    "teachers": [{ "id": 1, "name": "Dr. Smith" }],
+    "lastAccess": [{ "teacherid": 1, "lastaccess": 1737849600 }],
+    "resources": [
+      {
+        "id": 1,
+        "name": "Basic Concepts Review",
+        "timemodified": 1737676800,
+        "type": "resource"
+      }
+    ],
+    "forums": [
+      {
+        "id": 1,
+        "name": "Help Forum",
+        "timemodified": 1737849600,
+        "postcount": 2
+      }
+    ]
+  },
+  "procrastinator": {
+    "teachers": [{ "id": 1, "name": "Dr. Smith" }],
+    "lastAccess": [{ "teacherid": 1, "lastaccess": 1738368000 }],
+    "resources": [
+      {
+        "id": 1,
+        "name": "Urgent: Review Materials",
+        "timemodified": 1738368000,
+        "type": "resource"
+      }
+    ],
+    "forums": [
+      {
+        "id": 1,
+        "name": "Last Minute Questions",
+        "timemodified": 1738368000,
+        "postcount": 20
+      }
+    ]
+  },
+  "edge_cases": {
+    "teachers": [
+      { "id": 1, "name": "" },
+      {
+        "id": 2,
+        "name": "Teacher with extremely long name that tests display limits"
+      }
+    ],
+    "lastAccess": [
+      { "teacherid": 1, "lastaccess": 0 },
+      { "teacherid": 2, "lastaccess": null }
+    ],
+    "resources": [
+      { "id": 1, "name": "", "timemodified": null, "type": "resource" },
+      {
+        "id": 2,
+        "name": "Resource with extremely long name that tests the maximum character limits and display capabilities",
+        "timemodified": 2524608000,
+        "type": "resource"
+      }
+    ],
+    "forums": [
+      {
+        "id": 1,
+        "name": "Forum with no posts",
+        "timemodified": 1738281600,
+        "postcount": 0
+      },
+      {
+        "id": 2,
+        "name": "Forum with extreme posts",
+        "timemodified": 1738454400,
+        "postcount": 9999
+      }
+    ]
+  }
+}

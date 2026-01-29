@@ -173,11 +173,12 @@
 </template>
 
 <script>
-import Communication from "../../scripts/communication";
+import Communication from "../../utils/communication";
+import mockDataHelper from "../../utils/mockDataHelper";
 import WidgetHeading from "../../components/WidgetHeading.vue";
 import RecommendationItem from "../../components/RecommendationItem.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
-import { groupBy } from "../../scripts/util";
+import { groupBy } from "../../utils/util";
 import PopoverContent from "../../components/PopoverContent.vue";
 //import { treemapSquarify } from '../../../lib/src/d3.v4';
 
@@ -452,6 +453,48 @@ export default {
     },
 
     loadData: async function () {
+      // Check if mock data is enabled
+      if (mockDataHelper.isMockDataEnabled(this.$store)) {
+        const result = await mockDataHelper.loadWidgetData(
+          this.$store,
+          "ProgressChartAdaptive",
+          null,
+        );
+
+        if (result.success && result.isMockData && result.data) {
+          const mockData = result.data;
+          console.log("[Mock Data] Using mock data for ProgressChartAdaptive");
+
+          if (mockData.courseData) {
+            this.$store.commit("overview/setCourseData", mockData.courseData);
+            this.$store.commit(
+              "overview/setCurrentActivities",
+              this.getActivities,
+            );
+            this.$store.commit(
+              "overview/setActivityTypes",
+              Object.keys(this.getActivities),
+            );
+            this.total = this.getTotalActivites();
+          }
+
+          if (mockData.proficiency !== undefined) {
+            this.$store.commit(
+              "learnermodel/setProficiency",
+              mockData.proficiency,
+            );
+          }
+          if (mockData.progressUnderstanding !== undefined) {
+            this.$store.commit(
+              "learnermodel/setProgressUnderstanding",
+              mockData.progressUnderstanding,
+            );
+          }
+          return;
+        }
+      }
+
+      // Load real data from database
       const response = await Communication.webservice("overview", {
         courseid: parseInt(this.$store.getters.getCourseid, 10),
       });

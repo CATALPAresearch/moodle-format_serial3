@@ -1,4 +1,4 @@
-import Communication from "../../scripts/communication";
+import Communication from "../../utils/communication";
 
 export default {
   namespaced: true,

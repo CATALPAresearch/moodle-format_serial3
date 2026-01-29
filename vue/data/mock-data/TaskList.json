@@ -1,0 +1,174 @@
+{
+  "excellent": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Review advanced concepts",
+        "duedate": "2026-02-05",
+        "completed": true,
+        "courseid": 123,
+        "activityid": 201
+      },
+      {
+        "id": 2,
+        "title": "Prepare presentation",
+        "duedate": "2026-02-10",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 202
+      }
+    ]
+  },
+  "average": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Complete Quiz 2",
+        "duedate": "2026-02-01",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 203
+      },
+      {
+        "id": 2,
+        "title": "Read Chapter 3",
+        "duedate": "2026-02-03",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 204
+      },
+      {
+        "id": 3,
+        "title": "Watch video lecture",
+        "duedate": "2026-02-02",
+        "completed": true,
+        "courseid": 123,
+        "activityid": 205
+      },
+      {
+        "id": 4,
+        "title": "Submit assignment",
+        "duedate": "2026-02-08",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 206
+      }
+    ]
+  },
+  "struggling": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Catch up on Week 1",
+        "duedate": "2026-01-15",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 101
+      },
+      {
+        "id": 2,
+        "title": "Complete overdue quiz",
+        "duedate": "2026-01-20",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 102
+      },
+      {
+        "id": 3,
+        "title": "Review basic concepts",
+        "duedate": "2026-01-25",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 103
+      },
+      {
+        "id": 4,
+        "title": "Meet with tutor",
+        "duedate": "2026-01-30",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 104
+      },
+      {
+        "id": 5,
+        "title": "Finish assignment 1",
+        "duedate": "2026-02-01",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 105
+      },
+      {
+        "id": 6,
+        "title": "Study for midterm",
+        "duedate": "2026-02-10",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 106
+      }
+    ]
+  },
+  "procrastinator": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Assignment due tomorrow!",
+        "duedate": "2026-01-30",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 301
+      },
+      {
+        "id": 2,
+        "title": "Quiz due in 2 hours",
+        "duedate": "2026-01-29",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 302
+      },
+      {
+        "id": 3,
+        "title": "Read 5 chapters tonight",
+        "duedate": "2026-01-29",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 303
+      }
+    ]
+  },
+  "edge_cases": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "",
+        "duedate": "2026-02-01",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 401
+      },
+      {
+        "id": 2,
+        "title": "Task with extremely long title that goes on and on and on to test how the interface handles very long task descriptions that might wrap multiple lines",
+        "duedate": "2099-12-31",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 402
+      },
+      {
+        "id": 3,
+        "title": "Past due task",
+        "duedate": "2020-01-01",
+        "completed": false,
+        "courseid": 123,
+        "activityid": 403
+      },
+      {
+        "id": 4,
+        "title": "Already completed",
+        "duedate": "2026-02-01",
+        "completed": true,
+        "courseid": 123,
+        "activityid": 404
+      }
+    ]
+  }
+}

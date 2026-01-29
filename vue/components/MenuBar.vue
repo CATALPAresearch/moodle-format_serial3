@@ -10,6 +10,52 @@
     <button class="button" title="Reload widget data" @click="refreshWidgets">
       <i aria-hidden="true" class="fa fa-refresh icon m-0"></i>
     </button>
+    <div v-if="isModerator" class="dropdown" ref="mockDataDropdown">
+      <button
+        class="button dropdown-toggle"
+        type="button"
+        :title="mockDataEnabled ? 'Mock Data Active' : 'Enable Mock Data'"
+        @click="toggleMockDropdown"
+        :style="{ backgroundColor: mockDataEnabled ? '#ff9800' : '' }"
+      >
+        <i aria-hidden="true" class="fa fa-flask icon m-0"></i>
+      </button>
+      <ul class="dropdown-menu" :class="{ show: mockDropdownOpen }" @click.stop>
+        <li class="dropdown-header">Mock Data Scenarios</li>
+        <li>
+          <button
+            class="dropdown-item"
+            :class="{ active: !mockDataEnabled }"
+            @click="disableMockData"
+          >
+            <i class="fa fa-times"></i> Disabled (Real Data)
+          </button>
+        </li>
+        <li class="dropdown-divider"></li>
+        <li v-for="scenario in scenarios" :key="scenario.id">
+          <button
+            class="dropdown-item"
+            :class="{
+              active: mockDataEnabled && mockDataScenario === scenario.id,
+            }"
+            @click="selectScenario(scenario.id)"
+          >
+            <i class="fa fa-check" v-if="mockDataScenario === scenario.id"></i>
+            <span
+              :style="{
+                marginLeft: mockDataScenario === scenario.id ? '0' : '20px',
+              }"
+            >
+              {{ scenario.name }}
+            </span>
+            <br />
+            <small class="text-muted" style="margin-left: 20px">{{
+              scenario.description
+            }}</small>
+          </button>
+        </li>
+      </ul>
+    </div>
     <button
       v-if="isModerator"
       class="button"
@@ -217,7 +263,8 @@
 
 <script>
 import { mapState } from "vuex";
-import Communication from "../scripts/communication";
+import Communication from "../utils/communication";
+import scenariosData from "../data/mock-data/scenarios.json";
 
 export default {
   name: "MenuBar",
@@ -230,20 +277,33 @@ export default {
       saving: false,
       saveError: null,
       saveSuccess: false,
+      mockDropdownOpen: false,
+      scenarios: scenariosData.scenarios,
     };
   },
 
   computed: {
-    ...mapState(["strings", "isModerator", "courseid"]),
+    ...mapState([
+      "strings",
+      "isModerator",
+      "courseid",
+      "mockDataEnabled",
+      "mockDataScenario",
+    ]),
   },
 
   mounted() {
+    document.addEventListener("click", this.handleClickOutside);
     this.loadWidgetConfig();
     // Load widget configuration when modal is opened
     const modal = document.getElementById("widgetManagementModal");
     if (modal) {
       modal.addEventListener("show.bs.modal", this.loadWidgetConfig);
     }
+  },
+
+  beforeUnmount() {
+    document.removeEventListener("click", this.handleClickOutside);
   },
 
   /*beforeUnmount() {
@@ -254,6 +314,42 @@ export default {
   },*/
 
   methods: {
+    refreshWidgets() {
+      this.$emit("refreshWidgets");
+    },
+
+    toggleMockDropdown() {
+      this.mockDropdownOpen = !this.mockDropdownOpen;
+    },
+
+    handleClickOutside(event) {
+      if (!this.mockDropdownOpen) return;
+
+      const dropdown = this.$refs.mockDataDropdown;
+      if (dropdown && !dropdown.contains(event.target)) {
+        this.mockDropdownOpen = false;
+      }
+    },
+
+    disableMockData() {
+      this.$store.commit("setMockDataEnabled", {
+        enabled: false,
+        scenario: null,
+      });
+      this.mockDropdownOpen = false;
+      this.$emit("refreshWidgets");
+    },
+
+    selectScenario(scenarioId) {
+      console.log("[Mock Data] Selecting scenario:", scenarioId);
+      this.$store.commit("setMockDataEnabled", {
+        enabled: true,
+        scenario: scenarioId,
+      });
+      this.mockDropdownOpen = false;
+      this.$emit("refreshWidgets");
+    },
+
     async loadWidgetConfig() {
       this.loading = true;
       this.saveError = null;
@@ -392,5 +488,91 @@ export default {
   font-size: 0.8rem;
   line-height: 1.2;
   color: #6c757d;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  min-width: 350px;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 0.9rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+
+  &.show {
+    display: block;
+  }
+}
+
+.dropdown-header {
+  display: block;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: #6c757d;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.dropdown-divider {
+  height: 0;
+  margin: 0.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid #e9ecef;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: normal;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  line-height: 1.4;
+
+  &:hover,
+  &:focus {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #f8f9fa;
+  }
+
+  &.active {
+    color: #fff;
+    background-color: #007bff;
+
+    .text-muted {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+  }
+
+  i.fa-check {
+    margin-right: 5px;
+  }
+
+  small {
+    display: block;
+    font-size: 0.75rem;
+  }
 }
 </style>

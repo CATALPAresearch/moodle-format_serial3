@@ -1,0 +1,492 @@
+{
+  "excellent": {
+    "completions": [
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "hypervideo",
+        "count": 3,
+        "complete": 3,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "longpage",
+        "count": 5,
+        "complete": 5,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "assign",
+        "count": 2,
+        "complete": 2,
+        "submission_time": "2026-01-15",
+        "achieved_score": 95,
+        "max_score": 100,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "quiz",
+        "count": 1,
+        "complete": 1,
+        "submission_time": "2026-01-14",
+        "achieved_score": 90,
+        "max_score": 100,
+        "visible": "1"
+      },
+
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "hypervideo",
+        "count": 4,
+        "complete": 4,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "longpage",
+        "count": 6,
+        "complete": 6,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "assign",
+        "count": 2,
+        "complete": 2,
+        "submission_time": "2026-01-20",
+        "achieved_score": 92,
+        "max_score": 100,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "quiz",
+        "count": 1,
+        "complete": 1,
+        "submission_time": "2026-01-19",
+        "achieved_score": 88,
+        "max_score": 100,
+        "visible": "1"
+      },
+
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "hypervideo",
+        "count": 3,
+        "complete": 3,
+        "visible": "1"
+      },
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "longpage",
+        "count": 4,
+        "complete": 4,
+        "visible": "1"
+      },
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "assign",
+        "count": 3,
+        "complete": 3,
+        "submission_time": "2026-01-25",
+        "achieved_score": 94,
+        "max_score": 100,
+        "visible": "1"
+      }
+    ],
+    "reflections": [
+      {
+        "section": 1,
+        "reflection": "Great progress! I understood all concepts well.",
+        "timecreated": "2026-01-15 14:30:00"
+      },
+      {
+        "section": 2,
+        "reflection": "Challenging but manageable. Applied concepts successfully.",
+        "timecreated": "2026-01-20 16:45:00"
+      }
+    ]
+  },
+  "average": {
+    "completions": [
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "hypervideo",
+        "count": 3,
+        "complete": 2,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "longpage",
+        "count": 5,
+        "complete": 3,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "assign",
+        "count": 2,
+        "complete": 1,
+        "submission_time": "2026-01-16",
+        "achieved_score": 70,
+        "max_score": 100,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "quiz",
+        "count": 1,
+        "complete": 1,
+        "submission_time": "2026-01-15",
+        "achieved_score": 75,
+        "max_score": 100,
+        "visible": "1"
+      },
+
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "hypervideo",
+        "count": 4,
+        "complete": 2,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "longpage",
+        "count": 6,
+        "complete": 3,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "assign",
+        "count": 2,
+        "complete": 1,
+        "submission_time": "2026-01-22",
+        "achieved_score": 68,
+        "max_score": 100,
+        "visible": "1"
+      },
+
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "hypervideo",
+        "count": 3,
+        "complete": 1,
+        "visible": "1"
+      },
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "longpage",
+        "count": 4,
+        "complete": 1,
+        "visible": "1"
+      },
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "assign",
+        "count": 3,
+        "complete": 0,
+        "visible": "1"
+      }
+    ],
+    "reflections": [
+      {
+        "section": 1,
+        "reflection": "Making steady progress. Some concepts need more review.",
+        "timecreated": "2026-01-16 18:20:00"
+      }
+    ]
+  },
+  "struggling": {
+    "completions": [
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "hypervideo",
+        "count": 3,
+        "complete": 1,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "longpage",
+        "count": 5,
+        "complete": 1,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "assign",
+        "count": 2,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "quiz",
+        "count": 1,
+        "complete": 1,
+        "submission_time": "2026-01-20",
+        "achieved_score": 45,
+        "max_score": 100,
+        "visible": "1"
+      },
+
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "hypervideo",
+        "count": 4,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "longpage",
+        "count": 6,
+        "complete": 1,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "assign",
+        "count": 2,
+        "complete": 0,
+        "visible": "1"
+      },
+
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "hypervideo",
+        "count": 3,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "longpage",
+        "count": 4,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "assign",
+        "count": 3,
+        "complete": 0,
+        "visible": "1"
+      }
+    ],
+    "reflections": []
+  },
+  "procrastinator": {
+    "completions": [
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "hypervideo",
+        "count": 3,
+        "complete": 3,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "longpage",
+        "count": 5,
+        "complete": 4,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "assign",
+        "count": 2,
+        "complete": 2,
+        "submission_time": "2026-01-28",
+        "achieved_score": 65,
+        "max_score": 100,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "quiz",
+        "count": 1,
+        "complete": 1,
+        "submission_time": "2026-01-27",
+        "achieved_score": 62,
+        "max_score": 100,
+        "visible": "1"
+      },
+
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "hypervideo",
+        "count": 4,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "longpage",
+        "count": 6,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "assign",
+        "count": 2,
+        "complete": 0,
+        "visible": "1"
+      },
+
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "hypervideo",
+        "count": 3,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "longpage",
+        "count": 4,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 3,
+        "sectionname": "Kurseinheit 3: Practice",
+        "type": "assign",
+        "count": 3,
+        "complete": 0,
+        "visible": "1"
+      }
+    ],
+    "reflections": [
+      {
+        "section": 1,
+        "reflection": "Finally completed! Need to start earlier next time.",
+        "timecreated": "2026-01-28 23:45:00"
+      }
+    ]
+  },
+  "edge_cases": {
+    "completions": [
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "hypervideo",
+        "count": 0,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "longpage",
+        "count": 10,
+        "complete": 10,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "assign",
+        "count": 1,
+        "complete": 1,
+        "submission_time": "2026-01-10",
+        "achieved_score": 100,
+        "max_score": 100,
+        "visible": "1"
+      },
+      {
+        "section": 1,
+        "sectionname": "Kurseinheit 1: Introduction",
+        "type": "quiz",
+        "count": 1,
+        "complete": 1,
+        "submission_time": "2026-01-10",
+        "achieved_score": 0,
+        "max_score": 100,
+        "visible": "1"
+      },
+
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "hypervideo",
+        "count": 1,
+        "complete": 1,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "longpage",
+        "count": 1,
+        "complete": 0,
+        "visible": "1"
+      },
+      {
+        "section": 2,
+        "sectionname": "Kurseinheit 2: Advanced Topics",
+        "type": "assign",
+        "count": 5,
+        "complete": 3,
+        "submission_time": "2026-01-18",
+        "achieved_score": 150,
+        "max_score": 100,
+        "visible": "1"
+      }
+    ],
+    "reflections": [
+      { "section": 1, "reflection": "A", "timecreated": "2026-01-10 00:01:00" },
+      {
+        "section": 1,
+        "reflection": "This is an extremely long reflection that goes on and on and on to test how the system handles very verbose reflections. Students might write pages and pages of text describing their learning experience in great detail, discussing every aspect of what they learned, how they felt about it, what challenges they faced, and what strategies they employed to overcome those challenges. This tests the maximum character limits and display capabilities.",
+        "timecreated": "2026-01-11 12:00:00"
+      }
+    ]
+  }
+}

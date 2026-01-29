@@ -1,0 +1,187 @@
+{
+  "excellent": {
+    "recommendations": [
+      {
+        "id": 1,
+        "title": "Advanced Research Methods",
+        "type": "reading",
+        "reason": "Based on your excellent performance",
+        "url": "#",
+        "priority": "low",
+        "timecreated": 1706558400000,
+        "category": "success",
+        "description": "Expand your knowledge with advanced research methodologies."
+      },
+      {
+        "id": 2,
+        "title": "Challenge Problem Set",
+        "type": "exercise",
+        "reason": "To further enhance your skills",
+        "url": "#",
+        "priority": "low",
+        "timecreated": 1706644800000,
+        "category": "competency",
+        "description": "Test your mastery with challenging exercises."
+      }
+    ]
+  },
+  "average": {
+    "recommendations": [
+      {
+        "id": 1,
+        "title": "Review: Basic Concepts",
+        "type": "video",
+        "reason": "To strengthen your foundation",
+        "url": "#",
+        "priority": "medium",
+        "timecreated": 1706472000000,
+        "category": "competency",
+        "description": "Review fundamental concepts to improve your understanding."
+      },
+      {
+        "id": 2,
+        "title": "Practice Quiz",
+        "type": "exercise",
+        "reason": "Improve your test-taking skills",
+        "url": "#",
+        "priority": "medium",
+        "timecreated": 1706558400000,
+        "category": "progress",
+        "description": "Practice with sample questions to prepare for assessments."
+      },
+      {
+        "id": 3,
+        "title": "Study Group Session",
+        "type": "social",
+        "reason": "Collaborative learning opportunity",
+        "url": "#",
+        "priority": "low",
+        "timecreated": 1706644800000,
+        "category": "social",
+        "description": "Join a study group to learn with your peers."
+      }
+    ]
+  },
+  "struggling": {
+    "recommendations": [
+      {
+        "id": 1,
+        "title": "Foundational Concepts Tutorial",
+        "type": "video",
+        "reason": "Essential for understanding course material",
+        "url": "#",
+        "priority": "high",
+        "timecreated": 1706299200000,
+        "category": "competency",
+        "description": "Watch this tutorial to build a strong foundation in core concepts."
+      },
+      {
+        "id": 2,
+        "title": "Meet with Course Instructor",
+        "type": "support",
+        "reason": "Get personalized help",
+        "url": "#",
+        "priority": "high",
+        "timecreated": 1706385600000,
+        "category": "success",
+        "description": "Schedule office hours to discuss your progress and get guidance."
+      },
+      {
+        "id": 3,
+        "title": "Additional Practice Problems",
+        "type": "exercise",
+        "reason": "Build confidence through practice",
+        "url": "#",
+        "priority": "high",
+        "timecreated": 1706472000000,
+        "category": "progress",
+        "description": "Work through extra practice problems to reinforce learning."
+      },
+      {
+        "id": 4,
+        "title": "Time Management Workshop",
+        "type": "workshop",
+        "reason": "Improve study habits",
+        "url": "#",
+        "priority": "high",
+        "timecreated": 1706558400000,
+        "category": "time_management",
+        "description": "Learn effective time management strategies for academic success."
+      },
+      {
+        "id": 5,
+        "title": "Peer Tutoring Sessions",
+        "type": "support",
+        "reason": "One-on-one assistance available",
+        "url": "#",
+        "priority": "medium",
+        "timecreated": 1706644800000,
+        "category": "social",
+        "description": "Get help from peer tutors who have successfully completed the course."
+      }
+    ]
+  },
+  "procrastinator": {
+    "recommendations": [
+      {
+        "id": 1,
+        "title": "Time Management Strategies",
+        "type": "article",
+        "reason": "Start assignments earlier",
+        "url": "#",
+        "priority": "high",
+        "timecreated": 1706299200000,
+        "category": "time_management",
+        "description": "Learn strategies to break the procrastination habit and stay on track."
+      },
+      {
+        "id": 2,
+        "title": "Create a Study Schedule",
+        "type": "tool",
+        "reason": "Better planning reduces stress",
+        "url": "#",
+        "priority": "high",
+        "timecreated": 1706385600000,
+        "category": "time_management",
+        "description": "Use this tool to create a realistic study schedule and stick to it."
+      },
+      {
+        "id": 3,
+        "title": "Break Large Tasks into Steps",
+        "type": "strategy",
+        "reason": "Makes work more manageable",
+        "url": "#",
+        "priority": "medium",
+        "timecreated": 1706472000000,
+        "category": "time_management",
+        "description": "Divide big assignments into smaller, achievable tasks to reduce overwhelm."
+      }
+    ]
+  },
+  "edge_cases": {
+    "recommendations": [
+      {
+        "id": 1,
+        "title": "",
+        "type": "unknown",
+        "reason": "",
+        "url": "",
+        "priority": "low",
+        "timecreated": 1706212800000,
+        "category": "success",
+        "description": ""
+      },
+      {
+        "id": 2,
+        "title": "Recommendation with extremely long title and description that tests the maximum character limits and display capabilities of the recommendation system to ensure it handles edge cases properly",
+        "type": "article",
+        "reason": "This is an extremely long reason that goes on and on to test character limits",
+        "url": "https://example.com/very/long/url/path/that/might/cause/display/issues",
+        "priority": "high",
+        "timecreated": 1706558400000,
+        "category": "competency",
+        "description": "This is an extremely long description that goes on and on to test how the system handles very lengthy text content. It includes multiple sentences and continues to provide excessive detail to ensure the display can handle edge cases with maximum character limits and very long recommendation descriptions that might cause layout issues or text overflow problems in the user interface."
+      }
+    ]
+  }
+}

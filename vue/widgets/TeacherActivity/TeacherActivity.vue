@@ -156,7 +156,8 @@ DONE forum6 51 % ... eine Vorhersage erhalten, wann ich eine Antwort der Lehrper
 
 <script>
 import WidgetHeading from "../../components/WidgetHeading.vue";
-import Communication from "../../scripts/communication";
+import Communication from "../../utils/communication";
+import mockDataHelper from "../../utils/mockDataHelper";
 import { mapActions } from "vuex";
 
 export default {
@@ -183,7 +184,27 @@ export default {
   methods: {
     ...mapActions(["log"]),
 
-    loadData() {
+    async loadData() {
+      // Check for mock data
+      if (mockDataHelper.isMockDataEnabled(this.$store)) {
+        const result = await mockDataHelper.loadWidgetData(
+          this.$store,
+          "TeacherActivity",
+          null,
+        );
+
+        if (result.success && result.isMockData) {
+          console.log("[Mock Data] Using mock data for TeacherActivity");
+          this.teacherIDList = result.data.teachers || [];
+          this.teacherLastAccessList = result.data.lastAccess || [];
+          this.courseResourceList = result.data.resources || [];
+          this.deletedCourseResourceList = result.data.deletedResources || [];
+          this.newForumDiscussionList = result.data.forums || [];
+          return;
+        }
+      }
+
+      // Load real data
       this.getTeachers();
       this.getTeachersLastAccess();
       this.getAddedOrChangedCourseResources();

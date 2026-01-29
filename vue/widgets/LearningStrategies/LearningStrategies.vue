@@ -1,5 +1,5 @@
 <script>
-import Communication from "../../scripts/communication";
+import Communication from "../../utils/communication";
 import WidgetHeading from "../../components/WidgetHeading.vue";
 import Vue from "vue";
 import { mapActions, mapGetters, mapState } from "vuex";

@@ -1,0 +1,167 @@
+{
+  "excellent": {
+    "proficiency": 92,
+    "progressUnderstanding": 95,
+    "userGrade": 450,
+    "totalGrade": 500,
+    "timeliness": 88,
+    "thresholds": {
+      "master": {
+        "proficiency": [100, 75, 50],
+        "progress": [100, 85, 60],
+        "grades": [100, 75, 50],
+        "timeManagement": [100, 70, 40]
+      },
+      "passing": {
+        "proficiency": [100, 66, 30],
+        "progress": [100, 75, 45],
+        "grades": [100, 66, 30],
+        "timeManagement": [100, 60, 30]
+      },
+      "overview": {
+        "proficiency": [100, 100, 0],
+        "progress": [100, 100, 0],
+        "grades": [100, 100, 0],
+        "timeManagement": [100, 100, 0]
+      },
+      "practice": {
+        "proficiency": [100, 50, 20],
+        "progress": [100, 75, 50],
+        "grades": [100, 50, 20],
+        "timeManagement": [100, 65, 35]
+      }
+    }
+  },
+  "average": {
+    "proficiency": 68,
+    "progressUnderstanding": 70,
+    "userGrade": 340,
+    "totalGrade": 500,
+    "timeliness": 62,
+    "thresholds": {
+      "master": {
+        "proficiency": [100, 75, 50],
+        "progress": [100, 85, 60],
+        "grades": [100, 75, 50],
+        "timeManagement": [100, 70, 40]
+      },
+      "passing": {
+        "proficiency": [100, 66, 30],
+        "progress": [100, 75, 45],
+        "grades": [100, 66, 30],
+        "timeManagement": [100, 60, 30]
+      },
+      "overview": {
+        "proficiency": [100, 100, 0],
+        "progress": [100, 100, 0],
+        "grades": [100, 100, 0],
+        "timeManagement": [100, 100, 0]
+      },
+      "practice": {
+        "proficiency": [100, 50, 20],
+        "progress": [100, 75, 50],
+        "grades": [100, 50, 20],
+        "timeManagement": [100, 65, 35]
+      }
+    }
+  },
+  "struggling": {
+    "proficiency": 35,
+    "progressUnderstanding": 28,
+    "userGrade": 150,
+    "totalGrade": 500,
+    "timeliness": 25,
+    "thresholds": {
+      "master": {
+        "proficiency": [100, 75, 50],
+        "progress": [100, 85, 60],
+        "grades": [100, 75, 50],
+        "timeManagement": [100, 70, 40]
+      },
+      "passing": {
+        "proficiency": [100, 66, 30],
+        "progress": [100, 75, 45],
+        "grades": [100, 66, 30],
+        "timeManagement": [100, 60, 30]
+      },
+      "overview": {
+        "proficiency": [100, 100, 0],
+        "progress": [100, 100, 0],
+        "grades": [100, 100, 0],
+        "timeManagement": [100, 100, 0]
+      },
+      "practice": {
+        "proficiency": [100, 50, 20],
+        "progress": [100, 75, 50],
+        "grades": [100, 50, 20],
+        "timeManagement": [100, 65, 35]
+      }
+    }
+  },
+  "procrastinator": {
+    "proficiency": 58,
+    "progressUnderstanding": 50,
+    "userGrade": 260,
+    "totalGrade": 500,
+    "timeliness": 35,
+    "thresholds": {
+      "master": {
+        "proficiency": [100, 75, 50],
+        "progress": [100, 85, 60],
+        "grades": [100, 75, 50],
+        "timeManagement": [100, 70, 40]
+      },
+      "passing": {
+        "proficiency": [100, 66, 30],
+        "progress": [100, 75, 45],
+        "grades": [100, 66, 30],
+        "timeManagement": [100, 60, 30]
+      },
+      "overview": {
+        "proficiency": [100, 100, 0],
+        "progress": [100, 100, 0],
+        "grades": [100, 100, 0],
+        "timeManagement": [100, 100, 0]
+      },
+      "practice": {
+        "proficiency": [100, 50, 20],
+        "progress": [100, 75, 50],
+        "grades": [100, 50, 20],
+        "timeManagement": [100, 65, 35]
+      }
+    }
+  },
+  "edge_cases": {
+    "proficiency": 0,
+    "progressUnderstanding": 100,
+    "userGrade": 600,
+    "totalGrade": 500,
+    "timeliness": 0,
+    "thresholds": {
+      "master": {
+        "proficiency": [100, 75, 50],
+        "progress": [100, 85, 60],
+        "grades": [100, 75, 50],
+        "timeManagement": [100, 70, 40]
+      },
+      "passing": {
+        "proficiency": [100, 66, 30],
+        "progress": [100, 75, 45],
+        "grades": [100, 66, 30],
+        "timeManagement": [100, 60, 30]
+      },
+      "overview": {
+        "proficiency": [100, 100, 0],
+        "progress": [100, 100, 0],
+        "grades": [100, 100, 0],
+        "timeManagement": [100, 100, 0]
+      },
+      "practice": {
+        "proficiency": [100, 50, 20],
+        "progress": [100, 75, 50],
+        "grades": [100, 50, 20],
+        "timeManagement": [100, 65, 35]
+      }
+    }
+  }
+}

@@ -93,6 +93,7 @@
 import * as d3 from "../../js/d3.min.js";
 import "../../js/bullet.js";
 import WidgetHeading from "../../components/WidgetHeading.vue";
+import mockDataHelper from "../../utils/mockDataHelper";
 import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
@@ -295,7 +296,48 @@ export default {
       }
     },
 
-    loadData() {
+    async loadData() {
+      // Check for mock data
+      if (mockDataHelper.isMockDataEnabled(this.$store)) {
+        const result = await mockDataHelper.loadWidgetData(
+          this.$store,
+          "IndicatorDisplay",
+          null,
+        );
+
+        if (result.success && result.isMockData) {
+          console.log("[Mock Data] Using mock data for IndicatorDisplay");
+          // Update learnermodel state with mock data
+          this.$store.commit(
+            "learnermodel/setProficiency",
+            result.data.proficiency,
+          );
+          this.$store.commit(
+            "learnermodel/setProgressUnderstanding",
+            result.data.progressUnderstanding,
+          );
+          this.$store.commit(
+            "learnermodel/setUserGrade",
+            result.data.userGrade,
+          );
+          this.$store.commit(
+            "learnermodel/setTotalGrade",
+            result.data.totalGrade,
+          );
+          this.$store.commit(
+            "learnermodel/setTimeliness",
+            result.data.timeliness,
+          );
+          if (result.data.thresholds) {
+            this.$store.commit(
+              "learnermodel/setThresholds",
+              result.data.thresholds,
+            );
+          }
+        }
+      }
+
+      // Always run these for display
       this.ranges = this.thresholds;
       this.getselectedIndicators();
       this.calculateUnderstanding();

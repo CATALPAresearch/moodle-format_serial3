@@ -607,7 +607,8 @@
 
 <script>
 import WidgetHeading from "../../components/WidgetHeading.vue";
-import Communication from "../../scripts/communication";
+import Communication from "../../utils/communication";
+import mockDataHelper from "../../utils/mockDataHelper";
 import { mapState, mapGetters } from "vuex";
 import { Teleport } from "vue";
 
@@ -700,6 +701,23 @@ export default {
     ...mapGetters(["is1801Course"]),
 
     loadData: async function () {
+      // Check for mock data
+      if (mockDataHelper.isMockDataEnabled(this.$store)) {
+        const result = await mockDataHelper.loadWidgetData(
+          this.$store,
+          "CourseOverview",
+          null,
+        );
+
+        if (result.success && result.isMockData) {
+          console.log("[Mock Data] Using mock data for CourseOverview");
+          this.sections = this.groupBy(result.data.completions, "section");
+          this.stats = this.calcStats();
+          return;
+        }
+      }
+
+      // Load real data
       const response = await Communication.webservice("overview", {
         courseid: this.courseid,
       });
@@ -841,13 +859,15 @@ export default {
         assign: { count: 0, complete: 0, achieved_score: 0, max_score: 0 },
       };
       for (var i = 0; i < stats.length; i++) {
-        var el = {
-          sectionname: this.sectionnames[i].replace(":", ":\n"),
-          id: i,
-        };
         if (stats[i] == null) {
           continue;
         }
+        var el = {
+          sectionname: this.sectionnames[i]
+            ? this.sectionnames[i].replace(":", ":\n")
+            : "Section " + i,
+          id: i,
+        };
         if (stats[i].hypervideo) {
           el.hypervideo = {
             count: stats[i].hypervideo.count,
@@ -896,7 +916,10 @@ export default {
 
       // reduce the number of sections
       for (let i = 0; i < this.sectionnames.length; i++) {
-        if (!this.sectionnames[i].includes("Kurseinheit")) {
+        if (
+          this.sectionnames[i] &&
+          !this.sectionnames[i].includes("Kurseinheit")
+        ) {
           this.sectionnames.splice(i, 1);
         }
       }

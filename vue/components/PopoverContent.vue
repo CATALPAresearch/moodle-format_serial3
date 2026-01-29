@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import Communication from "../scripts/communication";
+import Communication from "../utils/communication";
 import { mapState } from "vuex";
 
 export default {

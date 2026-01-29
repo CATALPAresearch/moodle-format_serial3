@@ -1,0 +1,60 @@
+{
+  "excellent": {
+    "courseData": {
+      "101": {"id": 101, "name": "Video 1: Introduction", "type": "hypervideo", "modulename": "hypervideo", "section": "1", "sectionname": "Kurseinheit 1", "rating": 3, "complete": 1, "completion": 1},
+      "102": {"id": 102, "name": "Text 1: Basics", "type": "longpage", "modulename": "longpage", "section": "1", "sectionname": "Kurseinheit 1", "rating": 3, "complete": 1, "completion": 1},
+      "103": {"id": 103, "name": "Self-Assessment 1", "type": "safran", "modulename": "safran", "section": "1", "sectionname": "Kurseinheit 1", "rating": 3, "complete": 1, "completion": 1, "grade": 95, "maxgrade": 100},
+      "201": {"id": 201, "name": "Video 2: Advanced", "type": "hypervideo", "modulename": "hypervideo", "section": "2", "sectionname": "Kurseinheit 2", "rating": 3, "complete": 1, "completion": 1},
+      "202": {"id": 202, "name": "Text 2: Advanced Topics", "type": "longpage", "modulename": "longpage", "section": "2", "sectionname": "Kurseinheit 2", "rating": 3, "complete": 1, "completion": 1},
+      "203": {"id": 203, "name": "Assignment 1", "type": "assign", "modulename": "assign", "section": "2", "sectionname": "Kurseinheit 2", "rating": 3, "complete": 1, "completion": 1, "grade": 92, "maxgrade": 100}
+    },
+    "proficiency": 92,
+    "progressUnderstanding": 95
+  },
+  "average": {
+    "courseData": {
+      "101": {"id": 101, "name": "Video 1: Introduction", "type": "hypervideo", "modulename": "hypervideo", "section": "1", "sectionname": "Kurseinheit 1", "rating": 2, "complete": 1, "completion": 1},
+      "102": {"id": 102, "name": "Text 1: Basics", "type": "longpage", "modulename": "longpage", "section": "1", "sectionname": "Kurseinheit 1", "rating": 2, "complete": 1, "completion": 1},
+      "103": {"id": 103, "name": "Self-Assessment 1", "type": "safran", "modulename": "safran", "section": "1", "sectionname": "Kurseinheit 1", "rating": 2, "complete": 1, "completion": 1, "grade": 72, "maxgrade": 100},
+      "201": {"id": 201, "name": "Video 2: Advanced", "type": "hypervideo", "modulename": "hypervideo", "section": "2", "sectionname": "Kurseinheit 2", "rating": 1, "complete": 0, "completion": 0},
+      "202": {"id": 202, "name": "Text 2: Advanced Topics", "type": "longpage", "modulename": "longpage", "section": "2", "sectionname": "Kurseinheit 2", "rating": 1, "complete": 0, "completion": 0},
+      "203": {"id": 203, "name": "Assignment 1", "type": "assign", "modulename": "assign", "section": "2", "sectionname": "Kurseinheit 2", "rating": 0, "complete": 0, "completion": 0}
+    },
+    "proficiency": 68,
+    "progressUnderstanding": 70
+  },
+  "struggling": {
+    "courseData": {
+      "101": {"id": 101, "name": "Video 1: Introduction", "type": "hypervideo", "modulename": "hypervideo", "section": "1", "sectionname": "Kurseinheit 1", "rating": 1, "complete": 0, "completion": 0},
+      "102": {"id": 102, "name": "Text 1: Basics", "type": "longpage", "modulename": "longpage", "section": "1", "sectionname": "Kurseinheit 1", "rating": 0, "complete": 0, "completion": 0},
+      "103": {"id": 103, "name": "Self-Assessment 1", "type": "safran", "modulename": "safran", "section": "1", "sectionname": "Kurseinheit 1", "rating": 0, "complete": 1, "completion": 1, "grade": 45, "maxgrade": 100},
+      "201": {"id": 201, "name": "Video 2: Advanced", "type": "hypervideo", "modulename": "hypervideo", "section": "2", "sectionname": "Kurseinheit 2", "rating": 0, "complete": 0},
+      "202": {"id": 202, "name": "Text 2: Advanced Topics", "type": "longpage", "modulename": "longpage", "section": "2", "sectionname": "Kurseinheit 2", "rating": 0, "complete": 0},
+      "203": {"id": 203, "name": "Assignment 1", "type": "assign", "modulename": "assign", "section": "2", "sectionname": "Kurseinheit 2", "rating": 0, "complete": 0}
+    },
+    "proficiency": 35,
+    "progressUnderstanding": 25
+  },
+  "procrastinator": {
+    "courseData": {
+      "101": {"id": 101, "name": "Video 1: Introduction", "type": "hypervideo", "modulename": "hypervideo", "section": "1", "sectionname": "Kurseinheit 1", "rating": 2, "complete": 1, "completion": 1},
+      "102": {"id": 102, "name": "Text 1: Basics", "type": "longpage", "modulename": "longpage", "section": "1", "sectionname": "Kurseinheit 1", "rating": 2, "complete": 1, "completion": 1},
+      "103": {"id": 103, "name": "Self-Assessment 1", "type": "safran", "modulename": "safran", "section": "1", "sectionname": "Kurseinheit 1", "rating": 1, "complete": 1, "completion": 1, "grade": 65, "maxgrade": 100},
+      "201": {"id": 201, "name": "Video 2: Advanced", "type": "hypervideo", "modulename": "hypervideo", "section": "2", "sectionname": "Kurseinheit 2", "rating": 0, "complete": 0},
+      "202": {"id": 202, "name": "Text 2: Advanced Topics", "type": "longpage", "modulename": "longpage", "section": "2", "sectionname": "Kurseinheit 2", "rating": 0, "complete": 0},
+      "203": {"id": 203, "name": "Assignment 1", "type": "assign", "modulename": "assign", "section": "2", "sectionname": "Kurseinheit 2", "rating": 0, "complete": 0}
+    },
+    "proficiency": 55,
+    "progressUnderstanding": 60
+  },
+  "edge_cases": {
+    "courseData": {
+      "101": {"id": 101, "name": "", "type": "hypervideo", "modulename": "hypervideo", "section": "1", "sectionname": "", "rating": null, "complete": 0, "completion": 0},
+      "102": {"id": 102, "name": "Very long activity name that goes on and on and should test text wrapping and overflow handling in the UI", "type": "longpage", "modulename": "longpage", "section": "1", "sectionname": "Section with very long name that tests overflow", "rating": 3, "complete": 1, "completion": 1},
+      "103": {"id": 103, "name": "Self-Assessment Edge", "type": "safran", "modulename": "safran", "section": "1", "sectionname": "Kurseinheit 1", "rating": 0, "complete": 1, "completion": 1, "grade": 150, "maxgrade": 100},
+      "999": {"id": 999, "name": "Future Activity", "type": "assign", "modulename": "assign", "section": "99", "sectionname": "Future Section", "rating": 0, "complete": 0}
+    },
+    "proficiency": 0,
+    "progressUnderstanding": 100
+  }
+}

@@ -62,8 +62,9 @@
 <script>
 import WidgetHeading from "../../components/WidgetHeading.vue";
 import * as d3 from "../../js/d3.min.js";
+import mockDataHelper from "../../utils/mockDataHelper";
 import { mapGetters, mapState } from "vuex";
-import Communication from "../../scripts/communication";
+import Communication from "../../utils/communication";
 
 export default {
   name: "QuizStatistics",
@@ -136,7 +137,26 @@ export default {
   },
 
   methods: {
-    loadData() {
+    async loadData() {
+      // Check for mock data
+      if (mockDataHelper.isMockDataEnabled(this.$store)) {
+        const result = await mockDataHelper.loadWidgetData(
+          this.$store,
+          "QuizStatistics",
+          null,
+        );
+
+        if (result.success && result.isMockData) {
+          console.log("[Mock Data] Using mock data for QuizStatistics");
+          this.quizzes = result.data.quizzes || [];
+          this.assignments = result.data.assignments || [];
+          this.dataAll = [...this.quizzes, ...this.assignments];
+          this.displayData(this.dataAll);
+          return;
+        }
+      }
+
+      // Load real data
       Promise.all([this.getQuizzes(), this.getAssignments()]).then(() => {
         this.displayData(this.dataAll);
       });

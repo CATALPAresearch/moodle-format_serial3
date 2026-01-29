@@ -31,6 +31,7 @@
 <script>
 import WidgetHeading from "../../components/WidgetHeading.vue";
 import RecommendationItem from "../../components/RecommendationItem.vue";
+import mockDataHelper from "../../utils/mockDataHelper";
 // import recommendationRules from '../../data/recommendations.json';
 import { mapActions, mapGetters, mapState } from "vuex";
 import TimeAgo from "javascript-time-ago";
@@ -125,7 +126,26 @@ export default {
   methods: {
     ...mapActions("recommendations", ["loadRecommentations"]),
 
-    loadData() {
+    async loadData() {
+      // Check for mock data
+      if (mockDataHelper.isMockDataEnabled(this.$store)) {
+        const result = await mockDataHelper.loadWidgetData(
+          this.$store,
+          "Recommendations",
+          null,
+        );
+
+        if (result.success && result.isMockData) {
+          console.log("[Mock Data] Using mock data for Recommendations");
+          this.$store.commit(
+            "recommendations/setRecommendations",
+            result.data.recommendations,
+          );
+          return;
+        }
+      }
+
+      // Load real data
       this.loadRecommentations();
     },
 

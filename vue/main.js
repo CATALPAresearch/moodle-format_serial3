@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import { store } from "./store/store";
 import router from "./router";
 import App from "./App.vue";
-import Communication from "./scripts/communication";
+import Communication from "./utils/communication";
 
 function init(
   courseid,

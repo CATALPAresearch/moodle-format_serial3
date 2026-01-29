@@ -93,7 +93,8 @@
 
 <script>
 import WidgetHeading from "../../components/WidgetHeading.vue";
-import Communication from "../../scripts/communication";
+import Communication from "../../utils/communication";
+import mockDataHelper from "../../utils/mockDataHelper";
 import { mapActions } from "vuex";
 
 export default {
@@ -150,7 +151,24 @@ export default {
   methods: {
     ...mapActions(["log"]),
 
-    loadData() {
+    async loadData() {
+      // Check for mock data
+      if (mockDataHelper.isMockDataEnabled(this.$store)) {
+        const result = await mockDataHelper.loadWidgetData(
+          this.$store,
+          "Deadlines",
+          null,
+        );
+
+        if (result.success && result.isMockData) {
+          console.log("[Mock Data] Using mock data for Deadlines");
+          this.deadlines = result.data.calendar || [];
+          this.assignments = result.data.assignments || [];
+          return;
+        }
+      }
+
+      // Load real data
       this.getCalendarData();
       this.getAssignmentData();
     },

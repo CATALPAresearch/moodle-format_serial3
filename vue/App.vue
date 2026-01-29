@@ -75,7 +75,7 @@
 import MenuBar from "./components/MenuBar.vue";
 import WelcomeVideo from "./components/WelcomeVideo.vue";
 import SurveyPrompt from "./components/SurveyPrompt.vue";
-import Communication from "./scripts/communication";
+import Communication from "./utils/communication";
 
 // Widget imports - now from organized widget folders
 import AppDeadlines from "./widgets/Deadlines";

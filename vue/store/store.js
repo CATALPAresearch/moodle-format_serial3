@@ -2,11 +2,11 @@ import { createStore } from "vuex";
 import moodleAjax from "core/ajax";
 import moodleStorage from "core/localstorage";
 import Notification from "core/notification";
-import Logger from "../scripts/logger";
+import Logger from "../utils/logger";
 
 import dashboardSettings from "./dashboardSettings";
 import learnermodel from "./learnermodel";
-import Communication from "../scripts/communication";
+import Communication from "../utils/communication";
 
 // Import widget stores
 import taskListStore from "../widgets/TaskList/store";
@@ -60,9 +60,31 @@ export const store = createStore({
     },
     confValue: "",
     learnerGoal: "passing",
+    mockDataEnabled: false,
+    mockDataScenario: null,
   },
 
   mutations: {
+    setMockDataEnabled(state, { enabled, scenario }) {
+      state.mockDataEnabled = enabled;
+      state.mockDataScenario = enabled ? scenario : null;
+
+      // Persist to sessionStorage
+      if (enabled) {
+        sessionStorage.setItem("mockDataEnabled", "true");
+        sessionStorage.setItem("mockDataScenario", scenario);
+      } else {
+        sessionStorage.removeItem("mockDataEnabled");
+        sessionStorage.removeItem("mockDataScenario");
+      }
+    },
+    initMockDataFromSession(state) {
+      const enabled = sessionStorage.getItem("mockDataEnabled") === "true";
+      const scenario = sessionStorage.getItem("mockDataScenario");
+
+      state.mockDataEnabled = enabled;
+      state.mockDataScenario = enabled ? scenario : null;
+    },
     setResearchCondition(state) {
       // assign user to the control group if their user id is even
       state.research_condition =
@@ -173,8 +195,50 @@ export const store = createStore({
     getLearnerGoal: function (state) {
       return state.learnerGoal;
     },
+    getMockDataEnabled: function (state) {
+      return state.mockDataEnabled;
+    },
+    getMockDataScenario: function (state) {
+      return state.mockDataScenario;
+    },
   },
   actions: {
+    async loadMockData({ commit, state }, { widgetName, scenario }) {
+      try {
+        const scenarioToUse = scenario || state.mockDataScenario;
+
+        // Get the base path from the current page URL
+        // Moodle URLs look like: http://localhost/moodle455/...
+        const pathParts = window.location.pathname.split("/");
+        const moodleIndex = pathParts.findIndex((part) => part === "course");
+        const basePath =
+          moodleIndex > 0 ? pathParts.slice(0, moodleIndex).join("/") : "";
+
+        const url = `${basePath}/course/format/serial3/vue/data/mock-data/${widgetName}.json`;
+        console.log(`[Mock Data] Fetching from: ${url}`);
+
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(
+            `Failed to load mock data for ${widgetName}: ${response.status} ${response.statusText}`,
+          );
+        }
+        const data = await response.json();
+        return data[scenarioToUse] || data.average;
+      } catch (error) {
+        console.error(`[Mock Data] Error loading ${widgetName}:`, error);
+        return null;
+      }
+    },
+
+    toggleMockData({ commit, state }) {
+      commit("setMockDataEnabled", !state.mockDataEnabled);
+    },
+
+    setMockScenario({ commit }, scenario) {
+      commit("setMockDataScenario", scenario);
+    },
+
     setupLogger(context) {
       context.state.logger = new Logger(context.state.courseid, {
         context: context.state.pluginName,
