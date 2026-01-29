@@ -29,28 +29,40 @@ require_once(__DIR__ . '/analytics.php');
 
 class format_serial3_course_external extends external_api
 {
-    // Get added or changed course resources
-    public static function get_added_or_changed_course_resources_parameters()
-    {
+    /**
+     * Returns the parameters for getting added or changed course resources.
+     *
+     * @return external_function_parameters Parameters for the function
+     */
+    public static function get_added_or_changed_course_resources_parameters() {
         return new external_function_parameters(
-            array(
-                'courseid' => new external_value(PARAM_INT, 'Course ID')
-            )
+            [
+                'courseid' => new external_value(PARAM_INT, 'Course ID'),
+            ]
         );
     }
 
-    public static function get_added_or_changed_course_resources_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function get_added_or_changed_course_resources_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_added_or_changed_course_resources($courseid)
-    {
+    /**
+     * Gets recently added or modified course resources.
+     *
+     * @param int $courseid Course ID
+     * @return array Array containing success flag and JSON-encoded resource data
+     */
+    public static function get_added_or_changed_course_resources($courseid) {
         global $DB;
 
         // Get recently added or modified course modules
@@ -62,64 +74,80 @@ class format_serial3_course_external extends external_api
              AND cm.deletioninprogress = 0
              ORDER BY cm.added DESC
              LIMIT 50",
-            array('courseid' => $courseid)
+            ['courseid' => $courseid]
         );
 
-        // Get more details for each resource
-        $detailedResources = array();
+        // Get more details for each resource.
+        $detailedresources = [];
         foreach ($resources as $resource) {
             $resource->url = '';
             $resource->filename = '';
-            
-            // Try to get the resource name from the specific module table
+
+            // Try to get the resource name from the specific module table.
             $tablename = $resource->modname;
             if ($DB->get_manager()->table_exists($tablename)) {
-                $moduledata = $DB->get_record($tablename, array('id' => $resource->instance));
+                $moduledata = $DB->get_record($tablename, ['id' => $resource->instance]);
                 if ($moduledata && isset($moduledata->name)) {
                     $resource->filename = $moduledata->name;
                 }
             }
-            
-            $detailedResources[] = $resource;
+
+            $detailedresources[] = $resource;
         }
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($detailedResources),
-        );
+            'data' => json_encode($detailedresources),
+        ];
     }
 
-    public static function get_added_or_changed_course_resources_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function get_added_or_changed_course_resources_is_allowed_from_ajax() {
         return true;
     }
 
-    // Get deleted course resources
-    public static function get_deleted_course_resources_parameters()
-    {
+    /**
+     * Returns the parameters for getting deleted course resources.
+     *
+     * @return external_function_parameters Parameters for the function
+     */
+    public static function get_deleted_course_resources_parameters() {
         return new external_function_parameters(
-            array(
-                'courseid' => new external_value(PARAM_INT, 'Course ID')
-            )
+            [
+                'courseid' => new external_value(PARAM_INT, 'Course ID'),
+            ]
         );
     }
 
-    public static function get_deleted_course_resources_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function get_deleted_course_resources_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_deleted_course_resources($courseid)
-    {
+    /**
+     * Gets recently deleted course resources from log.
+     *
+     * @param int $courseid Course ID
+     * @return array Array containing success flag and JSON-encoded deleted resource data
+     */
+    public static function get_deleted_course_resources($courseid) {
         global $DB;
 
-        // Get deleted course modules from log
-        $deletedResources = $DB->get_records_sql(
+        // Get deleted course modules from log.
+        $deletedresources = $DB->get_records_sql(
             "SELECT l.id, l.timecreated, l.objectid, l.other
              FROM {logstore_standard_log} l
              WHERE l.courseid = :courseid
@@ -127,11 +155,11 @@ class format_serial3_course_external extends external_api
              AND l.target = 'course_module'
              ORDER BY l.timecreated DESC
              LIMIT 50",
-            array('courseid' => $courseid)
+            ['courseid' => $courseid]
         );
 
-        $processedResources = array();
-        foreach ($deletedResources as $resource) {
+        $processedresources = [];
+        foreach ($deletedresources as $resource) {
             $resource->filename = '';
             if (!empty($resource->other)) {
                 $other = json_decode($resource->other);
@@ -141,17 +169,21 @@ class format_serial3_course_external extends external_api
                     $resource->filename = $other->modulename;
                 }
             }
-            $processedResources[] = $resource;
+            $processedresources[] = $resource;
         }
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($processedResources),
-        );
+            'data' => json_encode($processedresources),
+        ];
     }
 
-    public static function get_deleted_course_resources_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function get_deleted_course_resources_is_allowed_from_ajax() {
         return true;
     }
 }

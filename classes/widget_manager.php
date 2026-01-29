@@ -34,7 +34,6 @@ defined('MOODLE_INTERNAL') || die();
  * Handles widget configuration, availability, and settings
  */
 class widget_manager {
-
     /**
      * Get all available widgets with their metadata
      *
@@ -138,14 +137,14 @@ class widget_manager {
     public static function get_enabled_widgets(int $courseid): array {
         $format = course_get_format($courseid);
         $settings = $format->get_format_options();
-        
+
         if (isset($settings['enabled_widgets'])) {
             $enabled = json_decode($settings['enabled_widgets'], true);
             if (is_array($enabled)) {
                 return $enabled;
             }
         }
-        
+
         // Return default enabled widgets
         $widgets = self::get_available_widgets();
         $enabled = [];
@@ -178,22 +177,22 @@ class widget_manager {
      */
     public static function get_widget_settings(int $courseid, string $widgetid): array {
         global $DB;
-        
+
         // Get settings from course_format_options table
         $optionkey = 'widget_settings_' . $widgetid;
         $record = $DB->get_record('course_format_options', [
             'courseid' => $courseid,
             'format' => 'serial3',
-            'name' => $optionkey
+            'name' => $optionkey,
         ]);
-        
+
         if ($record && !empty($record->value)) {
             $widgetsettings = json_decode($record->value, true);
             if (is_array($widgetsettings)) {
                 return $widgetsettings;
             }
         }
-        
+
         // Return default settings
         $widgets = self::get_available_widgets();
         if (isset($widgets[$widgetid]['settings'])) {
@@ -203,7 +202,7 @@ class widget_manager {
             }
             return $defaults;
         }
-        
+
         return [];
     }
 
@@ -233,17 +232,17 @@ class widget_manager {
      */
     public static function save_widget_settings(int $courseid, string $widgetid, array $settings): bool {
         global $DB;
-        
+
         $optionkey = 'widget_settings_' . $widgetid;
         $value = json_encode($settings);
-        
+
         // Check if record exists
         $record = $DB->get_record('course_format_options', [
             'courseid' => $courseid,
             'format' => 'serial3',
-            'name' => $optionkey
+            'name' => $optionkey,
         ]);
-        
+
         if ($record) {
             // Update existing record
             $record->value = $value;

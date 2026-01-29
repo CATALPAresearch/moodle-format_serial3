@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,7 +22,7 @@
  *  - lib.php/modulename_install() post installation hook
  *  - partially defaults.php
  *
- * @package mod_page
+ * @package format_serial3
  * @copyright  2009 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,5 +31,4 @@ defined('MOODLE_INTERNAL') || die;
 
 function xmldb_format_serial3_install() {
     global $CFG;
-
 }

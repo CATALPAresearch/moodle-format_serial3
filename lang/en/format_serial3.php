@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,16 +24,16 @@
 
 $string['addsections'] = 'Add topics';
 $string['currentsection'] = 'This topic';
+$string['deletesection'] = 'Delete topic';
 $string['editsection'] = 'Edit topic';
 $string['editsectionname'] = 'Edit topic name';
-$string['deletesection'] = 'Delete topic';
+$string['hidefromothers'] = 'Hide topic';
 $string['newsectionname'] = 'New name for topic {$a}';
-$string['sectionname'] = 'Topic';
-$string['pluginname'] = 'Serial 3';
-$string['section0name'] = 'General';
 $string['page-course-view-topics'] = 'Any course main page in topics format';
 $string['page-course-view-topics-x'] = 'Any course page in topics format';
-$string['hidefromothers'] = 'Hide topic';
+$string['pluginname'] = 'Serial 3';
+$string['section0name'] = 'General';
+$string['sectionname'] = 'Topic';
 $string['showfromothers'] = 'Show topic';
 // Survey
 $string['surveyTitle'] = 'Accompanying research APLE / LA-DIVA';
@@ -247,4 +246,3 @@ $string['widget_quizstatistics_desc'] = 'Shows quiz performance statistics and a
 // Widget-specific settings
 $string['widget_learningstrategies_showcategories'] = 'Show strategy categories';
 $string['widget_deadlines_daysahead'] = 'Days to show ahead';
-

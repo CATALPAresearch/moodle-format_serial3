@@ -31,7 +31,6 @@ require_once(__DIR__ . '/../classes/widget_manager.php');
  * Widget settings webservice class
  */
 class format_serial3_widgets_external extends external_api {
-
     /**
      * Get enabled widgets for a course
      *
@@ -40,26 +39,26 @@ class format_serial3_widgets_external extends external_api {
      */
     public static function get_widget_config($courseid) {
         global $USER;
-        
+
         $course = get_course($courseid);
         require_login($course);
-        
+
         $context = \context_course::instance($courseid);
-        
+
         // Get enabled widgets
         $enabledwidgets = \format_serial3\widget_manager::get_enabled_widgets($courseid);
-        
+
         // Get all widgets with their metadata
         $allwidgets = \format_serial3\widget_manager::get_available_widgets();
-        
+
         // Build widget configuration
         $widgetconfig = [];
         $isteacher = has_capability('moodle/course:update', $context);
-        
+
         foreach ($allwidgets as $widgetid => $widget) {
             // Convert widget ID to lowercase for frontend consistency
             $frontendid = strtolower($widgetid);
-            
+
             // Teachers see all widgets, students only see enabled ones
             if ($isteacher || in_array($widgetid, $enabledwidgets)) {
                 $widgetconfig[] = [
@@ -70,7 +69,7 @@ class format_serial3_widgets_external extends external_api {
                 ];
             }
         }
-        
+
         return [
             'success' => true,
             'widgets' => $widgetconfig,
@@ -121,23 +120,23 @@ class format_serial3_widgets_external extends external_api {
      */
     public static function save_widget_config($courseid, $widgets) {
         global $USER;
-        
+
         $course = get_course($courseid);
         require_login($course);
-        
+
         $context = \context_course::instance($courseid);
-        
+
         try {
             // Validate widget IDs
             $allwidgets = \format_serial3\widget_manager::get_available_widgets();
             $validwidgets = [];
-            
+
             // Create a lowercase to PascalCase mapping
             $idmap = [];
             foreach ($allwidgets as $widgetid => $widget) {
                 $idmap[strtolower($widgetid)] = $widgetid;
             }
-            
+
             foreach ($widgets as $frontendid) {
                 // Convert frontend ID back to backend ID
                 $backendid = isset($idmap[$frontendid]) ? $idmap[$frontendid] : $frontendid;
@@ -145,25 +144,25 @@ class format_serial3_widgets_external extends external_api {
                     $validwidgets[] = $backendid;
                 }
             }
-            
+
             // Save enabled widgets
             $success = \format_serial3\widget_manager::save_enabled_widgets($courseid, $validwidgets);
-            
+
             if ($success) {
                 return [
                     'success' => true,
-                    'message' => 'Widget configuration saved successfully'
+                    'message' => 'Widget configuration saved successfully',
                 ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Failed to save widget configuration'
+                    'message' => 'Failed to save widget configuration',
                 ];
             }
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => 'Error: ' . $e->getMessage(),
             ];
         }
     }

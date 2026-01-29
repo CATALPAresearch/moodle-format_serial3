@@ -17,7 +17,7 @@
 /**
  * Version details
  *
- * @package    format
+ * @package    format_serial3
  * @subpackage serial3
  * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -30,4 +30,3 @@ $plugin->requires  = 2024100705;          // Requires this Moodle version.
 $plugin->component = 'format_serial3';    // Full name of the plugin (used for diagnostics).
 $plugin->release   = '3.2.0';             // Human-readable version name.
 $plugin->maturity  = MATURITY_BETA;     // MATURITY_STABLE, MATURITY_RC, MATURITY_BETA, MATURITY_ALPHA.
-

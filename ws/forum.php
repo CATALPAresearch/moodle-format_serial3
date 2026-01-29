@@ -27,35 +27,56 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/externallib.php');
 require_once(__DIR__ . '/analytics.php');
 
+/**
+ * Forum webservice methods.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_serial3_forum_external extends external_api
 {
     /**
-     * Get the number of forum posts of a user.
+     * Returns the parameters for getting forum posts.
+     *
+     * @return external_function_parameters Parameters for the function.
      */
-    public static function get_forum_posts_parameters()
-    {
+    public static function get_forum_posts_parameters() {
         return new external_function_parameters([
             'course' => new external_value(PARAM_INT, 'id of course'),
         ]);
     }
 
-    public static function get_forum_posts_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function get_forum_posts_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_forum_posts_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function get_forum_posts_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_forum_posts($course)
-    {
+    /**
+     * Gets forum post statistics for a course.
+     *
+     * @param int $course Course ID.
+     * @return array Array containing success flag and JSON-encoded forum post data.
+     */
+    public static function get_forum_posts($course) {
         global $DB, $USER;
 
         $userid = (int)$USER->id;
@@ -84,43 +105,56 @@ class format_serial3_forum_external extends external_api
 		WHERE fd.course = :courseid1 AND fp.userid IS NOT NULL
         ;";
 
-        $params = array('courseid' => (int)$course, 'courseid1' => (int)$course, 'userid' => $userid);
-        
+        $params = ['courseid' => (int)$course, 'courseid1' => (int)$course, 'userid' => $userid];
+
         $result = $DB->get_records_sql($sql, $params);
         $result = [];
-        return array(
+        return [
             'success' => true,
             'data' => json_encode($result),
-        );
+        ];
     }
 
-    // Get new forum discussions
-    public static function get_new_forum_discussions_parameters()
-    {
+    /**
+     * Returns the parameters for getting new forum discussions.
+     *
+     * @return external_function_parameters Parameters for the function.
+     */
+    public static function get_new_forum_discussions_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'Course ID'),
-                'userid' => new external_value(PARAM_INT, 'User ID')
-            )
+                'userid' => new external_value(PARAM_INT, 'User ID'),
+            ]
         );
     }
 
-    public static function get_new_forum_discussions_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function get_new_forum_discussions_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_new_forum_discussions($courseid, $userid)
-    {
+    /**
+     * Gets new forum discussions created by teachers.
+     *
+     * @param int $courseid Course ID.
+     * @param int $userid User ID.
+     * @return array Array containing success flag and JSON-encoded discussion data.
+     */
+    public static function get_new_forum_discussions($courseid, $userid) {
         global $DB;
 
         $context = context_course::instance($courseid);
-        
+
         // Get forum discussions created by teachers
         $discussions = $DB->get_records_sql(
             "SELECT fd.id, fd.name, fd.userid, fd.timemodified, fd.timestart,
@@ -135,17 +169,21 @@ class format_serial3_forum_external extends external_api
              AND r.shortname IN ('teacher', 'editingteacher')
              ORDER BY fd.timemodified DESC
              LIMIT 50",
-            array('courseid' => $courseid, 'contextid' => $context->id)
+            ['courseid' => $courseid, 'contextid' => $context->id]
         );
 
-        return array(
+        return [
             'success' => true,
             'data' => json_encode(array_values($discussions)),
-        );
+        ];
     }
 
-    public static function get_new_forum_discussions_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function get_new_forum_discussions_is_allowed_from_ajax() {
         return true;
     }
 }

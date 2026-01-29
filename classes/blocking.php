@@ -28,22 +28,30 @@ defined('MOODLE_INTERNAL') || die();
 
 class blocking
 {
-
     const policy_version = 6; // local_niels: 11  aple: 6, marc: 1
     const disable_blocking = false;
     const disable_whitelist = false;
-    const whitelist = array(
+    const whitelist = [
         '127.0.0.1',
         '::1',
         'localhost',
-        //'132.176.117.197' reverse setting for testing 
-    );
+        // '132.176.117.197' reverse setting for testing
+    ];
 
-    public static function tool_policy_accepted()
-    {
-        global $DB, $USER;             
-        if(self::disable_blocking === true || (self::disable_whitelist === false && in_array($_SERVER['REMOTE_ADDR'], self::whitelist))) return true;        
-        $res = $DB->get_record("tool_policy_acceptances", array("policyversionid" => self::policy_version, "userid" => (int)$USER->id ), "status");
+    /**
+     * Check if the user has accepted the required tool policy.
+     *
+     * Checks against the configured policy version and optionally bypasses
+     * the check based on whitelist or disable_blocking settings.
+     *
+     * @return bool True if the policy is accepted or bypassed, false otherwise
+     */
+    public static function tool_policy_accepted() {
+        global $DB, $USER;
+        if (self::disable_blocking === true || (self::disable_whitelist === false && in_array($_SERVER['REMOTE_ADDR'], self::whitelist))) {
+            return true;
+        }
+        $res = $DB->get_record("tool_policy_acceptances", ["policyversionid" => self::policy_version, "userid" => (int)$USER->id ], "status");
         if (isset($res->status) && $res->status == 1) {
             return true;
         }

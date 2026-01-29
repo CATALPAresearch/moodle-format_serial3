@@ -24,7 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot. '/course/format/lib.php');
+require_once($CFG->dirroot . '/course/format/lib.php');
 
 use core_courseformat\base as format_base;
 use core\output\inplace_editable;
@@ -46,7 +46,6 @@ use global_navigation;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_serial3 extends format_base {
-
     /** @var bool Survey enabled flag */
     private $SURVEY_ENABLED = true;
 
@@ -70,8 +69,11 @@ class format_serial3 extends format_base {
     public function get_section_name($section): string {
         $section = $this->get_section($section);
         if ((string)$section->name !== '') {
-            return format_string($section->name, true,
-                    array('context' => context_course::instance($this->courseid)));
+            return format_string(
+                $section->name,
+                true,
+                ['context' => context_course::instance($this->courseid)]
+            );
         } else {
             return $this->get_default_section_name($section);
         }
@@ -108,9 +110,9 @@ class format_serial3 extends format_base {
      *     'sr' (int) used by multipage formats to specify to which section to return
      * @return null|moodle_url
      */
-    public function get_view_url($section, $options = array()): ?moodle_url {
+    public function get_view_url($section, $options = []): ?moodle_url {
         $course = $this->get_course();
-        $url = new moodle_url('/course/view.php', array('id' => $course->id));
+        $url = new moodle_url('/course/view.php', ['id' => $course->id]);
 
         $sr = null;
         if (array_key_exists('sr', $options)) {
@@ -135,7 +137,7 @@ class format_serial3 extends format_base {
             if ($sectionno != 0 && $usercoursedisplay == COURSE_DISPLAY_MULTIPAGE) {
                 $url->param('section', $sectionno);
             } else {
-                $url->set_anchor('section-'.$sectionno);
+                $url->set_anchor('section-' . $sectionno);
             }
         }
         return $url;
@@ -161,23 +163,23 @@ class format_serial3 extends format_base {
      * @param global_navigation $navigation
      * @param navigation_node $node The course node within the navigation
      */
-    public function extend_course_navigation($navigation, navigation_node $node): void {    
+    public function extend_course_navigation($navigation, navigation_node $node): void {
 
         // SURVEY START
-        
+
         global $COURSE, $DB, $CFG, $USER, $PAGE;
 
         $perm = new \format_serial3\permission\course($USER->id, $COURSE->id);
 
-        if ($this->SURVEY_ENABLED === true && !$perm->isAnyKindOfModerator()) {             
+        if ($this->SURVEY_ENABLED === true && !$perm->isAnyKindOfModerator()) {
             $records = $DB->get_records_sql(
-                'SELECT * FROM {limesurvey_assigns} WHERE course_id = ?', 
-                array($COURSE->id)
-            );                   
-            foreach ($records as $record) {                
+                'SELECT * FROM {limesurvey_assigns} WHERE course_id = ?',
+                [$COURSE->id]
+            );
+            foreach ($records as $record) {
                 $submissionexists = $DB->record_exists_sql(
-                    'SELECT * FROM {limesurvey_submissions} WHERE user_id = ? AND survey_id = ?', 
-                    array($USER->id, $record->survey_id)
+                    'SELECT * FROM {limesurvey_submissions} WHERE user_id = ? AND survey_id = ?',
+                    [$USER->id, $record->survey_id]
                 );
                 if ($submissionexists === false) {
                     if (isset($record->startdate) && !is_null($record->startdate) && is_int(+$record->startdate)) {
@@ -195,19 +197,21 @@ class format_serial3 extends format_base {
                             continue;
                         }
                     }
-                    $redirectToSurvey = new moodle_url('/course/format/serial3/survey.php', array('c' => $COURSE->id));
+                    $redirectToSurvey = new moodle_url('/course/format/serial3/survey.php', ['c' => $COURSE->id]);
                     redirect($redirectToSurvey);
                 }
             }
-        }      
-      
+        }
+
         // SURVEY END
-        
+
         // If section is specified in course/view.php, make sure it is expanded in navigation.
         if ($navigation->includesectionnum === false) {
             $selectedsection = optional_param('section', null, PARAM_INT);
-            if ($selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
-                    $PAGE->url->compare(new moodle_url('/course/view.php'), URL_MATCH_BASE)) {
+            if (
+                $selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
+                    $PAGE->url->compare(new moodle_url('/course/view.php'), URL_MATCH_BASE)
+            ) {
                 $navigation->includesectionnum = $selectedsection;
             }
         }
@@ -238,7 +242,7 @@ class format_serial3 extends format_base {
      */
     public function ajax_section_move(): array {
         global $PAGE;
-        $titles = array();
+        $titles = [];
         $course = $this->get_course();
         $modinfo = get_fast_modinfo($course);
         $renderer = $this->get_renderer($PAGE);
@@ -247,7 +251,7 @@ class format_serial3 extends format_base {
                 $titles[$number] = $renderer->section_title($section, $course);
             }
         }
-        return array('sectiontitles' => $titles, 'action' => 'move');
+        return ['sectiontitles' => $titles, 'action' => 'move'];
     }
 
     /**
@@ -257,10 +261,10 @@ class format_serial3 extends format_base {
      *     each of values is an array of block names (for left and right side columns)
      */
     public function get_default_blocks(): array {
-        return array(
-            BLOCK_POS_LEFT => array(),
-            BLOCK_POS_RIGHT => array()
-        );
+        return [
+            BLOCK_POS_LEFT => [],
+            BLOCK_POS_RIGHT => [],
+        ];
     }
 
     /**
@@ -282,87 +286,87 @@ class format_serial3 extends format_base {
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
             $courseconfig = get_config('moodlecourse');
-            $courseformatoptions = array(
-                'hiddensections' => array(
+            $courseformatoptions = [
+                'hiddensections' => [
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT,
-                ),
-                'coursedisplay' => array(
+                ],
+                'coursedisplay' => [
                     'default' => $courseconfig->coursedisplay,
                     'type' => PARAM_INT,
-                ),
-                'dashboardsectionexclude' => array(
+                ],
+                'dashboardsectionexclude' => [
                     'default' => '',
                     'type' => PARAM_TEXT,
-                ),
-                'sectioncollapsenabled' => array(
-                    'default' => property_exists($courseconfig, "sectioncollapsenabled") ? 
+                ],
+                'sectioncollapsenabled' => [
+                    'default' => property_exists($courseconfig, "sectioncollapsenabled") ?
                         $courseconfig->sectioncollapsenabled : 0,
                     'type' => PARAM_INT,
-                ),
-                'sectioninitiallycollapsed' => array(
-                    'default' => property_exists($courseconfig, "sectioninitiallycollapsed") ? 
+                ],
+                'sectioninitiallycollapsed' => [
+                    'default' => property_exists($courseconfig, "sectioninitiallycollapsed") ?
                         $courseconfig->sectioninitiallycollapsed : 0,
                     'type' => PARAM_INT,
-                ),
-                'enabled_widgets' => array(
+                ],
+                'enabled_widgets' => [
                     'default' => '',
                     'type' => PARAM_TEXT,
-                ),
-            );
+                ],
+            ];
         }
         if ($foreditform) {
-            $courseformatoptionsedit = array(
-                'hiddensections' => array(
+            $courseformatoptionsedit = [
+                'hiddensections' => [
                     'label' => new lang_string('hiddensections'),
                     'help' => 'hiddensections',
                     'help_component' => 'moodle',
                     'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
+                    'element_attributes' => [
+                        [
                             0 => new lang_string('hiddensectionscollapsed'),
-                            1 => new lang_string('hiddensectionsinvisible')
-                        )
-                    ),
-                ),
-                'coursedisplay' => array(
+                            1 => new lang_string('hiddensectionsinvisible'),
+                        ],
+                    ],
+                ],
+                'coursedisplay' => [
                     'label' => new lang_string('coursedisplay', 'format_serial3'),
                     'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
+                    'element_attributes' => [
+                        [
                             COURSE_DISPLAY_SINGLEPAGE => new lang_string('coursedisplay_single'),
-                            COURSE_DISPLAY_MULTIPAGE => new lang_string('coursedisplay_multi')
-                        )
-                    ),
+                            COURSE_DISPLAY_MULTIPAGE => new lang_string('coursedisplay_multi'),
+                        ],
+                    ],
                     'help' => 'coursedisplay',
                     'help_component' => 'moodle',
-                ),
-                'dashboardsectionexclude' => array(
-                    'label' =>  get_string('dashboardsectionexclude', 'format_serial3'),
-                    'element_type' => 'text'
-                ),
-                'sectioncollapsenabled' => array(
-                    'label' =>  get_string('sectioncollapsenabled', 'format_serial3'),
+                ],
+                'dashboardsectionexclude' => [
+                    'label' => get_string('dashboardsectionexclude', 'format_serial3'),
+                    'element_type' => 'text',
+                ],
+                'sectioncollapsenabled' => [
+                    'label' => get_string('sectioncollapsenabled', 'format_serial3'),
                     'element_type' => 'advcheckbox',
                     'help' => 'sectioncollapsenabled',
                     'help_component' => 'moodle',
-                ),
-                'sectioninitiallycollapsed' => array( 
-                    'label' =>  get_string('sectioninitiallycollapsed', 'format_serial3'),
+                ],
+                'sectioninitiallycollapsed' => [
+                    'label' => get_string('sectioninitiallycollapsed', 'format_serial3'),
                     'element_type' => 'advcheckbox',
                     'help' => 'sectioninitiallycollapsed',
                     'help_component' => 'moodle',
-                ),
-            );
-            
+                ],
+            ];
+
             // Add widget configuration to edit form
             $this->add_widget_settings_to_form($courseformatoptionsedit);
-            
+
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
         return $courseformatoptions;
     }
-    
+
     /**
      * Add widget settings to course format options
      *
@@ -371,42 +375,45 @@ class format_serial3 extends format_base {
     private function add_widget_settings_to_form(array &$options): void {
         require_once(__DIR__ . '/classes/widget_manager.php');
         $widgets = \format_serial3\widget_manager::get_available_widgets();
-        
+
         // Add header for widget settings
-        $options['widgets_header'] = array(
+        $options['widgets_header'] = [
             'label' => get_string('widgets_header', 'format_serial3'),
             'element_type' => 'header',
-        );
-        
+        ];
+
         // Add enabled widgets multiselect
-        $widgetoptions = array();
+        $widgetoptions = [];
         foreach ($widgets as $widgetid => $widget) {
             $widgetoptions[$widgetid] = $widget['name'];
         }
-        
-        $options['enabled_widgets'] = array(
+
+        $options['enabled_widgets'] = [
             'label' => get_string('enabled_widgets', 'format_serial3'),
             'help' => 'enabled_widgets',
             'help_component' => 'format_serial3',
             'element_type' => 'autocomplete',
-            'element_attributes' => array(
+            'element_attributes' => [
                 $widgetoptions,
-                array('multiple' => true)
-            ),
-        );
-        
+                ['multiple' => true],
+            ],
+        ];
+
         // Add link to dedicated settings page instead of adding all fields here
         $courseid = $this->get_course()->id;
         if ($courseid > 0) {
-            $settingsurl = new \moodle_url('/course/format/serial3/widgets.php', array('id' => $courseid));
-            $options['widgets_settings_link'] = array(
+            $settingsurl = new \moodle_url('/course/format/serial3/widgets.php', ['id' => $courseid]);
+            $options['widgets_settings_link'] = [
                 'label' => get_string('widget_settings_advanced', 'format_serial3'),
                 'element_type' => 'static',
-                'element_attributes' => array(
-                    \html_writer::link($settingsurl, get_string('widget_settings_advanced_link', 'format_serial3'),
-                        array('target' => '_blank', 'class' => 'btn btn-secondary'))
-                ),
-            );
+                'element_attributes' => [
+                    \html_writer::link(
+                        $settingsurl,
+                        get_string('widget_settings_advanced_link', 'format_serial3'),
+                        ['target' => '_blank', 'class' => 'btn btn-secondary']
+                    ),
+                ],
+            ];
         }
     }
 
@@ -454,7 +461,7 @@ class format_serial3 extends format_base {
      */
     public function update_course_format_options($data, $oldcourse = null): bool {
         $data = (array)$data;
-        
+
         // Filter out widget settings - these are handled separately via widget_manager
         $filtereddata = [];
         foreach ($data as $key => $value) {
@@ -464,7 +471,7 @@ class format_serial3 extends format_base {
             }
         }
         $data = $filtereddata;
-        
+
         if ($oldcourse !== null) {
             $oldcourse = (array)$oldcourse;
             $options = $this->course_format_options();
@@ -505,9 +512,13 @@ class format_serial3 extends format_base {
      * @param null|lang_string|string $editlabel
      * @return \core\output\inplace_editable
      */
-    public function inplace_editable_render_section_name($section, $linkifneeded = true,
-                                                         $editable = null, $edithint = null, 
-                                                         $editlabel = null): inplace_editable {
+    public function inplace_editable_render_section_name(
+        $section,
+        $linkifneeded = true,
+        $editable = null,
+        $edithint = null,
+        $editlabel = null
+    ): inplace_editable {
         if (empty($edithint)) {
             $edithint = new lang_string('editsectionname', 'format_serial3');
         }
@@ -580,7 +591,9 @@ function format_serial3_inplace_editable($itemtype, $itemid, $newvalue): inplace
     if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
         $section = $DB->get_record_sql(
             'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-            array($itemid, 'serial3'), MUST_EXIST);
+            [$itemid, 'serial3'],
+            MUST_EXIST
+        );
         return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
 }

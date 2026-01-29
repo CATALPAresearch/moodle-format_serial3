@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,11 +26,22 @@ namespace format_serial3\permission;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Permission course context class.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class course extends context {
-    
-    function __construct($userid, $courseid){
-        $context = \context_course::instance($courseid);        
+    /**
+     * Constructor.
+     *
+     * @param int $userid User ID
+     * @param int $courseid Course ID
+     */
+    function __construct($userid, $courseid) {
+        $context = \context_course::instance($courseid);
         parent::__construct($userid, $context);
     }
-
 }

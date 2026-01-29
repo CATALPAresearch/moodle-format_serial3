@@ -28,8 +28,8 @@ use format_serial3\blocking;
 use core\context\course as context_course;
 use core_courseformat\output\local\content as content_output;
 
-require_once($CFG->libdir.'/filelib.php');
-require_once($CFG->libdir.'/completionlib.php');
+require_once($CFG->libdir . '/filelib.php');
+require_once($CFG->libdir . '/completionlib.php');
 
 // Backwards compatible parameter aliasing.
 if ($topic = optional_param('topic', 0, PARAM_INT)) {
@@ -64,32 +64,31 @@ course_create_sections_if_missing($course, 0);
  */
 function format_serial3_check_moderator_status(): bool {
     global $USER, $COURSE;
-    
+
     try {
         // Site admins are always moderators.
         if (is_siteadmin($USER->id)) {
             return true;
         }
-        
+
         // Must be logged in.
         if (!isloggedin()) {
             return false;
         }
-        
+
         $context = context_course::instance($COURSE->id);
         $roles = get_user_roles($context, $USER->id);
-        
+
         // Check for moderator-level roles.
         $moderatorroles = ['manager', 'coursecreator', 'teacher', 'editingteacher'];
-        
+
         foreach ($roles as $role) {
             if (isset($role->shortname) && in_array($role->shortname, $moderatorroles)) {
                 return true;
             }
         }
-        
+
         return false;
-        
     } catch (Exception $ex) {
         debugging('Error checking moderator status: ' . $ex->getMessage(), DEBUG_DEVELOPER);
         return false;

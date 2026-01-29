@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -26,7 +25,7 @@
 require_once(dirname(__FILE__) . '/../../../../config.php');
 $context = context_system::instance();
 $PAGE->set_context($context);
-$PAGE->set_url($CFG->wwwroot.'/course/format/serial3/analytics/serial3.php');
+$PAGE->set_url($CFG->wwwroot . '/course/format/serial3/analytics/serial3.php');
 require_login();
 
 $PAGE->set_pagelayout('course');
@@ -34,21 +33,21 @@ $PAGE->set_title(get_string('surveyTitle', 'format_serial3'));
 $PAGE->set_title('Analytics');
 $PAGE->set_heading(get_string('surveyHeadline', 'format_serial3'));
 
-if(!isset($_GET['c']) || $DB->count_records('course', array('id' => $_GET['c'])) !== 1){
+if (!isset($_GET['c']) || $DB->count_records('course', ['id' => $_GET['c']]) !== 1) {
     // Kurs nicht gefunden
     redirect(new moodle_url("/"), 'Es wurde kein passender Kurs übergeben!', null, \core\output\notification::NOTIFY_WARNING);
 } else {
     $courseid = $_GET['c'];
     // Kurs gefunden
-    $permission = new format_serial3\permission\course((int)$USER->id, $courseid);   
-    if(!$permission->isAnyKindOfModerator()){
+    $permission = new format_serial3\permission\course((int)$USER->id, $courseid);
+    if (!$permission->isAnyKindOfModerator()) {
         // Keine Berechtigung
         redirect(new moodle_url("/"), 'Sie haben keine Berechtigung das Dashboard einzusehen!', null, \core\output\notification::NOTIFY_WARNING);
     } else {
         // Zugriff gewährt!
         echo $OUTPUT->header();
-        echo '<analytics-dashboard></analytics-dashboard>';  
-        $PAGE->requires->js_call_amd('format_serial3/ladAnalytics', 'init', array('course' => $courseid));      
+        echo '<analytics-dashboard></analytics-dashboard>';
+        $PAGE->requires->js_call_amd('format_serial3/ladAnalytics', 'init', ['course' => $courseid]);
         echo $OUTPUT->footer();
     }
 }

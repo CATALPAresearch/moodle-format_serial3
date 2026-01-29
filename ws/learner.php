@@ -31,36 +31,51 @@ class format_serial3_learner_external extends external_api
 {
     /**
      * Sets the learner goal for each user and course.
+     *
+     * @return external_function_parameters Parameters for setting learner goal
      */
-    public static function set_learner_goal_parameters()
-    {
+    public static function set_learner_goal_parameters() {
         return new external_function_parameters([
             'course' => new external_value(PARAM_INT, 'id of course'),
             'goal' => new external_value(PARAM_TEXT, 'The users learning goal.'),
         ]);
     }
 
-    public static function set_learner_goal_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function set_learner_goal_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function set_learner_goal_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag
+     */
+    public static function set_learner_goal_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success variable'),
-            )
+            ]
         );
     }
 
-    public static function set_learner_goal($course, $goal)
-    {
+    /**
+     * Sets or updates the learner's goal for a specific course.
+     *
+     * @param int $course Course ID
+     * @param string $goal The user's learning goal text
+     * @return array Array containing success flag
+     */
+    public static function set_learner_goal($course, $goal) {
         global $DB, $USER;
 
         $userid = (int)$USER->id;
 
-        $record = $DB->get_record('serial3_learner_goal', array('userid' => $userid, 'course' => $course));
+        $record = $DB->get_record('serial3_learner_goal', ['userid' => $userid, 'course' => $course]);
 
         if ($record) {
             $record->goal = $goal;
@@ -73,57 +88,72 @@ class format_serial3_learner_external extends external_api
             $success = $DB->insert_record('serial3_learner_goal', $record);
         }
 
-        return array(
+        return [
             'success' => $success,
-        );
+        ];
     }
 
 
     /**
      * Gets the learner goal for each user and course.
+     *
+     * @return external_function_parameters Parameters for getting learner goal
      */
-    public static function get_learner_goal_parameters()
-    {
+    public static function get_learner_goal_parameters() {
         return new external_function_parameters([
             'course' => new external_value(PARAM_INT, 'id of course'),
         ]);
     }
 
-    public static function get_learner_goal_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function get_learner_goal_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_learner_goal_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function get_learner_goal_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_learner_goal($course)
-    {
+    /**
+     * Retrieves the learner's goal for a specific course.
+     *
+     * @param int $course Course ID
+     * @return array Array containing success flag and JSON-encoded goal
+     */
+    public static function get_learner_goal($course) {
         global $DB, $USER;
 
         $userid = (int)$USER->id;
 
-        $goal = $DB->get_field('serial3_learner_goal', 'goal', array('userid' => $userid, 'course' => $course));
+        $goal = $DB->get_field('serial3_learner_goal', 'goal', ['userid' => $userid, 'course' => $course]);
 
-        return array(
+        return [
             'success' => true,
             'data' => json_encode($goal),
-        );
+        ];
     }
 
 
     /**
-     * Set users understaning of course activity
+     * Set user's understanding of course activity.
+     *
+     * @return external_function_parameters Parameters for setting user understanding
      */
-    public static function set_user_understanding_parameters()
-    {
+    public static function set_user_understanding_parameters() {
         return new external_function_parameters([
             'course' => new external_value(PARAM_INT, 'id of course'),
             'activityid' => new external_value(PARAM_TEXT, 'id of activity'),
@@ -131,23 +161,38 @@ class format_serial3_learner_external extends external_api
         ]);
     }
 
-    public static function set_user_understanding_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function set_user_understanding_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function set_user_understanding_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function set_user_understanding_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function set_user_understanding($course, $activityid, $rating)
-    {
+    /**
+     * Sets or updates user's understanding rating for a course activity.
+     *
+     * @param int $course Course ID
+     * @param string $activityid Activity ID
+     * @param int $rating User understanding rating
+     * @return array Array containing success flag and JSON-encoded result
+     */
+    public static function set_user_understanding($course, $activityid, $rating) {
         global $DB, $USER;
 
         $userid = (int)$USER->id;
@@ -172,39 +217,53 @@ class format_serial3_learner_external extends external_api
             $success = $DB->insert_record('serial3_overview', $record);
         }
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($success)
-        );
+            'data' => json_encode($success),
+        ];
     }
 
     /**
-     * Get users understanding of course activity
+     * Get user's understanding of course activity.
+     *
+     * @return external_function_parameters Parameters for getting user understanding
      */
-    public static function get_user_understanding_parameters()
-    {
+    public static function get_user_understanding_parameters() {
         return new external_function_parameters([
             'course' => new external_value(PARAM_INT, 'id of course'),
         ]);
     }
 
-    public static function get_user_understanding_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function get_user_understanding_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_user_understanding_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function get_user_understanding_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_user_understanding($course)
-    {
+    /**
+     * Retrieves all user understanding ratings for a specific course.
+     *
+     * @param int $course Course ID
+     * @return array Array containing success flag and JSON-encoded understanding data
+     */
+    public static function get_user_understanding($course) {
         global $DB, $USER;
 
         $params = [
@@ -217,9 +276,9 @@ class format_serial3_learner_external extends external_api
         // Convert to indexed array for JSON encoding
         $data = $res ? array_values($res) : [];
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($data)
-        );
+            'data' => json_encode($data),
+        ];
     }
 }

@@ -38,11 +38,7 @@ use core_privacy\local\request\transform;
  * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements
-    \core_privacy\local\metadata\provider,
-    \core_privacy\local\request\plugin\provider,
-    \core_privacy\local\request\core_userlist_provider {
-
+class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\core_userlist_provider, \core_privacy\local\request\plugin\provider {
     /**
      * Returns meta data about this system.
      *
@@ -329,7 +325,7 @@ class provider implements
             return;
         }
 
-        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        [$usersql, $userparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
 
         $DB->delete_records_select('serial3_tasks', "userid $usersql AND course = :course", $userparams + ['course' => $courseid]);
         $DB->delete_records_select('serial3_overview', "userid $usersql AND course = :course", $userparams + ['course' => $courseid]);

@@ -27,36 +27,55 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/externallib.php');
 require_once(__DIR__ . '/analytics.php');
 
+/**
+ * Teacher webservice methods.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_serial3_teacher_external extends external_api
 {
-    // Get all teachers of course
-    public static function get_all_teachers_of_course_parameters()
-    {
+    /**
+     * Returns the parameters for getting all teachers of course.
+     *
+     * @return external_function_parameters Parameters for the function.
+     */
+    public static function get_all_teachers_of_course_parameters() {
         return new external_function_parameters(
-            array(
-                'courseid' => new external_value(PARAM_INT, 'Course ID')
-            )
+            [
+                'courseid' => new external_value(PARAM_INT, 'Course ID'),
+            ]
         );
     }
 
-    public static function get_all_teachers_of_course_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function get_all_teachers_of_course_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_all_teachers_of_course($courseid)
-    {
+    /**
+     * Gets all teachers of a specific course.
+     *
+     * @param int $courseid Course ID.
+     * @return array Array containing success flag and JSON-encoded teacher data.
+     */
+    public static function get_all_teachers_of_course($courseid) {
         global $DB;
 
         $context = context_course::instance($courseid);
-        
-        // Get users with teacher or editing teacher role
-        $teacherRoles = $DB->get_records_sql(
+
+        // Get users with teacher or editing teacher role.
+        $teacherroles = $DB->get_records_sql(
             "SELECT DISTINCT u.id, u.firstname, u.lastname, u.email
              FROM {role_assignments} ra
              JOIN {user} u ON u.id = ra.userid
@@ -64,47 +83,63 @@ class format_serial3_teacher_external extends external_api
              WHERE ra.contextid = :contextid
              AND r.shortname IN ('teacher', 'editingteacher')
              AND u.deleted = 0",
-            array('contextid' => $context->id)
+            ['contextid' => $context->id]
         );
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode(array_values($teacherRoles)),
-        );
+            'data' => json_encode(array_values($teacherroles)),
+        ];
     }
 
-    public static function get_all_teachers_of_course_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function get_all_teachers_of_course_is_allowed_from_ajax() {
         return true;
     }
 
-    // Get last access of teachers in course
-    public static function get_last_access_of_teachers_of_course_parameters()
-    {
+    /**
+     * Returns the parameters for getting last access of teachers.
+     *
+     * @return external_function_parameters Parameters for the function.
+     */
+    public static function get_last_access_of_teachers_of_course_parameters() {
         return new external_function_parameters(
-            array(
-                'courseid' => new external_value(PARAM_INT, 'Course ID')
-            )
+            [
+                'courseid' => new external_value(PARAM_INT, 'Course ID'),
+            ]
         );
     }
 
-    public static function get_last_access_of_teachers_of_course_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function get_last_access_of_teachers_of_course_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_last_access_of_teachers_of_course($courseid)
-    {
+    /**
+     * Gets last access time of teachers in a specific course.
+     *
+     * @param int $courseid Course ID.
+     * @return array Array containing success flag and JSON-encoded teacher access data.
+     */
+    public static function get_last_access_of_teachers_of_course($courseid) {
         global $DB;
 
         $context = context_course::instance($courseid);
-        
-        $teacherAccess = $DB->get_records_sql(
+
+        $teacheraccess = $DB->get_records_sql(
             "SELECT DISTINCT u.id, u.firstname, u.lastname, ul.timeaccess as lastaccess
              FROM {role_assignments} ra
              JOIN {user} u ON u.id = ra.userid
@@ -114,17 +149,21 @@ class format_serial3_teacher_external extends external_api
              AND r.shortname IN ('teacher', 'editingteacher')
              AND u.deleted = 0
              ORDER BY ul.timeaccess DESC",
-            array('contextid' => $context->id, 'courseid2' => $courseid)
+            ['contextid' => $context->id, 'courseid2' => $courseid]
         );
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode(array_values($teacherAccess)),
-        );
+            'data' => json_encode(array_values($teacheraccess)),
+        ];
     }
 
-    public static function get_last_access_of_teachers_of_course_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function get_last_access_of_teachers_of_course_is_allowed_from_ajax() {
         return true;
     }
 }

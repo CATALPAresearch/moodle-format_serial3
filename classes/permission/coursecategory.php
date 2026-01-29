@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,8 +24,21 @@
 
 namespace format_serial3\permission;
 
+/**
+ * Permission course category context class.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class coursecategory extends context {
-    function __construct($userid, $category_id){
+    /**
+     * Constructor.
+     *
+     * @param int $userid User ID
+     * @param int $category_id Category ID
+     */
+    function __construct($userid, $category_id) {
         $context = \context_coursecat::instance($category_id);
         parent::__construct($userid, $context);
     }

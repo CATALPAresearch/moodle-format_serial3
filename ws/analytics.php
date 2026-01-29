@@ -26,13 +26,18 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/externallib.php');
 
-function get_meta($courseID)
-{
+/**
+ * Gets metadata for a course including user and context information.
+ *
+ * @param int $courseid Course ID
+ * @return stdClass Object containing course and user metadata
+ */
+function get_meta($courseid) {
     try {
         global $USER, $COURSE;
         $obj = new stdClass();
         $obj->course = new stdClass();
-        $obj->course->id = (int)$courseID;
+        $obj->course->id = (int)$courseid;
         require_login($obj->course->id);
         $obj->course->context = context_course::instance($obj->course->id);
         $obj->course->global = $COURSE;
@@ -43,7 +48,7 @@ function get_meta($courseID)
         $obj->user->enrolled = is_enrolled($obj->course->context, $USER->id);
         $obj->user->guest = is_guest($obj->course->context, $USER->id);
         $obj->user->viewing = is_viewing($obj->course->context, $USER->id);
-        $obj->user->roles = array();
+        $obj->user->roles = [];
         $obj->user->global = $USER;
         $roles = get_user_roles($obj->course->context, $USER->id);
         $obj->user->roles_raw = $roles;
@@ -80,36 +85,59 @@ function get_meta($courseID)
     }
 }
 
+/**
+ * Analytics webservice methods.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_serial3_analytics_external extends external_api
 {
-    // Overview
-
-    public static function overview_parameters()
-    {
-        //  VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
+    /**
+     * Returns the parameters for overview function.
+     *
+     * @return external_function_parameters Parameters for the function.
+     */
+    public static function overview_parameters() {
+        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED.
         return new external_function_parameters(
-            array(
-                'courseid' => new external_value(PARAM_INT, 'course id')
-            )
+            [
+                'courseid' => new external_value(PARAM_INT, 'course id'),
+            ]
         );
     }
 
-    public static function overview_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function overview_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function overview_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function overview_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
-    public static function overview($data)
-    {
+
+    /**
+     * Gets overview data for a course including activities and completions.
+     *
+     * @param int $data Course ID.
+     * @return array Array containing success flag and JSON-encoded overview data.
+     */
+    public static function overview($data) {
         global $CFG, $DB, $USER, $COURSE;
         $userid = (int)$USER->id;
         $courseid = $data;
@@ -119,13 +147,13 @@ class format_serial3_analytics_external extends external_api
         // Step 1: obtain all course activities
         $modinfo = get_fast_modinfo($courseid, $userid);
         $sections = $modinfo->get_sections();
-        $activities = array();
+        $activities = [];
         foreach ($modinfo->instances as $module => $instances) {
             $modulename = get_string('pluginname', $module);
             foreach ($instances as $index => $cm) {
                 $cmx = get_coursemodule_from_id($module, $cm->id);
-                $url = $CFG->wwwroot.'/mod/' . $module . '/view.php?id='.$cmx->id;
-                $activities[] = array(
+                $url = $CFG->wwwroot . '/mod/' . $module . '/view.php?id=' . $cmx->id;
+                $activities[] = [
                     'type'       => $module,
                     'modulename' => $modulename,
                     'id'         => $cm->id,
@@ -142,7 +170,7 @@ class format_serial3_analytics_external extends external_api
                     'completion' => 0,
                     'visible'     => $cm->visible,
                     'rating'     => 0,
-                );
+                ];
             }
         }
 
@@ -152,9 +180,9 @@ class format_serial3_analytics_external extends external_api
         foreach ($activities as $activity) {
             if($activity['type'] == 'safran'){
                 //$query = "SELECT id as safranid,  FROM {safran_q_attempt} WHERE questionid = :questionid";
-                $query = "SELECT 
-                        id as safranid,  
-                    FROM {safran_question} 
+                $query = "SELECT
+                        id as safranid,
+                    FROM {safran_question}
                     WHERE safranid = :safranid";
                 $resultset = $DB->get_recordset_sql($query, [
                     "safranid" => $activity["instance"]
@@ -163,10 +191,10 @@ class format_serial3_analytics_external extends external_api
         }
         */
 
-        // Step 2: get completions
-        $completions = array();
+        // Step 2: Get completions.
+        $completions = [];
         $completion = new completion_info($COURSE);
-        // $completion->is_enabled($cm) TODO: We nee to check this
+        // $completion->is_enabled($cm) We need to check this.
         $cm = new stdClass();
 
         foreach ($activities as $activity) {
@@ -175,9 +203,8 @@ class format_serial3_analytics_external extends external_api
             $completions[$activity['id']] = $activity;
         }
 
-
-        // Step 3: Get scores
-        $query_activities = array(
+        // Step 3: Get scores.
+        $queryactivities = [
             'assign' => "SELECT
                     m.name activity,
                     a.id activity_id,
@@ -262,41 +289,39 @@ class format_serial3_analytics_external extends external_api
                     hl.actions = 'playback' AND
                     m.name = 'hypervideo'
                 GROUP BY m.name, h.id, cm.id, cm.section
-            ;"
-        );
+            ;",
+        ];
         /*
-SELECT distinct
-m.name activity,
-l.id activity_id,
-cm.id module_id,
-cm.section,
-COUNT(distinct lrp.section) / AVG(lrp.sectioncount) count,
-'0' AS max_score,
-'0' AS achieved_score,
-MAX(lrp.timemodified) AS submission_time,
-'0' AS grading_time
-FROM mdl_longpage l
-JOIN mdl_longpage_reading_progress lrp ON l.id = lrp.longpageid
-RIGHT JOIN mdl_course_modules cm ON l.id = cm.instance
-RIGHT JOIN mdl_modules m ON m.id = cm.module
-WHERE
-lrp.userid=2 AND
--- lrp.longpageid=1 AND
-m.name = 'longpage'
-Group by cm.id
+        SELECT distinct
+        m.name activity,
+        l.id activity_id,
+        cm.id module_id,
+        cm.section,
+        COUNT(distinct lrp.section) / AVG(lrp.sectioncount) count,
+        '0' AS max_score,
+        '0' AS achieved_score,
+        MAX(lrp.timemodified) AS submission_time,
+        '0' AS grading_time
+        FROM mdl_longpage l
+        JOIN mdl_longpage_reading_progress lrp ON l.id = lrp.longpageid
+        RIGHT JOIN mdl_course_modules cm ON l.id = cm.instance
+        RIGHT JOIN mdl_modules m ON m.id = cm.module
+        WHERE
+        lrp.userid=2 AND
+        -- lrp.longpageid=1 AND
+        m.name = 'longpage'
+        Group by cm.id
 
 
 
 
-;
-;
+        ;
+        ;
         */
 
-
-
-        $params = array('courseid' => $courseid, 'userid' => $userid);
+        $params = ['courseid' => $courseid, 'userid' => $userid];
         $res = [];
-        foreach ($query_activities as $moduletype => $query) {
+        foreach ($queryactivities as $moduletype => $query) {
             try {
                 $resultset = $DB->get_recordset_sql($query, $params);
                 foreach ($resultset as $key => $value) {
@@ -305,40 +330,39 @@ Group by cm.id
                     }
                 }
             } catch (Exception $e) {
-                //$res[$moduletype] = [];
+                // There was an error processing this module type.
                 $debug[] = $e;
             }
         }
         $debug[] = "---resultset----";
         $debug[] = $res;
 
-
-        // Step 4: add scores to completion
+        // Step 4: Add scores to completion.
         foreach ($completions as $sec => $activity) {
             foreach ($res as $type => $item) {
-                //$debug[] = $item;
+                // $debug[] = $item;
                 if ($activity['type'] == $item->activity && $activity['instance'] == $item->activity_id) {
                     $completions[$sec]['achieved_score'] = $item->achieved_score;
                     $completions[$sec]['max_score'] = $item->max_score;
                     $completions[$sec]['count'] = $item->count;
                     $completions[$sec]['submission_time'] = $item->submission_time;
                     $completions[$sec]['name'] = $activity['type'];
-                    
+
                     if (isset($item->complete)) {
                         $completions[$sec]['complete'] = $item->complete;
                     }
-                    
-                    $debug[] = $completions[$sec]; 
+
+                    $debug[] = $completions[$sec];
                 }
             }
         }
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode(array(
+            'data' => json_encode([
                 'debug' => json_encode($debug),
-                'completions' => json_encode($completions)
-            ))
-        );
+                'completions' => json_encode($completions),
+            ]),
+        ];
     }
 }

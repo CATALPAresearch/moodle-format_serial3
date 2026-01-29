@@ -30,27 +30,38 @@ require_once(__DIR__ . '/analytics.php');
 class format_serial3_misc_external extends external_api
 {
     /**
-     * Get calendar data
+     * Returns the parameters for getting calendar data.
+     *
+     * @return external_function_parameters Parameters for the function
      */
-
-    public static function getcalendar_parameters()
-    {
+    public static function getcalendar_parameters() {
         return new external_function_parameters(
-            array(
-                'courseid' => new external_value(PARAM_INT, 'course id')
-            )
+            [
+                'courseid' => new external_value(PARAM_INT, 'course id'),
+            ]
         );
     }
-    public static function getcalendar_returns()
-    {
+
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing calendar data
+     */
+    public static function getcalendar_returns() {
         return new external_single_structure(
-            array(
-                'data' => new external_value(PARAM_RAW, 'data')
-            )
+            [
+                'data' => new external_value(PARAM_RAW, 'data'),
+            ]
         );
     }
-    public static function getcalendar($data)
-    {
+
+    /**
+     * Gets calendar events for a specific course.
+     *
+     * @param int $data Course ID
+     * @return array Array containing JSON-encoded calendar events
+     */
+    public static function getcalendar($data) {
         global $CFG, $DB, $USER;
         $transaction = $DB->start_delegated_transaction();
         $cid = (int)$data;
@@ -79,10 +90,15 @@ class format_serial3_misc_external extends external_api
             ORDER BY ' . $CFG->prefix . 'event.timestart ASC';
         $data = $DB->get_records_sql($sql);
         $transaction->allow_commit();
-        return array('data' => json_encode($data));
+        return ['data' => json_encode($data)];
     }
-    public static function getcalendar_is_allowed_from_ajax()
-    {
+
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function getcalendar_is_allowed_from_ajax() {
         return true;
     }
 
@@ -90,20 +106,28 @@ class format_serial3_misc_external extends external_api
 
 
     /**
-     * Interface to get survey data of the individual user
+     * Returns the parameters for getting survey data.
+     *
+     * @return external_function_parameters Parameters for the function
      */
-    public static function get_surveys_parameters()
-    {
-        //  VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
+    public static function get_surveys_parameters() {
+        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
         return new external_function_parameters(
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'course id'),
-                'moduleid' => new external_value(PARAM_INT, 'course id')
-            )
+                'moduleid' => new external_value(PARAM_INT, 'course id'),
+            ]
         );
     }
-    public static function get_surveys($courseid, $moduleid)
-    {
+
+    /**
+     * Gets survey completion data for the individual user.
+     *
+     * @param int $courseid Course ID
+     * @param int $moduleid Module ID
+     * @return array Array containing success flag and JSON-encoded survey data
+     */
+    public static function get_surveys($courseid, $moduleid) {
         global $DB, $USER;
 
         $res = $DB->get_record_sql(
@@ -118,58 +142,83 @@ class format_serial3_misc_external extends external_api
             [
                 "courseid" => (int)$courseid,
                 "moduleid" => (int)$moduleid,
-                "userid" => (int)$USER->id
+                "userid" => (int)$USER->id,
             ]
         );
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($res)
-        );
+            'data' => json_encode($res),
+        ];
     }
-    public static function get_surveys_returns()
-    {
+
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function get_surveys_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
-    public static function get_surveys_is_allowed_from_ajax()
-    {
+
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function get_surveys_is_allowed_from_ajax() {
         return true;
     }
 
     /**
-     * Reflections
-     **/
-    public static function reflectionRead_parameters()
-    {
-        //  VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
+     * Returns the parameters for reading reflections.
+     *
+     * @return external_function_parameters Parameters for the function
+     */
+    public static function reflectionread_parameters() {
+        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
         return new external_function_parameters(
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'course id'),
-            )
+            ]
         );
     }
 
-    public static function reflectionRead_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function reflectionread_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function reflectionRead_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function reflectionread_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, ''),
-                'data' => new external_value(PARAM_RAW, '')
-            )
+                'data' => new external_value(PARAM_RAW, ''),
+            ]
         );
     }
-    public static function reflectionRead($data)
-    {
+
+    /**
+     * Reads all reflections for a user in a specific course.
+     *
+     * @param int $data Course ID
+     * @return array Array containing success flag and JSON-encoded reflection data
+     */
+    public static function reflectionread($data) {
         global $DB, $USER;
         $debug = [];
         $userid = (int)$USER->id;
@@ -177,52 +226,70 @@ class format_serial3_misc_external extends external_api
         $transaction = $DB->start_delegated_transaction();
         $res = $DB->get_records_sql(
             "SELECT * FROM {serial3_reflections} WHERE courseid=:course AND userid=:user ORDER BY timecreated ASC",
-            array("course" => (int)$courseid, "user" => (int)$userid)
+            ["course" => (int)$courseid, "user" => (int)$userid]
         );
         $transaction->allow_commit();
 
         // TODO json_encode($debug)
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($res)
-        );
+            'data' => json_encode($res),
+        ];
     }
 
 
-    public static function reflectionCreate_parameters()
-    {
-        //  VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
+    /**
+     * Returns the parameters for creating a reflection.
+     *
+     * @return external_function_parameters Parameters for the function
+     */
+    public static function reflectioncreate_parameters() {
+        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
         return new external_function_parameters(
-            array(
+            [
                 'data' =>
                 new external_single_structure(
-                    array(
+                    [
                         'course' => new external_value(PARAM_INT, 'course id'),
                         'section' => new external_value(PARAM_INT, 'section id'),
-                        'reflection' => new external_value(PARAM_TEXT, 'reflection text submitted by the learner')
-                    )
-                )
-            )
+                        'reflection' => new external_value(PARAM_TEXT, 'reflection text submitted by the learner'),
+                    ]
+                ),
+            ]
         );
     }
 
-    public static function reflectionCreate_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function reflectioncreate_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function reflectionCreate_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function reflectioncreate_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, ''),
-                'data' => new external_value(PARAM_RAW, '')
-            )
+                'data' => new external_value(PARAM_RAW, ''),
+            ]
         );
     }
-    public static function reflectionCreate($data)
-    {
+
+    /**
+     * Creates a new reflection entry for a user.
+     *
+     * @param array $data Array containing course, section, and reflection text
+     * @return array Array containing success flag and JSON-encoded data
+     */
+    public static function reflectioncreate($data) {
         global $CFG, $DB, $USER, $COURSE;
         $debug = [];
         $userid = (int)$USER->id;
@@ -240,38 +307,50 @@ class format_serial3_misc_external extends external_api
         $res = $DB->insert_record("serial3_reflections", $r);
         $transaction->allow_commit();
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($data)
-        );
+            'data' => json_encode($data),
+        ];
     }
 
 
 
     /**
-     * Interface to save dashboard layout settings for a user
+     * Returns the parameters for saving dashboard settings.
+     *
+     * @return external_function_parameters Parameters for the function
      */
-    public static function save_dashboard_settings_parameters()
-    {
+    public static function save_dashboard_settings_parameters() {
         return new external_function_parameters([
             'userid' => new external_value(PARAM_INT, 'if of user'),
             'course' => new external_value(PARAM_INT, 'id of course'),
-            'settings' => new external_value(PARAM_TEXT, 'layout settings', VALUE_OPTIONAL)
+            'settings' => new external_value(PARAM_TEXT, 'layout settings', VALUE_OPTIONAL),
         ]);
     }
 
-    public static function save_dashboard_settings_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function save_dashboard_settings_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_TEXT, 'Data output')
-            )
+                'data' => new external_value(PARAM_TEXT, 'Data output'),
+            ]
         );
     }
 
-    public static function save_dashboard_settings($userid, $course, $settings)
-    {
+    /**
+     * Saves dashboard layout settings for a user.
+     *
+     * @param int $userid User ID
+     * @param int $course Course ID
+     * @param string $settings JSON-encoded layout settings
+     * @return array Array containing success flag and JSON-encoded data
+     */
+    public static function save_dashboard_settings($userid, $course, $settings) {
         global $DB;
 
         $params = [
@@ -293,45 +372,64 @@ class format_serial3_misc_external extends external_api
             $DB->insert_record('serial3_dashboard_settings', $record);
         }
 
-        return array(
+        return [
             'success' => ($record !== false),
-            'data' => json_encode($params)
-        );
+            'data' => json_encode($params),
+        ];
     }
 
-    public static function save_dashboard_settings_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function save_dashboard_settings_is_allowed_from_ajax() {
         return true;
     }
 
     /**
-     * Interface to get dashboard settings for a user
+     * Returns the parameters for getting dashboard settings.
+     *
+     * @return external_function_parameters Parameters for the function
      */
-    public static function get_dashboard_settings_parameters()
-    {
+    public static function get_dashboard_settings_parameters() {
         return new external_function_parameters([
             'userid' => new external_value(PARAM_INT, 'user id'),
             'course' => new external_value(PARAM_INT, 'id of course'),
         ]);
     }
 
-    public static function get_dashboard_settings_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function get_dashboard_settings_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_dashboard_settings_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function get_dashboard_settings_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_dashboard_settings($userid, $course)
-    {
+    /**
+     * Retrieves dashboard settings for a specific user and course.
+     *
+     * @param int $userid User ID
+     * @param int $course Course ID
+     * @return array Array containing success flag and JSON-encoded settings
+     */
+    public static function get_dashboard_settings($userid, $course) {
         global $DB;
 
         $result = $DB->get_record_sql(
@@ -342,20 +440,23 @@ class format_serial3_misc_external extends external_api
             	course=:course",
             [
                 "course" => (int)$course,
-                "userid" => (int)$userid
+                "userid" => (int)$userid,
             ]
         );
 
-        return array(
+        return [
             'success' => true,
             'data' => json_encode($result),
-        );
+        ];
     }
 
 
-    //set_rule_response
-    public static function set_rule_response_parameters()
-    {
+    /**
+     * Returns the parameters for setting rule response.
+     *
+     * @return external_function_parameters Parameters for the function
+     */
+    public static function set_rule_response_parameters() {
         return new external_function_parameters([
             'course_id' => new external_value(PARAM_INT, 'course id'),
             'action_id' => new external_value(PARAM_TEXT, 'id of the rule action'),
@@ -364,108 +465,155 @@ class format_serial3_misc_external extends external_api
         ]);
     }
 
-    public static function set_rule_response_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function set_rule_response_is_allowed_from_ajax() {
         return true;
     }
-    public static function set_rule_response_returns()
-    {
+
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag
+     */
+    public static function set_rule_response_returns() {
         return new external_single_structure(['success' => new external_value(PARAM_BOOL, 'Success Variable')]);
     }
-    public static function set_rule_response($course_id, $action_id, $response_type, $user_response)
-    {
+
+    /**
+     * Sets user response to a rule action.
+     *
+     * @param int $courseid Course ID
+     * @param string $actionid Rule action ID
+     * @param string $responsetype Type of response
+     * @param mixed $userresponse User's response data
+     * @return array Array containing success flag
+     */
+    public static function set_rule_response($courseid, $actionid, $responsetype, $userresponse) {
         global $DB, $USER;
         $date = new DateTime();
         $record = new stdClass();
         $record->user_id = (int)$USER->id;
-        $record->course_id = (int)$course_id;
-        $record->action_id = $action_id;
-        $record->response_type = $response_type;
-        $record->response = $user_response;
+        $record->course_id = (int)$courseid;
+        $record->action_id = $actionid;
+        $record->response_type = $responsetype;
+        $record->response = $userresponse;
         $record->timecreated = $date->getTimestamp();
 
-        //$DB->insert_record('ari_response_rule_action', $record);
-        
-        return array(
-            'success' => true
-        );
+        // $DB->insert_record('ari_response_rule_action', $record);
+
+        return [
+            'success' => true,
+        ];
     }
 
     /**
-     * Get recommendations
+     * Returns the parameters for getting recommendations.
+     *
+     * @return external_function_parameters Parameters for the function
      */
-    public static function get_recommendations_parameters()
-    {
+    public static function get_recommendations_parameters() {
         return new external_function_parameters([
             'userid' => new external_value(PARAM_INT, 'User ID'),
             'course' => new external_value(PARAM_INT, 'Course ID'),
         ]);
     }
 
-    public static function get_recommendations_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
+     */
+    public static function get_recommendations_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_recommendations_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function get_recommendations_returns() {
         return new external_single_structure([
             'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-            'data' => new external_value(PARAM_RAW, 'Data output')
+            'data' => new external_value(PARAM_RAW, 'Data output'),
         ]);
     }
 
-    public static function get_recommendations($userid, $course)
-    {
+    /**
+     * Gets personalized recommendations for a user in a specific course.
+     *
+     * @param int $userid User ID
+     * @param int $course Course ID
+     * @return array Array containing success flag and JSON-encoded recommendations
+     */
+    public static function get_recommendations($userid, $course) {
         global $DB;
 
         // Placeholder implementation - returns empty array for now
         // This can be extended to implement actual recommendation logic
         $recommendations = [];
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($recommendations)
+            'data' => json_encode($recommendations),
+        ];
+    }
+
+    /**
+     * Returns the parameters for logging client data.
+     *
+     * @return external_function_parameters Parameters for the function
+     */
+    public static function logger_parameters() {
+        return new external_function_parameters(
+            [
+                'data' =>
+                new external_single_structure(
+                    [
+                        'courseid' => new external_value(PARAM_INT, 'id of course', VALUE_OPTIONAL),
+                        'utc' => new external_value(PARAM_INT, 'utc time', VALUE_OPTIONAL),
+                        'action' => new external_value(PARAM_TEXT, 'action', VALUE_OPTIONAL),
+                        'entry' => new external_value(PARAM_RAW, 'log data', VALUE_OPTIONAL),
+                    ]
+                ),
+            ]
         );
     }
 
     /**
-     * Collects log data from the client
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true
      */
-    public static function logger_parameters()
-    {
-        return new external_function_parameters(
-            array(
-                'data' =>
-                new external_single_structure(
-                    array(
-                        'courseid' => new external_value(PARAM_INT, 'id of course', VALUE_OPTIONAL),
-                        'utc' => new external_value(PARAM_INT, 'utc time', VALUE_OPTIONAL),
-                        'action' => new external_value(PARAM_TEXT, 'action', VALUE_OPTIONAL),
-                        'entry' => new external_value(PARAM_RAW, 'log data', VALUE_OPTIONAL)
-                    )
-                )
-            )
-        );
-    }
-
-    public static function logger_is_allowed_from_ajax()
-    {
+    public static function logger_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function logger_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data
+     */
+    public static function logger_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, ''),
-                'data' => new external_value(PARAM_RAW, '')
-            )
+                'data' => new external_value(PARAM_RAW, ''),
+            ]
         );
     }
 
-    public static function logger($data)
-    {
+    /**
+     * Collects log data from the client and stores it in the database.
+     *
+     * @param array $data Array containing courseid, utc time, action, and log entry
+     * @return array Array containing success flag and JSON-encoded result
+     */
+    public static function logger($data) {
         global $CFG, $DB, $USER;
 
         $r = new stdClass();
@@ -490,13 +638,12 @@ class format_serial3_misc_external extends external_api
         $r->ip = $_SERVER['REMOTE_ADDR'];
 
         $transaction = $DB->start_delegated_transaction();
-        $res = $DB->insert_records("logstore_standard_log", array($r));
+        $res = $DB->insert_records("logstore_standard_log", [$r]);
         $transaction->allow_commit();
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($res)
-        );
+            'data' => json_encode($res),
+        ];
     }
 }
-

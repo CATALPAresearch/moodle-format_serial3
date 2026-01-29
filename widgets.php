@@ -27,7 +27,7 @@ require_once($CFG->dirroot . '/course/lib.php');
 require_once(__DIR__ . '/classes/widget_manager.php');
 
 $courseid = required_param('id', PARAM_INT);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
 require_login($course);
 $context = context_course::instance($course->id);
@@ -38,7 +38,7 @@ if ($course->format !== 'serial3') {
     throw new moodle_exception('invalidcourseformat', 'error');
 }
 
-$PAGE->set_url('/course/format/serial3/widgets.php', array('id' => $courseid));
+$PAGE->set_url('/course/format/serial3/widgets.php', ['id' => $courseid]);
 $PAGE->set_pagelayout('admin');
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('widget_settings', 'format_serial3', format_string($course->fullname)));
@@ -48,16 +48,16 @@ $PAGE->navbar->add(get_string('widget_settings', 'format_serial3'));
 // Handle form submission
 if (optional_param('save', false, PARAM_BOOL) && confirm_sesskey()) {
     // Get enabled widgets
-    $enabled = optional_param_array('enabled_widgets', array(), PARAM_ALPHANUMEXT);
-    
+    $enabled = optional_param_array('enabled_widgets', [], PARAM_ALPHANUMEXT);
+
     // Save enabled widgets
     \format_serial3\widget_manager::save_enabled_widgets($courseid, $enabled);
-    
+
     // Save widget-specific settings
     $widgets = \format_serial3\widget_manager::get_available_widgets();
     foreach ($widgets as $widgetid => $widget) {
         if (!empty($widget['settings'])) {
-            $settings = array();
+            $settings = [];
             foreach ($widget['settings'] as $settingkey => $setting) {
                 $paramname = 'widget_' . $widgetid . '_' . $settingkey;
                 if ($setting['type'] === 'checkbox') {
@@ -69,9 +69,13 @@ if (optional_param('save', false, PARAM_BOOL) && confirm_sesskey()) {
             \format_serial3\widget_manager::save_widget_settings($courseid, $widgetid, $settings);
         }
     }
-    
-    redirect(new moodle_url('/course/format/serial3/widgets.php', array('id' => $courseid)),
-             get_string('changessaved'), null, \core\output\notification::NOTIFY_SUCCESS);
+
+    redirect(
+        new moodle_url('/course/format/serial3/widgets.php', ['id' => $courseid]),
+        get_string('changessaved'),
+        null,
+        \core\output\notification::NOTIFY_SUCCESS
+    );
 }
 
 // Get current settings
@@ -82,28 +86,28 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('widget_settings', 'format_serial3'));
 
 // Display form
-echo html_writer::start_tag('form', array(
+echo html_writer::start_tag('form', [
     'method' => 'post',
-    'action' => new moodle_url('/course/format/serial3/widgets.php', array('id' => $courseid))
-));
-echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()));
+    'action' => new moodle_url('/course/format/serial3/widgets.php', ['id' => $courseid]),
+]);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
 
-echo html_writer::start_tag('div', array('class' => 'widget-settings'));
+echo html_writer::start_tag('div', ['class' => 'widget-settings']);
 
 // Widget selection
 echo $OUTPUT->heading(get_string('enabled_widgets', 'format_serial3'), 3);
-echo html_writer::tag('p', get_string('enabled_widgets_help', 'format_serial3'), array('class' => 'text-muted'));
+echo html_writer::tag('p', get_string('enabled_widgets_help', 'format_serial3'), ['class' => 'text-muted']);
 
 foreach ($widgets as $widgetid => $widget) {
     $checked = in_array($widgetid, $enabledwidgets);
-    
+
     echo html_writer::start_div('form-check mb-3');
-    echo html_writer::checkbox('enabled_widgets[]', $widgetid, $checked, '', array(
+    echo html_writer::checkbox('enabled_widgets[]', $widgetid, $checked, '', [
         'id' => 'widget_' . $widgetid,
-        'class' => 'form-check-input'
-    ));
-    echo html_writer::label($widget['name'], 'widget_' . $widgetid, true, array('class' => 'form-check-label'));
-    echo html_writer::tag('div', $widget['description'], array('class' => 'form-text text-muted small'));
+        'class' => 'form-check-input',
+    ]);
+    echo html_writer::label($widget['name'], 'widget_' . $widgetid, true, ['class' => 'form-check-label']);
+    echo html_writer::tag('div', $widget['description'], ['class' => 'form-text text-muted small']);
     echo html_writer::end_div();
 }
 
@@ -111,31 +115,31 @@ foreach ($widgets as $widgetid => $widget) {
 foreach ($widgets as $widgetid => $widget) {
     if (!empty($widget['settings'])) {
         echo $OUTPUT->heading($widget['name'] . ' - ' . get_string('settings'), 3, 'mt-4');
-        
+
         $widgetsettings = \format_serial3\widget_manager::get_widget_settings($courseid, $widgetid);
-        
+
         foreach ($widget['settings'] as $settingkey => $setting) {
             $paramname = 'widget_' . $widgetid . '_' . $settingkey;
             $currentvalue = $widgetsettings[$settingkey] ?? $setting['default'];
-            
+
             echo html_writer::start_div('form-group mb-3');
-            
+
             if ($setting['type'] === 'checkbox') {
-                echo html_writer::checkbox($paramname, 1, $currentvalue, $setting['label'], array(
+                echo html_writer::checkbox($paramname, 1, $currentvalue, $setting['label'], [
                     'id' => $paramname,
-                    'class' => 'form-check-input'
-                ));
+                    'class' => 'form-check-input',
+                ]);
             } else {
-                echo html_writer::label($setting['label'], $paramname, true, array('class' => 'form-label'));
-                echo html_writer::empty_tag('input', array(
+                echo html_writer::label($setting['label'], $paramname, true, ['class' => 'form-label']);
+                echo html_writer::empty_tag('input', [
                     'type' => 'text',
                     'name' => $paramname,
                     'id' => $paramname,
                     'value' => $currentvalue,
-                    'class' => 'form-control'
-                ));
+                    'class' => 'form-control',
+                ]);
             }
-            
+
             echo html_writer::end_div();
         }
     }
@@ -145,15 +149,17 @@ echo html_writer::end_tag('div');
 
 // Submit button
 echo html_writer::start_div('mt-4');
-echo html_writer::empty_tag('input', array(
+echo html_writer::empty_tag('input', [
     'type' => 'submit',
     'name' => 'save',
     'value' => get_string('savechanges'),
-    'class' => 'btn btn-primary'
-));
-echo html_writer::link(new moodle_url('/course/view.php', array('id' => $courseid)),
-                       get_string('cancel'),
-                       array('class' => 'btn btn-secondary ml-2'));
+    'class' => 'btn btn-primary',
+]);
+echo html_writer::link(
+    new moodle_url('/course/view.php', ['id' => $courseid]),
+    get_string('cancel'),
+    ['class' => 'btn btn-secondary ml-2']
+);
 echo html_writer::end_div();
 
 echo html_writer::end_tag('form');

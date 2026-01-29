@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,91 +26,175 @@ namespace format_serial3\permission;
 
 defined('MOODLE_INTERNAL') || die();
 
-
+/**
+ * Permission context helper class.
+ *
+ * Provides methods to check user roles and permissions within a context.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class context {
-
+    /** @var \context The context to check permissions in */
     protected $_context;
+
+    /** @var int The user ID to check permissions for */
     protected $_userid;
+
+    /** @var array The user's roles in this context */
     protected $_roles;
 
-    function __construct($userid, $context){      
+    /**
+     * Constructor.
+     *
+     * @param int $userid User ID
+     * @param \context $context Context to check permissions in
+     */
+    function __construct($userid, $context) {
         require_login();
         $this->_context = $context;
         $this->_userid = $userid;
         $this->_roles = get_user_roles($this->_context, $this->_userid);
-    }   
+    }
 
-    public function isSiteAdmin(){
+    /**
+     * Check if user is a site administrator.
+     *
+     * @return bool True if user is site admin
+     */
+    public function isSiteAdmin() {
         return is_siteadmin($this->_userid);
     }
 
-    public function isManager(){
+    /**
+     * Check if user has manager role.
+     *
+     * @return bool True if user is manager
+     */
+    public function isManager() {
         return $this->findRole('manager');
     }
 
-    public function isCourseCreator(){
+    /**
+     * Check if user has course creator role.
+     *
+     * @return bool True if user is course creator
+     */
+    public function isCourseCreator() {
         return $this->findRole('coursecreator');
     }
 
-    public function isEditingTeacher(){
+    /**
+     * Check if user has editing teacher role.
+     *
+     * @return bool True if user is editing teacher
+     */
+    public function isEditingTeacher() {
         return $this->findRole('editingteacher');
     }
 
-    public function isTeacher(){
+    /**
+     * Check if user has teacher role.
+     *
+     * @return bool True if user is teacher
+     */
+    public function isTeacher() {
         return $this->findRole('teacher');
     }
 
-    public function isStudent(){
+    /**
+     * Check if user has student role.
+     *
+     * @return bool True if user is student
+     */
+    public function isStudent() {
         return $this->findRole('student');
     }
 
-    public function isGuest(){
+    /**
+     * Check if user is a guest.
+     *
+     * @return bool True if user is guest
+     */
+    public function isGuest() {
         return is_guest($this->_context, $this->_userid);
     }
 
-    public function isUser(){
-        return $this->findRole('user'); 
+    /**
+     * Check if user has user role.
+     *
+     * @return bool True if user has user role
+     */
+    public function isUser() {
+        return $this->findRole('user');
     }
 
-    public function isFrontPage(){
-        return $this->findRole('frontpage'); 
+    /**
+     * Check if context is frontpage.
+     *
+     * @return bool True if frontpage role exists
+     */
+    public function isFrontPage() {
+        return $this->findRole('frontpage');
     }
 
-    public function findRole($shortname){
-        foreach($this->_roles as $role){
-            if(isset($role->shortname) && strtolower($role->shortname) === strtolower($shortname)){
+    /**
+     * Find a role by its shortname.
+     *
+     * @param string $shortname Role shortname to search for
+     * @return bool True if role found
+     */
+    public function findRole($shortname) {
+        foreach ($this->_roles as $role) {
+            if (isset($role->shortname) && strtolower($role->shortname) === strtolower($shortname)) {
                 return true;
             }
         }
         return false;
     }
 
-    public function hasViewCapability(){
+    /**
+     * Check if user has view capability.
+     *
+     * @return bool True if user can view
+     */
+    public function hasViewCapability() {
         return is_viewing($this->_context, $this->_userid);
     }
 
-    public function isEnrolled(){
+    /**
+     * Check if user is enrolled in context.
+     *
+     * @return bool True if user is enrolled
+     */
+    public function isEnrolled() {
         return is_enrolled($this->_context, $this->_userid);
     }
 
-    public function isAnyKindOfModerator(){      
-        if(
+    /**
+     * Check if user has any moderator-level role.
+     *
+     * @return bool True if user is site admin, manager, course creator, or editing teacher
+     */
+    public function isAnyKindOfModerator() {
+        if (
             $this->isSiteAdmin() ||
             $this->isManager() ||
-            $this->isCourseCreator() || 
-            $this->isEditingTeacher() ||          
-            $this->isTeacher()            
-        ){
+            $this->isCourseCreator() ||
+            $this->isEditingTeacher() ||
+            $this->isTeacher()
+        ) {
             return true;
         }
         return false;
     }
 
-    public function getContext(){
+    public function getContext() {
         return $this->_context;
     }
 
-    public function getCourseContext(){
+    public function getCourseContext() {
         $context = $this->_context;
         return $context->get_course_context();
     }

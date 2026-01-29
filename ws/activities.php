@@ -27,35 +27,56 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/externallib.php');
 require_once(__DIR__ . '/analytics.php');
 
+/**
+ * Activities webservice methods.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_serial3_activities_external extends external_api
 {
     /**
-     * Interface to fetch all quizzes and assignments
+     * Returns the parameters for getting assignments.
+     *
+     * @return external_function_parameters Parameters for the function.
      */
-    public static function get_assignments_parameters()
-    {
+    public static function get_assignments_parameters() {
         return new external_function_parameters([
             'course' => new external_value(PARAM_INT, 'id of course'),
         ]);
     }
 
-    public static function get_assignments_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function get_assignments_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_assignments_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function get_assignments_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_assignments($course)
-    {
+    /**
+     * Gets assignments for a course with grades and statistics.
+     *
+     * @param int $course Course ID.
+     * @return array Array containing success flag and JSON-encoded assignment data.
+     */
+    public static function get_assignments($course) {
         global $DB, $USER;
 
         $userid = $USER->id;
@@ -70,44 +91,57 @@ class format_serial3_activities_external extends external_api
 				JOIN {course_sections} cs ON cs.id = cm.section
 				WHERE a.course = :course AND g.userid = :userid2";
 
-        $params = array('course' => $course, 'userid' => $userid, 'userid2' => $userid);
+        $params = ['course' => $course, 'userid' => $userid, 'userid2' => $userid];
         $assignments = $DB->get_records_sql($sql, $params);
 
-
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($assignments)
-        );
+            'data' => json_encode($assignments),
+        ];
     }
 
 
     /**
-     * Interface to fetch all quizzes
+     * Returns the parameters for getting quizzes.
+     *
+     * @return external_function_parameters Parameters for the function.
      */
-    public static function get_quizzes_parameters()
-    {
+    public static function get_quizzes_parameters() {
         return new external_function_parameters([
             'course' => new external_value(PARAM_INT, 'id of course'),
         ]);
     }
 
-    public static function get_quizzes_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function get_quizzes_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_quizzes_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function get_quizzes_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_quizzes($course)
-    {
+    /**
+     * Gets quizzes for a course with grades and statistics.
+     *
+     * @param int $course Course ID.
+     * @return array Array containing success flag and JSON-encoded quiz data.
+     */
+    public static function get_quizzes($course) {
         global $DB, $USER;
 
         $userid = $USER->id;
@@ -122,42 +156,56 @@ class format_serial3_activities_external extends external_api
             JOIN {course_sections} cs ON cs.id = cm.section
             WHERE q.course = :course AND g.userid = :user";
 
-        $params = array('course' => $course, 'userid' => $userid, 'user' => $userid);
+        $params = ['course' => $course, 'userid' => $userid, 'user' => $userid];
         $quizrecords = $DB->get_records_sql($sql, $params);
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($quizrecords)
-        );
+            'data' => json_encode($quizrecords),
+        ];
     }
 
     /**
-     * Get assignment and quiz deadlines
+     * Returns the parameters for getting deadlines.
+     *
+     * @return external_function_parameters Parameters for the function.
      */
-    public static function get_deadlines_parameters()
-    {
+    public static function get_deadlines_parameters() {
         return new external_function_parameters([
             'courseid' => new external_value(PARAM_INT, 'id of course'),
         ]);
     }
 
-    public static function get_deadlines_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function get_deadlines_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_deadlines_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function get_deadlines_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_deadlines($courseid)
-    {
+    /**
+     * Gets assignment and quiz deadlines for a course.
+     *
+     * @param int $courseid Course ID.
+     * @return array Array containing success flag and JSON-encoded deadline data, or null on error.
+     */
+    public static function get_deadlines($courseid) {
         global $DB;
 
         try {
@@ -171,46 +219,60 @@ class format_serial3_activities_external extends external_api
 				JOIN {course_modules} cm ON cm.instance = q.id AND cm.module = (SELECT id FROM {modules} WHERE name = 'quiz')
 				WHERE q.course = :courseid AND q.timeclose != 0";
 
-            $params = array('courseid' => $courseid, 'course' => $courseid);
+            $params = ['courseid' => $courseid, 'course' => $courseid];
             $data = $DB->get_records_sql($sql, $params);
 
-            return array(
+            return [
                 'success' => true,
-                'data' => json_encode($data)
-            );
+                'data' => json_encode($data),
+            ];
         } catch (Exception $e) {
-            error_log("Error fetching deadlines: " . $e->getMessage());
+            debugging("Error fetching deadlines: " . $e->getMessage());
             return null;
         }
     }
 
     /**
-     * Interface to fetch get the missed and total number of assignments and quizzes
+     * Returns the parameters for getting missed activities.
+     *
+     * @return external_function_parameters Parameters for the function.
      */
-    public static function get_missed_activities_parameters()
-    {
+    public static function get_missed_activities_parameters() {
         return new external_function_parameters([
             'course' => new external_value(PARAM_INT, 'id of course'),
         ]);
     }
 
-    public static function get_missed_activities_is_allowed_from_ajax()
-    {
+    /**
+     * Indicates whether this external function can be called via AJAX.
+     *
+     * @return bool Always returns true.
+     */
+    public static function get_missed_activities_is_allowed_from_ajax() {
         return true;
     }
 
-    public static function get_missed_activities_returns()
-    {
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure Structure containing success flag and data.
+     */
+    public static function get_missed_activities_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, 'Success Variable'),
-                'data' => new external_value(PARAM_RAW, 'Data output')
-            )
+                'data' => new external_value(PARAM_RAW, 'Data output'),
+            ]
         );
     }
 
-    public static function get_missed_activities($course)
-    {
+    /**
+     * Gets the number of missed assignments and total assignments for a course.
+     *
+     * @param int $course Course ID.
+     * @return array Array containing success flag and JSON-encoded missed activity data.
+     */
+    public static function get_missed_activities($course) {
         global $DB, $USER;
 
         $sql = "SELECT
@@ -219,14 +281,14 @@ class format_serial3_activities_external extends external_api
 				FROM {assign} a
 				LEFT JOIN {assign_submission} s ON s.assignment = a.id AND s.userid = :userid
 				WHERE a.course = :course";
-                //AND a.allowsubmissionsfromdate < UNIX_TIMESTAMP() AND a.duedate < UNIX_TIMESTAMP()
+                // AND a.allowsubmissionsfromdate < UNIX_TIMESTAMP() AND a.duedate < UNIX_TIMESTAMP()
 
-        $params = array('course' => $course, 'userid' => (int)$USER->id);
-        $missedAssignments = $DB->get_records_sql($sql, $params);
+        $params = ['course' => $course, 'userid' => (int)$USER->id];
+        $missedassignments = $DB->get_records_sql($sql, $params);
 
-        return array(
+        return [
             'success' => true,
-            'data' => json_encode($missedAssignments)
-        );
+            'data' => json_encode($missedassignments),
+        ];
     }
 }

@@ -42,8 +42,8 @@ function xmldb_format_serial3_upgrade($oldversion) {
     //
     // Example:
     // if ($oldversion < 2026012301) {
-    //     // Perform upgrade actions.
-    //     upgrade_plugin_savepoint(true, 2026012301, 'format', 'serial3');
+    // Perform upgrade actions.
+    // upgrade_plugin_savepoint(true, 2026012301, 'format', 'serial3');
     // }
 
     return true;

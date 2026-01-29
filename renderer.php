@@ -31,7 +31,7 @@ use core_courseformat\output\section_renderer;
  * Basic renderer for serial3 format.
  *
  * @package    format_serial3
-* @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
+ * @copyright  2026 Niels Seidel <niels.seidel@fernuni-hagen.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_serial3_renderer extends section_renderer {
@@ -52,31 +52,42 @@ class format_serial3_renderer extends section_renderer {
 
 
     /**
-     * A Attribute to store if the user is a moderator for the course
+     * A Attribute to store if the user is a moderator for the course.
+     *
+     * @var bool|null
      */
     private $_moderator = null;
+
+    /** @var int Course ID */
     private $courseid;
+
+    /** @var bool Whether moderator status was found */
     private $found;
+
+    /** @var bool Whether user is logged in */
     private $islogged;
 
     /**
-     * A Method to test if the user is a moderator for the course
+     * A Method to test if the user is a moderator for the course.
+     *
+     * @return bool True if user is moderator, false otherwise
      */
-
-    private function checkModeratorStatus(){
-        if(!is_null($this->_moderator)) return $this->_moderator;
-        try{
+    private function checkModeratorStatus() {
+        if (!is_null($this->_moderator)) {
+            return $this->_moderator;
+        }
+        try {
             global $USER, $COURSE;
             $context = context_course::instance($COURSE->id);
             $loggedIn = isloggedin();
             $roles = get_user_roles($context, $USER->id);
             $found = false;
-            if(is_siteadmin($USER->id)){
+            if (is_siteadmin($USER->id)) {
                 return true;
             }
-            foreach($roles as $key => $value){
-                if(isset($value->shortname)){
-                    if($value->shortname === "manager" || $value->shortname === "coursecreator"){
+            foreach ($roles as $key => $value) {
+                if (isset($value->shortname)) {
+                    if ($value->shortname === "manager" || $value->shortname === "coursecreator") {
                         $found = true;
                         break;
                     }
@@ -85,9 +96,11 @@ class format_serial3_renderer extends section_renderer {
             $this->courseid = $COURSE->id;
             $this->found = $found;
             $this->islogged = $loggedIn;
-            if($found === true && $loggedIn === true) return true;
+            if ($found === true && $loggedIn === true) {
+                return true;
+            }
             return false;
-        } catch(Exception $ex){
+        } catch (Exception $ex) {
             var_dump($ex);
             return false;
         }
@@ -101,11 +114,11 @@ class format_serial3_renderer extends section_renderer {
      */
     protected function start_section_list(): string {
         global $CFG, $PAGE;
-        
+
         $format_options = course_get_format($PAGE->course)->get_format_options();
-        require_once($CFG->libdir.'/completionlib.php');
-        
-        return html_writer::start_tag('ul', array('class' => 'topics'));
+        require_once($CFG->libdir . '/completionlib.php');
+
+        return html_writer::start_tag('ul', ['class' => 'topics']);
     }
 
     /**
@@ -158,7 +171,7 @@ class format_serial3_renderer extends section_renderer {
         global $PAGE;
 
         if (!$PAGE->user_is_editing()) {
-            return array();
+            return [];
         }
 
         $coursecontext = context_course::instance($course->id);
@@ -170,26 +183,26 @@ class format_serial3_renderer extends section_renderer {
         }
         $url->param('sesskey', sesskey());
 
-        $controls = array();
+        $controls = [];
         if ($section->section && has_capability('moodle/course:setcurrentsection', $coursecontext)) {
             if ($course->marker == $section->section) {  // Show the "light globe" on/off.
                 $url->param('marker', 0);
                 $markedthistopic = get_string('markedthistopic');
                 $highlightoff = get_string('highlightoff');
-                $controls['highlight'] = array('url' => $url, "icon" => 'i/marked',
+                $controls['highlight'] = ['url' => $url, "icon" => 'i/marked',
                     'name' => $highlightoff,
-                    'pixattr' => array('class' => '', 'alt' => $markedthistopic),
-                    'attr' => array('class' => 'editing_highlight', 'title' => $markedthistopic,
-                        'data-action' => 'removemarker'));
+                    'pixattr' => ['class' => '', 'alt' => $markedthistopic],
+                    'attr' => ['class' => 'editing_highlight', 'title' => $markedthistopic,
+                        'data-action' => 'removemarker']];
             } else {
                 $url->param('marker', $section->section);
                 $markthistopic = get_string('markthistopic');
                 $highlight = get_string('highlight');
-                $controls['highlight'] = array('url' => $url, "icon" => 'i/marker',
+                $controls['highlight'] = ['url' => $url, "icon" => 'i/marker',
                     'name' => $highlight,
-                    'pixattr' => array('class' => '', 'alt' => $markthistopic),
-                    'attr' => array('class' => 'editing_highlight', 'title' => $markthistopic,
-                        'data-action' => 'setmarker'));
+                    'pixattr' => ['class' => '', 'alt' => $markthistopic],
+                    'attr' => ['class' => 'editing_highlight', 'title' => $markthistopic,
+                        'data-action' => 'setmarker']];
             }
         }
 
@@ -197,7 +210,7 @@ class format_serial3_renderer extends section_renderer {
 
         // If the edit key exists, we are going to insert our controls after it.
         if (array_key_exists("edit", $parentcontrols)) {
-            $merged = array();
+            $merged = [];
             // We can't use splice because we are using associative arrays.
             // Step through the array and merge the arrays.
             foreach ($parentcontrols as $key => $action) {

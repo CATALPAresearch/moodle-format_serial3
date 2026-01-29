@@ -24,12 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$capabilities = array(
-    'format/serial3:view' => array(
+$capabilities = [
+    'format/serial3:view' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'user' => CAP_ALLOW,
-        )
-    )
-);
+        ],
+    ],
+];
