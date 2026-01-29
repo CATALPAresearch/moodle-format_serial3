@@ -216,15 +216,6 @@ export default {
           name: "Lernziele",
           c: "IndicatorDisplay",
         },
-        /*{
-          x: 0,
-          y: 22,
-          w: 14,
-          h: 11,
-          i: "12",
-          name: "Kursübersicht",
-          c: "CourseOverview",
-        },*/
         {
           x: 10,
           y: 12,
@@ -315,12 +306,19 @@ export default {
         breakpoints: [{ w: 600, c: 1 }],
       },
       float: true,
-      disableResize: false,
+      disableResize: true,
+      disableMove: true,
       resizable: {
         handles: "e, se, s, sw, w",
       },
     });
+
+    // Explicitly disable dragging and resizing after grid initialization
     this.$nextTick(function () {
+      if (this.grid) {
+        this.grid.enableMove(false);
+        this.grid.enableResize(false);
+      }
       this.initObserver();
     });
   },
@@ -493,6 +491,17 @@ export default {
     toggleEditMode() {
       this.editMode = !this.editMode;
       this.draggable = this.resizable = this.editMode;
+
+      // Enable or disable dragging and resizing in GridStack
+      if (this.grid) {
+        if (this.editMode) {
+          this.grid.enableMove(true);
+          this.grid.enableResize(true);
+        } else {
+          this.grid.enableMove(false);
+          this.grid.enableResize(false);
+        }
+      }
     },
 
     loadDashboard: function () {
