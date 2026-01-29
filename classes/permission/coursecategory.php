@@ -36,10 +36,10 @@ class coursecategory extends context {
      * Constructor.
      *
      * @param int $userid User ID
-     * @param int $category_id Category ID
+     * @param int $categoryid Category ID
      */
-    function __construct($userid, $category_id) {
-        $context = \context_coursecat::instance($category_id);
+    public function __construct($userid, $categoryid) {
+        $context = \context_coursecat::instance($categoryid);
         parent::__construct($userid, $context);
     }
 }

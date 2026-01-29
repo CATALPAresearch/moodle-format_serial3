@@ -37,18 +37,18 @@ global $DB, $USER;
 $message = '';
 
 // Track the previous page to go back after the changes.
-$policy_back = $CFG->wwwroot;
+$policyback = $CFG->wwwroot;
 if (isset($_SESSION['policy_back'])) {
     if (isset($_SERVER['HTTP_REFERER']) && !is_null($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'policy.php') === false) {
-        $policy_back = $_SERVER['HTTP_REFERER'];
-        $_SESSION['policy_back'] = $policy_back;
+        $policyback = $_SERVER['HTTP_REFERER'];
+        $_SESSION['policy_back'] = $policyback;
     } else {
-        $policy_back = $_SESSION['policy_back'];
+        $policyback = $_SESSION['policy_back'];
     }
 } else {
     if (isset($_SERVER['HTTP_REFERER']) && !is_null($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'policy.php') === false) {
-        $policy_back = $_SERVER['HTTP_REFERER'];
-        $_SESSION['policy_back'] = $policy_back;
+        $policyback = $_SERVER['HTTP_REFERER'];
+        $_SESSION['policy_back'] = $policyback;
     }
 }
 
@@ -90,7 +90,7 @@ if (isset($_GET['policy']) && isset($_GET['status']) && isset($_GET['version']))
         );
     } else {
         $sql = '
-            UPDATE ' . $CFG->prefix . 'tool_policy_acceptances 
+            UPDATE ' . $CFG->prefix . 'tool_policy_acceptances
             SET status=?, timemodified=?
             WHERE policyversionid=? AND userid=?';
         $res = $DB->execute($sql, [(int)$_GET['status'], $time, (int)$_GET['version'], (int)$USER->id]);
@@ -101,21 +101,21 @@ if (isset($_GET['policy']) && isset($_GET['status']) && isset($_GET['version']))
 
 // fetch policies
 $query = '
-SELECT 	v.name, 
-		a.status, 
-		a.timecreated as acceptance, 
-		v.timecreated as creation, 
-		p.id as id, 
+SELECT v.name,
+		a.status,
+		a.timecreated as acceptance,
+		v.timecreated as creation,
+		p.id as id,
 		v.id as version
 FROM ' . $CFG->prefix . 'tool_policy as p
-LEFT JOIN ' . $CFG->prefix . 'tool_policy_acceptances as a 
+LEFT JOIN ' . $CFG->prefix . 'tool_policy_acceptances as a
 ON p.currentversionid = a.policyversionid
 AND a.userid = ?
-INNER JOIN ' . $CFG->prefix . 'tool_policy_versions as v 
+INNER JOIN ' . $CFG->prefix . 'tool_policy_versions as v
 ON p.currentversionid = v.id
 ';
 $res = $DB->get_records_sql($query, [(int)$USER->id]);
 // get_records("tool_policy_acceptances", array("userid" => (int)$USER->id ));
 echo '<policy-container></policy-container>';
-$PAGE->requires->js_call_amd('format_serial3/Policy', 'init', ['policies' => $res, 'message' => $message, 'backurl' => $policy_back]);
+$PAGE->requires->js_call_amd('format_serial3/Policy', 'init', ['policies' => $res, 'message' => $message, 'backurl' => $policyback]);
 echo $OUTPUT->footer();

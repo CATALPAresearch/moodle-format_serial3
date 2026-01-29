@@ -40,7 +40,7 @@ class course extends context {
      * @param int $userid User ID
      * @param int $courseid Course ID
      */
-    function __construct($userid, $courseid) {
+    public function __construct($userid, $courseid) {
         $context = \context_course::instance($courseid);
         parent::__construct($userid, $context);
     }

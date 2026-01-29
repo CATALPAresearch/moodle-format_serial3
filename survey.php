@@ -44,7 +44,7 @@ if (isset($_GET['c'])) {
     if (!isset($sess->s)) {
         $sess->s = [];
     }
-    // @LS => ?s={SID}&a={SAVEDID}
+    // @LS => ?s={SID}&a={SAVEDID}.
     $obj = new stdClass();
     $obj->survey_id = +$_GET['s'];
     $obj->submission_id = +$_GET['a'];
@@ -60,7 +60,7 @@ if (isset($sess->s)) {
             $survey->user_id = $USER->id;
             $DB->insert_record('limesurvey_submissions', $survey);
         }
-        // \core\notification::success("gespeichert");
+        // \core\notification::success("gespeichert").
     }
     unset($sess->s);
     $url = new moodle_url('/course/format/serial3/survey.php');
@@ -116,24 +116,24 @@ if (isset($sess->c)) {
             }
         }
 
-        $surveyID = $record->survey_id;
+        $surveyid = $record->survey_id;
 
         $list .= "<tr>
             <th class=\"align-middle\">{$id}</th>
                 <td class=\"align-middle\">{$title}</td>
                 <td class=\"align-middle\">{$stop}</td>
                 <td class=\"align-middle\">{$state}</td>
-                <td class=\"align-middle\"><button class=\"btn btn-primary center-block\" onClick=\"javascript:window.location.href='{$link}{$surveyID}'\">Zur Umfrage</button></td>
+                <td class=\"align-middle\"><button class=\"btn btn-primary center-block\" onClick=\"javascript:window.location.href='{$link}{$surveyid}'\">Zur Umfrage</button></td>
             </tr>";
         $id++;
-        // <td class=\"align-middle\">{$start}</td>  <td class=\"align-middle\">{$warn}</td>
+        // <td class="align-middle">{$start}</td>  <td class="align-middle">{$warn}</td>.
     }
 
     if ($pending === false) {
         redirect(new moodle_url('/course/view.php', ['id' => +$sess->c]));
     }
 
-    // OUTPUT
+    // OUTPUT.
     $PAGE->set_pagelayout('course');
     $PAGE->set_title(get_string('surveyTitle', 'format_serial3'));
     $PAGE->set_heading(get_string('surveyHeadline', 'format_serial3'));
@@ -153,11 +153,13 @@ if (isset($sess->c)) {
                         {$list}
                     </tbody>
                 </table>";
-                // <th scope=\"col\">".get_string('surveyStart', 'format_serial3')."</th><th scope=\"col\">".get_string('surveyWarn', 'format_serial3')."</th>
+                // <th scope="col">" . get_string('surveyStart', 'format_serial3') . "</th><th scope="col">" . get_string('surveyWarn', 'format_serial3') . "</th>.
 
-    $courseURL = new moodle_url('/course/view.php', ['id' => +$sess->c]);
+    $courseurl = new moodle_url('/course/view.php', ['id' => +$sess->c]);
     echo '<p class="text-center">' . get_string('surveyReqText', 'format_serial3') . '</p>';
-    echo '<div class="text-center"><button onClick="javascript:window.location.href=\'' . $courseURL->__toString() . '\';" class="btn btn-secondary center-block">' . get_string('surveyButton', 'format_serial3') . '</button></div></div>';
+    $buttonhtml = '<div class="text-center"><button onClick="javascript:window.location.href=\'' . $courseurl->__toString() . '\';"';
+    $buttonhtml .= ' class="btn btn-secondary center-block">' . get_string('surveyButton', 'format_serial3') . '</button></div></div>';
+    echo $buttonhtml;
     echo $OUTPUT->footer();
 } else {
     redirect(new moodle_url('/'));

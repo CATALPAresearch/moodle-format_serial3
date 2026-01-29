@@ -27,6 +27,13 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/externallib.php');
 require_once(__DIR__ . '/analytics.php');
 
+/**
+ * External API for course resource tracking.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_serial3_course_external extends external_api
 {
     /**
@@ -65,7 +72,7 @@ class format_serial3_course_external extends external_api
     public static function get_added_or_changed_course_resources($courseid) {
         global $DB;
 
-        // Get recently added or modified course modules
+        // Get recently added or modified course modules.
         $resources = $DB->get_records_sql(
             "SELECT cm.id, cm.added, m.name as modname, cm.instance
              FROM {course_modules} cm

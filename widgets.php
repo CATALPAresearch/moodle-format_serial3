@@ -33,7 +33,7 @@ require_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/course:update', $context);
 
-// Check if course format is serial3
+// Check if course format is serial3.
 if ($course->format !== 'serial3') {
     throw new moodle_exception('invalidcourseformat', 'error');
 }
@@ -45,15 +45,15 @@ $PAGE->set_title(get_string('widget_settings', 'format_serial3', format_string($
 $PAGE->set_heading($course->fullname);
 $PAGE->navbar->add(get_string('widget_settings', 'format_serial3'));
 
-// Handle form submission
+// Handle form submission.
 if (optional_param('save', false, PARAM_BOOL) && confirm_sesskey()) {
-    // Get enabled widgets
+    // Get enabled widgets.
     $enabled = optional_param_array('enabled_widgets', [], PARAM_ALPHANUMEXT);
 
-    // Save enabled widgets
+    // Save enabled widgets.
     \format_serial3\widget_manager::save_enabled_widgets($courseid, $enabled);
 
-    // Save widget-specific settings
+    // Save widget-specific settings.
     $widgets = \format_serial3\widget_manager::get_available_widgets();
     foreach ($widgets as $widgetid => $widget) {
         if (!empty($widget['settings'])) {
@@ -78,14 +78,14 @@ if (optional_param('save', false, PARAM_BOOL) && confirm_sesskey()) {
     );
 }
 
-// Get current settings
+// Get current settings.
 $widgets = \format_serial3\widget_manager::get_available_widgets();
 $enabledwidgets = \format_serial3\widget_manager::get_enabled_widgets($courseid);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('widget_settings', 'format_serial3'));
 
-// Display form
+// Display form.
 echo html_writer::start_tag('form', [
     'method' => 'post',
     'action' => new moodle_url('/course/format/serial3/widgets.php', ['id' => $courseid]),
@@ -94,7 +94,7 @@ echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', '
 
 echo html_writer::start_tag('div', ['class' => 'widget-settings']);
 
-// Widget selection
+// Widget selection.
 echo $OUTPUT->heading(get_string('enabled_widgets', 'format_serial3'), 3);
 echo html_writer::tag('p', get_string('enabled_widgets_help', 'format_serial3'), ['class' => 'text-muted']);
 
@@ -111,7 +111,7 @@ foreach ($widgets as $widgetid => $widget) {
     echo html_writer::end_div();
 }
 
-// Widget-specific settings
+// Widget-specific settings.
 foreach ($widgets as $widgetid => $widget) {
     if (!empty($widget['settings'])) {
         echo $OUTPUT->heading($widget['name'] . ' - ' . get_string('settings'), 3, 'mt-4');
@@ -147,7 +147,7 @@ foreach ($widgets as $widgetid => $widget) {
 
 echo html_writer::end_tag('div');
 
-// Submit button
+// Submit button.
 echo html_writer::start_div('mt-4');
 echo html_writer::empty_tag('input', [
     'type' => 'submit',

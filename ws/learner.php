@@ -27,6 +27,13 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/externallib.php');
 require_once(__DIR__ . '/analytics.php');
 
+/**
+ * External API for learner analytics and overview data.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_serial3_learner_external extends external_api
 {
     /**
@@ -273,7 +280,7 @@ class format_serial3_learner_external extends external_api
 
         $res = $DB->get_records('serial3_overview', $params);
 
-        // Convert to indexed array for JSON encoding
+        // Convert to indexed array for JSON encoding.
         $data = $res ? array_values($res) : [];
 
         return [

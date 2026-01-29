@@ -26,16 +26,30 @@ namespace format_serial3;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Policy version checking and user blocking management.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class blocking
 {
-    const policy_version = 6; // local_niels: 11  aple: 6, marc: 1
-    const disable_blocking = false;
-    const disable_whitelist = false;
-    const whitelist = [
+    /** @var int The current policy version number */
+    const POLICY_VERSION = 6; // Local_niels: 11 aple: 6, marc: 1.
+
+    /** @var bool Whether to disable blocking functionality */
+    const DISABLE_BLOCKING = false;
+
+    /** @var bool Whether to disable whitelist checking */
+    const DISABLE_WHITELIST = false;
+
+    /** @var array List of whitelisted IP addresses that bypass policy checks */
+    const WHITELIST = [
         '127.0.0.1',
         '::1',
         'localhost',
-        // '132.176.117.197' reverse setting for testing
+        // '132.176.117.197' Reverse setting for testing.
     ];
 
     /**
@@ -48,10 +62,10 @@ class blocking
      */
     public static function tool_policy_accepted() {
         global $DB, $USER;
-        if (self::disable_blocking === true || (self::disable_whitelist === false && in_array($_SERVER['REMOTE_ADDR'], self::whitelist))) {
+        if (self::DISABLE_BLOCKING === true || (self::DISABLE_WHITELIST === false && in_array($_SERVER['REMOTE_ADDR'], self::WHITELIST))) {
             return true;
         }
-        $res = $DB->get_record("tool_policy_acceptances", ["policyversionid" => self::policy_version, "userid" => (int)$USER->id ], "status");
+        $res = $DB->get_record("tool_policy_acceptances", ["policyversionid" => self::POLICY_VERSION, "userid" => (int)$USER->id ], "status");
         if (isset($res->status) && $res->status == 1) {
             return true;
         }

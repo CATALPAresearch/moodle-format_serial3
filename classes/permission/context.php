@@ -51,7 +51,7 @@ class context {
      * @param int $userid User ID
      * @param \context $context Context to check permissions in
      */
-    function __construct($userid, $context) {
+    public function __construct($userid, $context) {
         require_login();
         $this->_context = $context;
         $this->_userid = $userid;
@@ -63,7 +63,7 @@ class context {
      *
      * @return bool True if user is site admin
      */
-    public function isSiteAdmin() {
+    public function is_site_admin() {
         return is_siteadmin($this->_userid);
     }
 
@@ -72,8 +72,8 @@ class context {
      *
      * @return bool True if user is manager
      */
-    public function isManager() {
-        return $this->findRole('manager');
+    public function is_manager() {
+        return $this->find_role('manager');
     }
 
     /**
@@ -81,8 +81,8 @@ class context {
      *
      * @return bool True if user is course creator
      */
-    public function isCourseCreator() {
-        return $this->findRole('coursecreator');
+    public function is_course_creator() {
+        return $this->find_role('coursecreator');
     }
 
     /**
@@ -90,8 +90,8 @@ class context {
      *
      * @return bool True if user is editing teacher
      */
-    public function isEditingTeacher() {
-        return $this->findRole('editingteacher');
+    public function is_editing_teacher() {
+        return $this->find_role('editingteacher');
     }
 
     /**
@@ -99,8 +99,8 @@ class context {
      *
      * @return bool True if user is teacher
      */
-    public function isTeacher() {
-        return $this->findRole('teacher');
+    public function is_teacher() {
+        return $this->find_role('teacher');
     }
 
     /**
@@ -108,8 +108,8 @@ class context {
      *
      * @return bool True if user is student
      */
-    public function isStudent() {
-        return $this->findRole('student');
+    public function is_student() {
+        return $this->find_role('student');
     }
 
     /**
@@ -117,7 +117,7 @@ class context {
      *
      * @return bool True if user is guest
      */
-    public function isGuest() {
+    public function is_guest() {
         return is_guest($this->_context, $this->_userid);
     }
 
@@ -126,8 +126,8 @@ class context {
      *
      * @return bool True if user has user role
      */
-    public function isUser() {
-        return $this->findRole('user');
+    public function is_user() {
+        return $this->find_role('user');
     }
 
     /**
@@ -135,8 +135,8 @@ class context {
      *
      * @return bool True if frontpage role exists
      */
-    public function isFrontPage() {
-        return $this->findRole('frontpage');
+    public function is_front_page() {
+        return $this->find_role('frontpage');
     }
 
     /**
@@ -145,7 +145,7 @@ class context {
      * @param string $shortname Role shortname to search for
      * @return bool True if role found
      */
-    public function findRole($shortname) {
+    public function find_role($shortname) {
         foreach ($this->_roles as $role) {
             if (isset($role->shortname) && strtolower($role->shortname) === strtolower($shortname)) {
                 return true;
@@ -159,7 +159,7 @@ class context {
      *
      * @return bool True if user can view
      */
-    public function hasViewCapability() {
+    public function has_view_capability() {
         return is_viewing($this->_context, $this->_userid);
     }
 
@@ -168,7 +168,7 @@ class context {
      *
      * @return bool True if user is enrolled
      */
-    public function isEnrolled() {
+    public function is_enrolled() {
         return is_enrolled($this->_context, $this->_userid);
     }
 
@@ -177,24 +177,34 @@ class context {
      *
      * @return bool True if user is site admin, manager, course creator, or editing teacher
      */
-    public function isAnyKindOfModerator() {
+    public function is_any_kind_of_moderator() {
         if (
-            $this->isSiteAdmin() ||
-            $this->isManager() ||
-            $this->isCourseCreator() ||
-            $this->isEditingTeacher() ||
-            $this->isTeacher()
+            $this->is_site_admin() ||
+            $this->is_manager() ||
+            $this->is_course_creator() ||
+            $this->is_editing_teacher() ||
+            $this->is_teacher()
         ) {
             return true;
         }
         return false;
     }
 
-    public function getContext() {
+    /**
+     * Get the context instance.
+     *
+     * @return \context
+     */
+    public function get_context() {
         return $this->_context;
     }
 
-    public function getCourseContext() {
+    /**
+     * Get the course context from this context.
+     *
+     * @return \context_course
+     */
+    public function get_course_context() {
         $context = $this->_context;
         return $context->get_course_context();
     }

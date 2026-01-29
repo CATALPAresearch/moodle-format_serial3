@@ -281,7 +281,7 @@ class format_serial3_activities_external extends external_api
 				FROM {assign} a
 				LEFT JOIN {assign_submission} s ON s.assignment = a.id AND s.userid = :userid
 				WHERE a.course = :course";
-                // AND a.allowsubmissionsfromdate < UNIX_TIMESTAMP() AND a.duedate < UNIX_TIMESTAMP()
+                // AND a.allowsubmissionsfromdate < UNIX_TIMESTAMP() AND a.duedate < UNIX_TIMESTAMP().
 
         $params = ['course' => $course, 'userid' => (int)$USER->id];
         $missedassignments = $DB->get_records_sql($sql, $params);

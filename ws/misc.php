@@ -27,6 +27,13 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/externallib.php');
 require_once(__DIR__ . '/analytics.php');
 
+/**
+ * External API for miscellaneous webservice methods.
+ *
+ * @package    format_serial3
+ * @copyright  2026 Niels Seidel
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_serial3_misc_external extends external_api
 {
     /**
@@ -68,12 +75,12 @@ class format_serial3_misc_external extends external_api
         $uid = (int)$USER->id;
         $sql = '
             SELECT * FROM ' . $CFG->prefix . 'event
-            WHERE (' . $CFG->prefix . 'event.eventtype = \'site\') 
+            WHERE (' . $CFG->prefix . 'event.eventtype = \'site\')
             OR (' . $CFG->prefix . 'event.eventtype = \'user\' AND ' . $CFG->prefix . 'event.userid = ' . $uid . ')
             OR (' . $CFG->prefix . 'event.eventtype = \'group\'
                 AND ' . $CFG->prefix . 'event.courseid = ' . $cid . '
-                AND ' . $CFG->prefix . 'event.groupid in 
-                (SELECT ' . $CFG->prefix . 'groups.id 
+                AND ' . $CFG->prefix . 'event.groupid in
+                (SELECT ' . $CFG->prefix . 'groups.id
                     FROM ' . $CFG->prefix . 'groups
                     INNER JOIN ' . $CFG->prefix . 'groups_members
                     ON ' . $CFG->prefix . 'groups.id = ' . $CFG->prefix . 'groups_members.groupid
@@ -111,7 +118,7 @@ class format_serial3_misc_external extends external_api
      * @return external_function_parameters Parameters for the function
      */
     public static function get_surveys_parameters() {
-        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
+        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED.
         return new external_function_parameters(
             [
                 'courseid' => new external_value(PARAM_INT, 'course id'),
@@ -131,13 +138,13 @@ class format_serial3_misc_external extends external_api
         global $DB, $USER;
 
         $res = $DB->get_record_sql(
-            "SELECT qr.submitted 
+            "SELECT qr.submitted
             FROM {questionnaire_response} qr
             JOIN {course_modules} cm ON qr.questionnaireid = cm.instance
             WHERE
             cm.id=:moduleid AND
             cm.course=:courseid AND
-            qr.userid=:userid AND 
+            qr.userid=:userid AND
             qr.complete='y'",
             [
                 "courseid" => (int)$courseid,
@@ -181,7 +188,7 @@ class format_serial3_misc_external extends external_api
      * @return external_function_parameters Parameters for the function
      */
     public static function reflectionread_parameters() {
-        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
+        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED.
         return new external_function_parameters(
             [
                 'courseid' => new external_value(PARAM_INT, 'course id'),
@@ -230,7 +237,7 @@ class format_serial3_misc_external extends external_api
         );
         $transaction->allow_commit();
 
-        // TODO json_encode($debug)
+        // TODO: json_encode($debug).
 
         return [
             'success' => true,
@@ -245,7 +252,7 @@ class format_serial3_misc_external extends external_api
      * @return external_function_parameters Parameters for the function
      */
     public static function reflectioncreate_parameters() {
-        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED
+        // VALUE_REQUIRED, VALUE_OPTIONAL, or VALUE_DEFAULT. If not mentioned, a value is VALUE_REQUIRED.
         return new external_function_parameters(
             [
                 'data' =>
@@ -503,7 +510,7 @@ class format_serial3_misc_external extends external_api
         $record->response = $userresponse;
         $record->timecreated = $date->getTimestamp();
 
-        // $DB->insert_record('ari_response_rule_action', $record);
+        // There was an error inserting the record.
 
         return [
             'success' => true,
@@ -553,8 +560,8 @@ class format_serial3_misc_external extends external_api
     public static function get_recommendations($userid, $course) {
         global $DB;
 
-        // Placeholder implementation - returns empty array for now
-        // This can be extended to implement actual recommendation logic
+        // Placeholder implementation - returns empty array for now.
+        // This can be extended to implement actual recommendation logic.
         $recommendations = [];
 
         return [

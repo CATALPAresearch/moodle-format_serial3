@@ -29,6 +29,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Post-installation hook for format_serial3.
+ *
+ * @return bool
+ */
 function xmldb_format_serial3_install() {
     global $CFG;
 }

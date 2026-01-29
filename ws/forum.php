@@ -81,27 +81,27 @@ class format_serial3_forum_external extends external_api
 
         $userid = (int)$USER->id;
 
-        $sql = "SELECT 
-			(SELECT COUNT(*) 
-			 FROM {forum_posts} fp 
-			 JOIN {forum_discussions} fd ON fd.id = fp.discussion 
+        $sql = "SELECT
+			(SELECT COUNT(*)
+			 FROM {forum_posts} fp
+			 JOIN {forum_discussions} fd ON fd.id = fp.discussion
 			 WHERE fd.course = :courseid AND fp.userid = :userid) AS user_posts,
 			COUNT(*) AS total_posts,
 			COUNT(*) / COALESCE(NULLIF(COUNT(DISTINCT fp.userid), 0)) AS avg_posts_per_person,
-			(SELECT COUNT(*) 
-			 FROM {forum_posts} fp 
-			 JOIN {forum_discussions} fd ON fd.id = fp.discussion 
-			 GROUP BY fp.userid 
-			 ORDER BY COUNT(*) DESC 
+			(SELECT COUNT(*)
+			 FROM {forum_posts} fp
+			 JOIN {forum_discussions} fd ON fd.id = fp.discussion
+			 GROUP BY fp.userid
+			 ORDER BY COUNT(*) DESC
 			 LIMIT 1) AS max_user_posts,
-			(SELECT COUNT(*) 
-			 FROM {forum_posts} fp 
-			 JOIN {forum_discussions} fd ON fd.id = fp.discussion 
-			 GROUP BY fp.userid 
-			 ORDER BY COUNT(*) ASC 
+			(SELECT COUNT(*)
+			 FROM {forum_posts} fp
+			 JOIN {forum_discussions} fd ON fd.id = fp.discussion
+			 GROUP BY fp.userid
+			 ORDER BY COUNT(*) ASC
 			 LIMIT 1) AS min_user_posts
-		FROM {forum_posts} fp 
-		JOIN {forum_discussions} fd ON fd.id = fp.discussion 
+		FROM {forum_posts} fp
+		JOIN {forum_discussions} fd ON fd.id = fp.discussion
 		WHERE fd.course = :courseid1 AND fp.userid IS NOT NULL
         ;";
 
@@ -155,7 +155,7 @@ class format_serial3_forum_external extends external_api
 
         $context = context_course::instance($courseid);
 
-        // Get forum discussions created by teachers
+        // Get forum discussions created by teachers.
         $discussions = $DB->get_records_sql(
             "SELECT fd.id, fd.name, fd.userid, fd.timemodified, fd.timestart,
                     u.firstname, u.lastname, f.name as forumname

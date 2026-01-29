@@ -26,7 +26,6 @@ $string['surveyButton'] = 'Zurück zum Kurs';
 $string['surveyDescription'] = 'Im Rahmen der Begleitforschung der Forschungsprojekte APLE und LA-DIVA bitten wir Sie, an folgenden Umfragen teilzunehmen und so unsere Forschung zu unterstützen.';
 $string['surveyHeadline'] = 'Begleitforschung APLE / LA-DIVA';
 $string['surveyReqText'] = "Umfragen mit dem Status 'erforderlich' müssen absolviert werden, bevor Sie wieder auf die Lernumgebung zugreifen können.";
-$string['surveyTitle'] = 'Begleitforschung APLE / LA-DIVA';
 
 // survey table
 $string['surveyID'] = "#";
@@ -73,7 +72,7 @@ $string['dashboardAddItem'] = 'Block hinzufügen';
 $string['dashboardRemoveItem'] = 'Element aus Dashboard entfernen';
 
 $string['informationTitle'] = 'Informationen über die Semesterübersicht';
-$string['informationContent'] = 'In einem typischen Fernstudiumskurs wie diesem stehen Ihnen viele verschiedene Lernmaterialien zur Verfügung, die Sie über einen längeren Zeitraum bis zur Klausur durchgearbeitet und verstanden haben müssen.<br> 
+$string['informationContent'] = 'In einem typischen Fernstudiumskurs wie diesem stehen Ihnen viele verschiedene Lernmaterialien zur Verfügung, die Sie über einen längeren Zeitraum bis zur Klausur durchgearbeitet und verstanden haben müssen.<br>
 Mit der Semesterübersicht unterstützen wir Sie dabei die Übersicht zu behalten, Ihre Lernziele zu erreichen, Termine nicht zu verpassen und einen Lernplan zu erstellen. Sie erhalten je Kurseinheit eine Übersicht über Ihren Lernfortschritt, d.h. die bislang bearbeiteten Aufgaben und gelesenen Texte sowie die dabei erzielten Ergebnisse. Sie können Ihren Wissensstand zudem selbst einschätzen, Ihre TODOs planen und unter Anleitung reflektieren, wie Sie in der letzten Kurseinheit eigentlich gelernt haben. ';
 $string['linkTitle'] = 'Hilfreiche Links und Ansprechpartner';
 $string['linkContent'] = 'Hier werden alle relevanten Links und Emails angezeigt. Z.B., Übungsssystem, Studienberatung, Prüfungsamt, News Group.';

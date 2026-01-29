@@ -34,15 +34,16 @@ $PAGE->set_title('Analytics');
 $PAGE->set_heading(get_string('surveyHeadline', 'format_serial3'));
 
 if (!isset($_GET['c']) || $DB->count_records('course', ['id' => $_GET['c']]) !== 1) {
-    // Kurs nicht gefunden
+    // Kurs nicht gefunden.
     redirect(new moodle_url("/"), 'Es wurde kein passender Kurs übergeben!', null, \core\output\notification::NOTIFY_WARNING);
 } else {
     $courseid = $_GET['c'];
-    // Kurs gefunden
+    // Kurs gefunden.
     $permission = new format_serial3\permission\course((int)$USER->id, $courseid);
-    if (!$permission->isAnyKindOfModerator()) {
-        // Keine Berechtigung
-        redirect(new moodle_url("/"), 'Sie haben keine Berechtigung das Dashboard einzusehen!', null, \core\output\notification::NOTIFY_WARNING);
+    if (!$permission->is_any_kind_of_moderator()) {
+        // Keine Berechtigung.
+        $msg = 'Sie haben keine Berechtigung das Dashboard einzusehen!';
+        redirect(new moodle_url("/"), $msg, null, \core\output\notification::NOTIFY_WARNING);
     } else {
         // Zugriff gewährt!
         echo $OUTPUT->header();

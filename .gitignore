@@ -13,3 +13,9 @@ x.json
 .tscache
 .vs-code-workspace.code-workspace
 .DS_Store
+
+amd/build/
+vue/node_modules/
+.grunt/
+.php_cs.cache
+coverage/

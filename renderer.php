@@ -42,7 +42,7 @@ class format_serial3_renderer extends section_renderer {
      * @param string $target one of rendering target constants
      */
     public function __construct(moodle_page $page, $target) {
-        global $COURSE, $PAGE;
+        global $COURSE;
         parent::__construct($page, $target);
 
         // Since format_topics_renderer::section_edit_controls() only displays the 'Set current section' control when editing mode is on
@@ -72,14 +72,14 @@ class format_serial3_renderer extends section_renderer {
      *
      * @return bool True if user is moderator, false otherwise
      */
-    private function checkModeratorStatus() {
+    private function check_moderator_status() {
         if (!is_null($this->_moderator)) {
             return $this->_moderator;
         }
         try {
             global $USER, $COURSE;
             $context = context_course::instance($COURSE->id);
-            $loggedIn = isloggedin();
+            $loggedin = isloggedin();
             $roles = get_user_roles($context, $USER->id);
             $found = false;
             if (is_siteadmin($USER->id)) {
@@ -95,8 +95,8 @@ class format_serial3_renderer extends section_renderer {
             }
             $this->courseid = $COURSE->id;
             $this->found = $found;
-            $this->islogged = $loggedIn;
-            if ($found === true && $loggedIn === true) {
+            $this->islogged = $loggedin;
+            if ($found === true && $loggedin === true) {
                 return true;
             }
             return false;
@@ -113,9 +113,9 @@ class format_serial3_renderer extends section_renderer {
      * @return string HTML to output.
      */
     protected function start_section_list(): string {
-        global $CFG, $PAGE;
+        global $CFG;
 
-        $format_options = course_get_format($PAGE->course)->get_format_options();
+        $formatoptions = course_get_format($this->page->course)->get_format_options();
         require_once($CFG->libdir . '/completionlib.php');
 
         return html_writer::start_tag('ul', ['class' => 'topics']);
@@ -168,9 +168,8 @@ class format_serial3_renderer extends section_renderer {
      * @return array of edit control items
      */
     protected function section_edit_control_items($course, $section, $onsectionpage = false) {
-        global $PAGE;
 
-        if (!$PAGE->user_is_editing()) {
+        if (!$this->page->user_is_editing()) {
             return [];
         }
 

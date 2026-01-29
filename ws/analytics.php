@@ -144,7 +144,7 @@ class format_serial3_analytics_external extends external_api
         $debug = [];
         $meta = get_meta($courseid);
 
-        // Step 1: obtain all course activities
+        // Step 1: Obtain all course activities.
         $modinfo = get_fast_modinfo($courseid, $userid);
         $sections = $modinfo->get_sections();
         $activities = [];
@@ -174,12 +174,12 @@ class format_serial3_analytics_external extends external_api
             }
         }
 
-        // Step 1B: Expand Safran activity for containing tasks
-        // TODO
+        // Step 1B: Expand Safran activity for containing tasks.
+        // TODO.
         /*
         foreach ($activities as $activity) {
             if($activity['type'] == 'safran'){
-                //$query = "SELECT id as safranid,  FROM {safran_q_attempt} WHERE questionid = :questionid";
+                // $query = "SELECT id as safranid,  FROM {safran_q_attempt} WHERE questionid = :questionid".
                 $query = "SELECT
                         id as safranid,
                     FROM {safran_question}
@@ -209,9 +209,11 @@ class format_serial3_analytics_external extends external_api
                     m.name activity,
                     a.id activity_id,
                     cm.id module_id,
-                    cm.section, 
-                    (SELECT count(*) FROM {course_modules} cmm JOIN {modules} m ON m.id = cmm.module WHERE m.name = 'assign' AND cmm.course = cm.course AND cmm.section = cm.section) count,
-                    a.grade max_score, 
+                    cm.section,
+                    (SELECT count(*) FROM {course_modules} cmm
+                     JOIN {modules} m ON m.id = cmm.module
+                     WHERE m.name = 'assign' AND cmm.course = cm.course AND cmm.section = cm.section) count,
+                    a.grade max_score,
                     ag.grade achieved_score,
                     asub.timemodified  submission_time,
                     ag.timemodified grading_time
@@ -219,12 +221,12 @@ class format_serial3_analytics_external extends external_api
                 LEFT JOIN {assign_grades} ag ON a.id = ag.assignment
                 LEFT JOIN {assign_submission} asub ON a.id = asub.assignment
                 LEFT JOIN {course_modules} cm ON a.id = cm.instance
-                LEFT JOIN {modules} m ON m.id = cm.module 
-                WHERE 
-                    a.course = :courseid AND 
-                    ag.userid = :userid AND 
-                    asub.status = 'submitted' AND 
-                    asub.latest = 1 AND 
+                LEFT JOIN {modules} m ON m.id = cm.module
+                WHERE
+                    a.course = :courseid AND
+                    ag.userid = :userid AND
+                    asub.status = 'submitted' AND
+                    asub.latest = 1 AND
                     m.name = 'assign'
                 ;",
             'quiz' => "SELECT
@@ -232,22 +234,24 @@ class format_serial3_analytics_external extends external_api
                     q.id activity_id,
                     cm.id module_id,
                     cm.section,
-                    (select count(*) from {course_modules} cmm JOIN {modules} m ON m.id = cmm.module WHERE m.name = 'quiz' AND cmm.course=cm.course AND cmm.section = cm.section) count,
-                    q.grade max_score, 
+                    (select count(*) from {course_modules} cmm
+                     JOIN {modules} m ON m.id = cmm.module
+                     WHERE m.name = 'quiz' AND cmm.course=cm.course AND cmm.section = cm.section) count,
+                    q.grade max_score,
                     qsub.sumgrades*10 achieved_score,
                     qsub.timemodified  submission_time,
                     qsub.timemodified grading_time
                 FROM {quiz} q
                 LEFT JOIN {quiz_attempts} qsub ON q.id = qsub.quiz
                 LEFT JOIN {course_modules} cm ON q.id = cm.instance
-                LEFT JOIN {modules} m ON m.id = cm.module 
-                WHERE 
-                    q.course = :courseid AND 
+                LEFT JOIN {modules} m ON m.id = cm.module
+                WHERE
+                    q.course = :courseid AND
                     qsub.userid = :userid AND
                     qsub.state = 'finished' AND
                     m.name = 'quiz'
             ;",
-            'longpage' => "SELECT DISTINCT 
+            'longpage' => "SELECT DISTINCT
                     m.name activity,
                     l.id activity_id,
                     cm.id module_id,
@@ -261,19 +265,19 @@ class format_serial3_analytics_external extends external_api
                     FROM {longpage} l
                     JOIN {longpage_reading_progress} lrp ON l.id = lrp.longpageid
                     RIGHT JOIN {course_modules} cm ON l.id = cm.instance
-                    RIGHT JOIN {modules} m ON m.id = cm.module 
-                    WHERE 
+                    RIGHT JOIN {modules} m ON m.id = cm.module
+                    WHERE
                     l.course = :courseid AND
-                    lrp.userid= :userid AND 
+                    lrp.userid= :userid AND
                     m.name = 'longpage'
-                    Group by m.name, l.id, cm.id, cm.section 
+                    Group by m.name, l.id, cm.id, cm.section
             ;",
-            'hypervideo' => "SELECT DISTINCT 
+            'hypervideo' => "SELECT DISTINCT
                     m.name activity,
                     h.id activity_id,
                     cm.id module_id,
                     cm.section,
-                    SUM(hl.duration) count, 
+                    SUM(hl.duration) count,
                     COUNT(DISTINCT hl.values) * 2 complete, -- static parameter - attention
                     '0' AS max_score,
                     '0' AS achieved_score,
@@ -282,10 +286,10 @@ class format_serial3_analytics_external extends external_api
                 FROM {hypervideo} h
                 JOIN {hypervideo_log} hl ON h.id = hl.hypervideo
                 RIGHT JOIN {course_modules} cm ON h.id = cm.instance
-                RIGHT JOIN {modules} m ON m.id = cm.module 
-                WHERE 
+                RIGHT JOIN {modules} m ON m.id = cm.module
+                WHERE
                     h.course = :courseid AND
-                    hl.userid = :userid AND 
+                    hl.userid = :userid AND
                     hl.actions = 'playback' AND
                     m.name = 'hypervideo'
                 GROUP BY m.name, h.id, cm.id, cm.section
@@ -340,7 +344,7 @@ class format_serial3_analytics_external extends external_api
         // Step 4: Add scores to completion.
         foreach ($completions as $sec => $activity) {
             foreach ($res as $type => $item) {
-                // $debug[] = $item;
+                // Debug item.
                 if ($activity['type'] == $item->activity && $activity['instance'] == $item->activity_id) {
                     $completions[$sec]['achieved_score'] = $item->achieved_score;
                     $completions[$sec]['max_score'] = $item->max_score;

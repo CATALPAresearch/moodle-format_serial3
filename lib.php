@@ -47,7 +47,7 @@ use global_navigation;
  */
 class format_serial3 extends format_base {
     /** @var bool Survey enabled flag */
-    private $SURVEY_ENABLED = true;
+    private $surveyenabled = true;
 
     /**
      * Returns true if this course format uses sections
@@ -165,13 +165,13 @@ class format_serial3 extends format_base {
      */
     public function extend_course_navigation($navigation, navigation_node $node): void {
 
-        // SURVEY START
+        // SURVEY START.
 
         global $COURSE, $DB, $CFG, $USER, $PAGE;
 
         $perm = new \format_serial3\permission\course($USER->id, $COURSE->id);
 
-        if ($this->SURVEY_ENABLED === true && !$perm->isAnyKindOfModerator()) {
+        if ($this->surveyenabled === true && !$perm->is_any_kind_of_moderator()) {
             $records = $DB->get_records_sql(
                 'SELECT * FROM {limesurvey_assigns} WHERE course_id = ?',
                 [$COURSE->id]
@@ -197,13 +197,13 @@ class format_serial3 extends format_base {
                             continue;
                         }
                     }
-                    $redirectToSurvey = new moodle_url('/course/format/serial3/survey.php', ['c' => $COURSE->id]);
-                    redirect($redirectToSurvey);
+                    $redirecttosurvey = new moodle_url('/course/format/serial3/survey.php', ['c' => $COURSE->id]);
+                    redirect($redirecttosurvey);
                 }
             }
         }
 
-        // SURVEY END
+        // SURVEY END.
 
         // If section is specified in course/view.php, make sure it is expanded in navigation.
         if ($navigation->includesectionnum === false) {
@@ -359,7 +359,7 @@ class format_serial3 extends format_base {
                 ],
             ];
 
-            // Add widget configuration to edit form
+            // Add widget configuration to edit form.
             $this->add_widget_settings_to_form($courseformatoptionsedit);
 
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
@@ -376,13 +376,13 @@ class format_serial3 extends format_base {
         require_once(__DIR__ . '/classes/widget_manager.php');
         $widgets = \format_serial3\widget_manager::get_available_widgets();
 
-        // Add header for widget settings
+        // Add header for widget settings.
         $options['widgets_header'] = [
             'label' => get_string('widgets_header', 'format_serial3'),
             'element_type' => 'header',
         ];
 
-        // Add enabled widgets multiselect
+        // Add enabled widgets multiselect.
         $widgetoptions = [];
         foreach ($widgets as $widgetid => $widget) {
             $widgetoptions[$widgetid] = $widget['name'];
@@ -399,7 +399,7 @@ class format_serial3 extends format_base {
             ],
         ];
 
-        // Add link to dedicated settings page instead of adding all fields here
+        // Add link to dedicated settings page instead of adding all fields here.
         $courseid = $this->get_course()->id;
         if ($courseid > 0) {
             $settingsurl = new \moodle_url('/course/format/serial3/widgets.php', ['id' => $courseid]);
@@ -462,10 +462,10 @@ class format_serial3 extends format_base {
     public function update_course_format_options($data, $oldcourse = null): bool {
         $data = (array)$data;
 
-        // Filter out widget settings - these are handled separately via widget_manager
+        // Filter out widget settings - these are handled separately via widget_manager.
         $filtereddata = [];
         foreach ($data as $key => $value) {
-            // Only include keys that don't start with 'widget_settings_'
+            // Only include keys that don't start with 'widget_settings_'.
             if (strpos($key, 'widget_settings_') !== 0) {
                 $filtereddata[$key] = $value;
             }

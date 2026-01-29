@@ -38,9 +38,9 @@ class module extends context {
      * Constructor.
      *
      * @param int $userid User ID
-     * @param object $coure_module Course module object
+     * @param object $coursemodule Course module object
      */
-    function __construct($userid, $coure_module) {
+    public function __construct($userid, $coursemodule) {
         $context = \context_module::instance($cm->id);
         parent::__construct($userid, $context);
     }

@@ -145,7 +145,7 @@ class widget_manager {
             }
         }
 
-        // Return default enabled widgets
+        // Return default enabled widgets.
         $widgets = self::get_available_widgets();
         $enabled = [];
         foreach ($widgets as $id => $widget) {
@@ -178,7 +178,7 @@ class widget_manager {
     public static function get_widget_settings(int $courseid, string $widgetid): array {
         global $DB;
 
-        // Get settings from course_format_options table
+        // Get settings from course_format_options table.
         $optionkey = 'widget_settings_' . $widgetid;
         $record = $DB->get_record('course_format_options', [
             'courseid' => $courseid,
@@ -193,7 +193,7 @@ class widget_manager {
             }
         }
 
-        // Return default settings
+        // Return default settings.
         $widgets = self::get_available_widgets();
         if (isset($widgets[$widgetid]['settings'])) {
             $defaults = [];
@@ -236,7 +236,7 @@ class widget_manager {
         $optionkey = 'widget_settings_' . $widgetid;
         $value = json_encode($settings);
 
-        // Check if record exists
+        // Check if record exists.
         $record = $DB->get_record('course_format_options', [
             'courseid' => $courseid,
             'format' => 'serial3',
@@ -244,11 +244,11 @@ class widget_manager {
         ]);
 
         if ($record) {
-            // Update existing record
+            // Update existing record.
             $record->value = $value;
             return $DB->update_record('course_format_options', $record);
         } else {
-            // Insert new record
+            // Insert new record.
             $record = new \stdClass();
             $record->courseid = $courseid;
             $record->format = 'serial3';
