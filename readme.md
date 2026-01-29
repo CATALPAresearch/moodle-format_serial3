@@ -6,18 +6,18 @@ that can be selected and arranged to the users liking.
 **Features**
 
 - Customizable widget-based dashboard system
-- Progress Chart with adaptive learning support
-- Learner goals and Indicators
-- Recommendations
-- Task List
-- Deadlines
-- Quiz Statistics
+- Implemented widgets
+   - Progress Chart with adaptive learning support
+   - Learner goals and Indicators
+   - Recommendations
+   - Task List
+   - Deadlines
+   - Quiz Statistics
 
 **Roadmap**
 
 - Add the resource list
 - Add a time tracking tool and display
-- Add all menu bar functionality
 
 # Installation
 
@@ -49,7 +49,7 @@ rsync -r ./* aple-test:/var/moodle/htdocs/moodle/course/format/serial3 --exclude
 ```bash
 cd /path/to/moodle
 php admin/tool/phpunit/cli/init.php
-# Run all tests
+# Run all tests (72)
 find course/format/serial3/tests -name '*_test.php' -exec vendor/bin/phpunit {} \;
 # Or run specific test file
 vendor/bin/phpunit course/format/serial3/tests/webservices_test.php
@@ -58,6 +58,7 @@ vendor/bin/phpunit course/format/serial3/tests/webservices_test.php
 ## Getting Started
 
 **Key files:**
+
 - `ws/*.php` - Webservice implementations (strict naming conventions required)
 - `db/services.php` - Webservice definitions referencing ws classes
 - `vue/` - Vue.js application source (transpiles to `amd/`)
