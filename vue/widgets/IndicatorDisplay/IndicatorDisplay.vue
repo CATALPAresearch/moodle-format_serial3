@@ -29,18 +29,21 @@
               praktisches/job-relevantes Wissen anzueignen
             </option>
           </select>
-          <div class="dropdown">
-            <div
-              id="dropdownMenuButton"
-              aria-expanded="false"
-              aria-haspopup="true"
-              class="btn btn-link dropdown-toggle ml-3 icon"
-              data-toggle="dropdown"
+          <div class="dropdown" ref="dropdownContainer">
+            <button
               type="button"
+              class="btn btn-link dropdown-toggle ml-3 icon"
+              :aria-expanded="dropdownOpen"
+              aria-haspopup="true"
+              @click="toggleDropdown"
             >
               <i class="fa fa-cog"></i>
-            </div>
-            <ul aria-labelledby="dropdownMenuButton" class="dropdown-menu">
+            </button>
+            <ul
+              class="dropdown-menu"
+              :class="{ show: dropdownOpen }"
+              @click.stop
+            >
               <li v-for="(indicator, index) in indicators" :key="index">
                 <div class="form-check ml-2">
                   <input
@@ -100,6 +103,7 @@ export default {
   data: function () {
     return {
       containerWidth: 0,
+      dropdownOpen: false,
       indicators: [
         {
           value: "proficiency",
@@ -176,17 +180,8 @@ export default {
 
   mounted() {
     window.addEventListener("resize", this.resizeHandler);
+    document.addEventListener("click", this.handleClickOutside);
     this.loadData();
-
-    // Initialize Bootstrap dropdown if jQuery is available
-    if (window.jQuery && window.jQuery.fn.dropdown) {
-      this.$nextTick(() => {
-        const dropdownElement = this.$el.querySelector("#dropdownMenuButton");
-        if (dropdownElement) {
-          window.jQuery(dropdownElement).dropdown();
-        }
-      });
-    }
 
     // Ensure chart is drawn after calculations
     this.$nextTick(() => {
@@ -195,7 +190,8 @@ export default {
   },
 
   beforeUnmount() {
-    window.removeEventListener("resize", this.resizeHandler); // Remove event listener when component is destroyed
+    window.removeEventListener("resize", this.resizeHandler);
+    document.removeEventListener("click", this.handleClickOutside);
   },
 
   watch: {
@@ -285,6 +281,19 @@ export default {
   methods: {
     ...mapGetters(["getLearnerGoal"]),
     ...mapActions(["updateLearnerGoal", "fetchLearnerGoal"]),
+
+    toggleDropdown() {
+      this.dropdownOpen = !this.dropdownOpen;
+    },
+
+    handleClickOutside(event) {
+      if (!this.dropdownOpen) return;
+
+      const dropdownContainer = this.$refs.dropdownContainer;
+      if (dropdownContainer && !dropdownContainer.contains(event.target)) {
+        this.dropdownOpen = false;
+      }
+    },
 
     loadData() {
       this.ranges = this.thresholds;
