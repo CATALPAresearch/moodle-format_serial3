@@ -134,12 +134,13 @@ export default {
       } else {
         if (response.data) {
           console.error(
-            this.name,
-            "Faulty response of webservice /logger/",
+            "[PopoverContent] Faulty response from webservice /set_user_understanding/:",
             response.data,
           );
         } else {
-          console.error(this.name, "No connection to webservice /logger/");
+          console.error(
+            "[PopoverContent] No connection to webservice /set_user_understanding/",
+          );
         }
       }
     },
