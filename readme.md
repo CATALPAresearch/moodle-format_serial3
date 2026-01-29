@@ -5,7 +5,8 @@ that can be selected and arranged to the users liking.
 
 **Features**
 
-- Progress Chart
+- Customizable widget-based dashboard system
+- Progress Chart with adaptive learning support
 - Learner goals and Indicators
 - Recommendations
 - Task List
@@ -39,41 +40,32 @@ rsync -r ./* aple-test:/var/moodle/htdocs/moodle/course/format/serial3 --exclude
 **Dependencies**
 
 - Moodle v4.5 or newer
-- vue.js v2, vuex
+- vue.js v3, vuex v4
 - d3.js
 - vue-grid-layout library (https://jbaysolutions.github.io/vue-grid-layout/)
 
-**Getting started**
+## Testing
 
-api.php: In this file you'll find the SQL queries. All API get or post requests implement webservices. The naming
-conventions are very strict. Take care to to follow the nameing schema for the functions.
+```bash
+cd /path/to/moodle
+php admin/tool/phpunit/cli/init.php
+# Run all tests
+find course/format/serial3/tests -name '*_test.php' -exec vendor/bin/phpunit {} \;
+# Or run specific test file
+vendor/bin/phpunit course/format/serial3/tests/webservices_test.php
+```
 
-db/services.php: Here your are defining the webservice by referencing the involved files (api.php and its containing
-classes and functions)
+## Getting Started
 
-version.php: Every time you are changing the webservice description in service.php you need to increment the version by
-1 and update the plugin in moodle (See the _notifications_ page in the administration panel)
+**Key files:**
+- `ws/*.php` - Webservice implementations (strict naming conventions required)
+- `db/services.php` - Webservice definitions referencing ws classes
+- `vue/` - Vue.js application source (transpiles to `amd/`)
+- `version.php` - Increment when changing services.php
 
-amd/scr: This is the folder where all custome javascript is located. You should not change any file there since it is the output folder for transpiled and optimized code.
+**Widget development:** See [readme-widget-setup.md](readme-widget-setup.md)
 
-/amd/app-lazy.min.js: This is the only script that is called by the HTML-DOM of the plugin. By using require.js all other
-files and dependencies are loaded on demand in this file and passed to the components underneath.
-
-/vue: This is the folder where all code for the Vue application is stored.
-
-/vue/js: This the folder where all third party javascript is stored.
-
-/vue/store: This folder contains all files related to the vuex store.
-
-/vue/components: This folder contains all components for the dashboard. In the 'widgets' folder all widgets-components
-are stored that are being called by 'App.vue'.
-
-/vue/scripts: This folder contains utility functions.
-
-/vue/data: This data contains data used in the dashboard stored as json. This data includes the adaptation-rules and
-thresholds.
-
-A good sheet sheet: http://tech.solin.eu/doku.php?id=moodle:course_construction
+**Moodle compliance:** See [readme-moodle-compliance.md](readme-moodle-compliance.md)
 
 ## Contributors
 

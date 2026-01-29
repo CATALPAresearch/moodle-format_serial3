@@ -35,6 +35,7 @@ $string['pluginname'] = 'Serial 3';
 $string['section0name'] = 'General';
 $string['sectionname'] = 'Topic';
 $string['showfromothers'] = 'Show topic';
+$string['coursedisplay'] = 'Course display';
 // Survey
 $string['surveyTitle'] = 'Accompanying research APLE / LA-DIVA';
 $string['surveyHeadline'] = 'Accompanying research APLE / LA-DIVA';

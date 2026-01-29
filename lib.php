@@ -28,15 +28,6 @@ require_once($CFG->dirroot . '/course/format/lib.php');
 
 use core_courseformat\base as format_base;
 use core\output\inplace_editable;
-use context_course;
-use moodle_url;
-use navigation_node;
-use stdClass;
-use lang_string;
-use MoodleQuickForm;
-use cm_info;
-use section_info;
-use global_navigation;
 
 /**
  * Main class for the Serial3 course format

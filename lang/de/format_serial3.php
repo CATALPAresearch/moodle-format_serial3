@@ -26,6 +26,7 @@ $string['surveyButton'] = 'Zurück zum Kurs';
 $string['surveyDescription'] = 'Im Rahmen der Begleitforschung der Forschungsprojekte APLE und LA-DIVA bitten wir Sie, an folgenden Umfragen teilzunehmen und so unsere Forschung zu unterstützen.';
 $string['surveyHeadline'] = 'Begleitforschung APLE / LA-DIVA';
 $string['surveyReqText'] = "Umfragen mit dem Status 'erforderlich' müssen absolviert werden, bevor Sie wieder auf die Lernumgebung zugreifen können.";
+$string['coursedisplay'] = 'Kursanzeige';
 
 // survey table
 $string['surveyID'] = "#";
