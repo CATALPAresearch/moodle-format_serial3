@@ -115,7 +115,61 @@ INNER JOIN ' . $CFG->prefix . 'tool_policy_versions as v
 ON p.currentversionid = v.id
 ';
 $res = $DB->get_records_sql($query, [(int)$USER->id]);
-// get_records("tool_policy_acceptances", array("userid" => (int)$USER->id ));
-echo '<policy-container></policy-container>';
-$PAGE->requires->js_call_amd('format_serial3/Policy', 'init', ['policies' => $res, 'message' => $message, 'backurl' => $policyback]);
+
+// Display message if policy was updated
+if (!empty($message)) {
+    echo '<div class="alert alert-success">' . $message . '</div>';
+}
+
+// Display policies
+echo '<div class="policy-container">';
+echo '<h2>' . get_string('pluginname', 'format_serial3') . ' - Policies</h2>';
+
+if (!empty($res)) {
+    echo '<table class="table">';
+    echo '<thead><tr>';
+    echo '<th>Policy Name</th>';
+    echo '<th>Status</th>';
+    echo '<th>Created</th>';
+    echo '<th>Accepted</th>';
+    echo '<th>Actions</th>';
+    echo '</tr></thead><tbody>';
+    
+    foreach ($res as $policy) {
+        echo '<tr>';
+        echo '<td>' . format_string($policy->name) . '</td>';
+        echo '<td>' . ($policy->status == 1 ? 'Accepted' : 'Pending') . '</td>';
+        echo '<td>' . ($policy->creation ? userdate($policy->creation) : '-') . '</td>';
+        echo '<td>' . ($policy->acceptance ? userdate($policy->acceptance) : '-') . '</td>';
+        echo '<td>';
+        
+        if ($policy->status != 1) {
+            $acceptUrl = new moodle_url('/course/format/serial3/policy.php', [
+                'policy' => $policy->id,
+                'version' => $policy->version,
+                'status' => 1
+            ]);
+            echo '<a href="' . $acceptUrl . '" class="btn btn-primary btn-sm">Accept</a> ';
+        }
+        
+        $declineUrl = new moodle_url('/course/format/serial3/policy.php', [
+            'policy' => $policy->id,
+            'version' => $policy->version,
+            'status' => 0
+        ]);
+        echo '<a href="' . $declineUrl . '" class="btn btn-secondary btn-sm">Decline</a>';
+        echo '</td>';
+        echo '</tr>';
+    }
+    
+    echo '</tbody></table>';
+} else {
+    echo '<p>No policies found.</p>';
+}
+
+echo '<div class="mt-3">';
+echo '<a href="' . $policyback . '" class="btn btn-secondary">Back to Course</a>';
+echo '</div>';
+echo '</div>';
+
 echo $OUTPUT->footer();
