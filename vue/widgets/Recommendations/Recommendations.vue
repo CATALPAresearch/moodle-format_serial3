@@ -119,11 +119,15 @@ export default {
   mounted: function () {
     TimeAgo.addDefaultLocale(de);
     this.timeAgo = new TimeAgo("de-DE"); // @TODO Language should be stored in the settings or derived from moodle settings 'en-US'
-    this.loadRecommentations();
+    this.loadData();
   },
 
   methods: {
     ...mapActions("recommendations", ["loadRecommentations"]),
+
+    loadData() {
+      this.loadRecommentations();
+    },
 
     markRecommendationDone(index) {
       this.$store.commit("recommendations/markDone", index);

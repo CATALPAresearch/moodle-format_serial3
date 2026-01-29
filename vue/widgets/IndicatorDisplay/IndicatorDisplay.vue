@@ -176,12 +176,7 @@ export default {
 
   mounted() {
     window.addEventListener("resize", this.resizeHandler);
-    this.ranges = this.thresholds;
-    this.getselectedIndicators();
-    this.calculateUnderstanding();
-    this.calculateTopicProficiency();
-    this.calculateTimeManagement();
-    this.calculateGrades();
+    this.loadData();
 
     // Initialize Bootstrap dropdown if jQuery is available
     if (window.jQuery && window.jQuery.fn.dropdown) {
@@ -290,6 +285,15 @@ export default {
   methods: {
     ...mapGetters(["getLearnerGoal"]),
     ...mapActions(["updateLearnerGoal", "fetchLearnerGoal"]),
+
+    loadData() {
+      this.ranges = this.thresholds;
+      this.getselectedIndicators();
+      this.calculateUnderstanding();
+      this.calculateTopicProficiency();
+      this.calculateTimeManagement();
+      this.calculateGrades();
+    },
 
     resizeHandler() {
       if (this.$refs.chartContainer) {

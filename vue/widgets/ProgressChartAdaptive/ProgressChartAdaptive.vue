@@ -151,7 +151,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Vue Popover -->
     <div
       v-if="activePopover"
@@ -234,13 +234,13 @@ export default {
 
   mounted: async function () {
     // Add click outside listener
-    document.addEventListener('click', this.handleClickOutside);
+    document.addEventListener("click", this.handleClickOutside);
     await this.loadData();
     //await this.loadLearnerModel()
   },
 
   beforeUnmount() {
-    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener("click", this.handleClickOutside);
   },
 
   computed: {
@@ -299,9 +299,9 @@ export default {
 
     togglePopover(event, activity) {
       event.stopPropagation();
-      
+
       this.log({
-        key: 'activity-popover-show',
+        key: "activity-popover-show",
         value: { id: activity.id, name: activity.name },
       });
 
@@ -311,7 +311,7 @@ export default {
       }
 
       this.activePopover = activity;
-      
+
       this.$nextTick(() => {
         this.positionPopover(event.currentTarget);
       });
@@ -319,25 +319,25 @@ export default {
 
     positionPopover(buttonElement) {
       if (!buttonElement || !this.$refs.popoverContainer) return;
-      
+
       const buttonRect = buttonElement.getBoundingClientRect();
-      
+
       // Position below the button using fixed positioning (relative to viewport)
       const top = buttonRect.bottom + 8;
-      const left = buttonRect.left + (buttonRect.width / 2);
-      
+      const left = buttonRect.left + buttonRect.width / 2;
+
       this.popoverStyle = {
-        position: 'fixed',
+        position: "fixed",
         top: `${top}px`,
         left: `${left}px`,
-        transform: 'translateX(-50%)',
+        transform: "translateX(-50%)",
         zIndex: 1060,
       };
     },
 
     handleClickOutside(event) {
       if (!this.activePopover) return;
-      
+
       const popoverContainer = this.$refs.popoverContainer;
       if (popoverContainer && !popoverContainer.contains(event.target)) {
         this.activePopover = null;
@@ -642,7 +642,7 @@ export default {
 }
 
 .popover-arrow::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -1px;
   left: -8px;

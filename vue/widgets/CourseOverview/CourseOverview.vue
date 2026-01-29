@@ -685,7 +685,7 @@ export default {
   },
 
   mounted: function () {
-    this.loadCourseData();
+    this.loadData();
     this.loadReflection();
     // Initialize Bootstrap dropdown if jQuery is available
     this.$nextTick(() => {
@@ -703,7 +703,7 @@ export default {
   methods: {
     ...mapGetters(["is1801Course"]),
 
-    loadCourseData: async function () {
+    loadData: async function () {
       const response = await Communication.webservice("overview", {
         courseid: this.courseid,
       });

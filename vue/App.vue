@@ -36,6 +36,7 @@
         <menu-bar
           @editmode="toggleEditMode"
           @widgetsUpdated="reloadWidgetConfig"
+          @refreshWidgets="refreshAllWidgets"
         ></menu-bar>
       </div>
     </div>
@@ -59,7 +60,7 @@
           >
             <i class="fa fa-close"></i>
           </span>
-          <component :is="item.c"></component>
+          <component :is="item.c" :ref="'widget-' + item.c"></component>
         </div>
       </div>
     </div>
@@ -404,6 +405,23 @@ export default {
       // Reload the page to apply new widget configuration
       // This is simpler than trying to dynamically update all arrays
       window.location.reload();
+    },
+
+    refreshAllWidgets() {
+      // Iterate through all widget refs and call their loadData methods
+      Object.keys(this.$refs).forEach((refKey) => {
+        if (refKey.startsWith("widget-")) {
+          const widgetRefs = this.$refs[refKey];
+          // Handle both single and array refs
+          const widgets = Array.isArray(widgetRefs) ? widgetRefs : [widgetRefs];
+
+          widgets.forEach((widget) => {
+            if (widget && typeof widget.loadData === "function") {
+              widget.loadData();
+            }
+          });
+        }
+      });
     },
 
     initObserver() {

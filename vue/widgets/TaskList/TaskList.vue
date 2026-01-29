@@ -157,7 +157,7 @@ export default {
   },
 
   async mounted() {
-    await this.getItems();
+    await this.loadData();
   },
 
   computed: {
@@ -182,6 +182,10 @@ export default {
     ]),
     ...mapActions(["log"]),
 
+    loadData() {
+      // dummy function needed for widget standardization to refresh all widgets
+      return 0;
+    },
     updateDate(item) {
       this.updateItem(item);
       this.log({ key: "widget-taskslist-update", value: item });

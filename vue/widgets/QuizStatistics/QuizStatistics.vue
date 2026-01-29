@@ -119,9 +119,7 @@ export default {
   },
 
   mounted() {
-    Promise.all([this.getQuizzes(), this.getAssignments()]).then(() => {
-      this.displayData(this.dataAll);
-    });
+    this.loadData();
   },
 
   computed: {
@@ -138,6 +136,12 @@ export default {
   },
 
   methods: {
+    loadData() {
+      Promise.all([this.getQuizzes(), this.getAssignments()]).then(() => {
+        this.displayData(this.dataAll);
+      });
+    },
+
     filterData() {
       let filteredData = this.dataAll;
 

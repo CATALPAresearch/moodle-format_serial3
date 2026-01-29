@@ -209,11 +209,11 @@ export default {
     } else {
       this.setCurrentStrategy("crossreading");
     }
-    this.loadStorage();
+    this.loadData();
   },
 
   created: function () {
-    this.loadStorage();
+    this.loadData();
     this.$watch(
       () => this.$route.params,
       (toParams, previousParams) => {
@@ -225,7 +225,7 @@ export default {
   },
 
   methods: {
-    loadStorage: function () {
+    loadData: function () {
       if (this.storageAvailable("localStorage")) {
         try {
           if (localStorage.getItem("serial2_course_bookmarks") !== null) {

@@ -7,6 +7,9 @@
     >
       <i aria-hidden="true" class="fa fa-gear icon m-0"></i>
     </button>
+    <button class="button" title="Reload widget data" @click="refreshWidgets">
+      <i aria-hidden="true" class="fa fa-refresh icon m-0"></i>
+    </button>
     <button
       v-if="isModerator"
       class="button"

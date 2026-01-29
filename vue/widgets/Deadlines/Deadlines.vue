@@ -111,8 +111,7 @@ export default {
   },
 
   mounted() {
-    this.getCalendarData();
-    this.getAssignmentData();
+    this.loadData();
   },
 
   computed: {
@@ -150,6 +149,11 @@ export default {
 
   methods: {
     ...mapActions(["log"]),
+
+    loadData() {
+      this.getCalendarData();
+      this.getAssignmentData();
+    },
     async getCalendarData() {
       console.log("cid", this.$store.state.courseid);
       const response = await Communication.webservice("getcalendar", {

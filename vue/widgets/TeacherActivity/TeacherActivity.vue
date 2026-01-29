@@ -177,15 +177,19 @@ export default {
   },
 
   mounted() {
-    this.getTeachers();
-    this.getTeachersLastAccess();
-    this.getAddedOrChangedCourseResources();
-    this.getDeletedCourseResources();
-    this.getNewForumDiscussions();
+    this.loadData();
   },
 
   methods: {
     ...mapActions(["log"]),
+
+    loadData() {
+      this.getTeachers();
+      this.getTeachersLastAccess();
+      this.getAddedOrChangedCourseResources();
+      this.getDeletedCourseResources();
+      this.getNewForumDiscussions();
+    },
 
     async getTeachers() {
       const response = await Communication.webservice(
