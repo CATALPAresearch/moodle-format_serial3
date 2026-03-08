@@ -15,7 +15,7 @@ export const widgetRegistry = {
       description:
         "Uses overview store for activities, recommendations store for feedback, taskList for adding items",
     },
-    defaultLayout: { x: 0, y: 0, w: 12, h: 5 },
+    defaultLayout: { w: 12, h: 5 },
   },
 
   IndicatorDisplay: {
@@ -27,7 +27,7 @@ export const widgetRegistry = {
       description:
         "Uses root store for learner goal, learnermodel for understanding data",
     },
-    defaultLayout: { x: 0, y: 5, w: 12, h: 5 },
+    defaultLayout: { w: 12, h: 5 },
   },
 
   Recommendations: {
@@ -39,7 +39,7 @@ export const widgetRegistry = {
       sharedState: ["courseid", "userid"],
       description: "Self-contained widget with own store for recommendations",
     },
-    defaultLayout: { x: 0, y: 10, w: 6, h: 4 },
+    defaultLayout: { w: 6, h: 4 },
   },
 
   TaskList: {
@@ -53,7 +53,7 @@ export const widgetRegistry = {
       description:
         "Self-contained widget, but actions are called from other widgets",
     },
-    defaultLayout: { x: 6, y: 10, w: 3, h: 4 },
+    defaultLayout: { w: 3, h: 4 },
   },
 
   LearningStrategies: {
@@ -79,7 +79,7 @@ export const widgetRegistry = {
       sharedState: ["courseid", "userid"],
       description: "Uses overview store for course structure and activities",
     },
-    defaultLayout: { x: 0, y: 14, w: 6, h: 3 },
+    defaultLayout: { w: 6, h: 3 },
   },
 
   Deadlines: {
@@ -90,7 +90,7 @@ export const widgetRegistry = {
       sharedState: ["courseid", "userid", "logger"],
       description: "Self-contained widget, uses only logger from shared state",
     },
-    defaultLayout: { x: 0, y: 17, w: 6, h: 3 },
+    defaultLayout: { w: 6, h: 3 },
   },
 
   TeacherActivity: {
@@ -101,7 +101,7 @@ export const widgetRegistry = {
       sharedState: ["courseid"],
       description: "Self-contained widget showing teacher activity",
     },
-    defaultLayout: { x: 6, y: 14, w: 6, h: 3 },
+    defaultLayout: { w: 6, h: 3 },
   },
 
   QuizStatistics: {
@@ -112,7 +112,7 @@ export const widgetRegistry = {
       sharedState: ["courseid", "userid"],
       description: "Uses overview store for quiz data",
     },
-    defaultLayout: { x: 6, y: 17, w: 6, h: 3 },
+    defaultLayout: { w: 6, h: 3 },
   },
 };
 

@@ -394,7 +394,7 @@ export default {
 
       try {
         Communication.setPluginName("format_serial3");
-
+        console.log("save widgetttt", this.selectedWidgets);
         const response = await Communication.webservice("save_widget_config", {
           courseid: this.courseid,
           widgets: this.selectedWidgets,

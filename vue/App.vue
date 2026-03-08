@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="width: 100%">
     <survey-prompt></survey-prompt>
     <div class="d-flex justify-content-between">
       <h2 class="main__title">{{ strings.dashboardTitle }}</h2>
@@ -42,25 +42,25 @@
     </div>
     <div id="widgetGrid" class="grid-stack vue-grid-layout">
       <div
-        class="grid-stack-item vue-grid-item border p-3"
-        v-for="(item, index) in layout"
+        class="grid-stack-item border"
+        v-for="item in layout"
+        :key="item.i"
         :id="'widget-' + item.c"
         :gs-w="item.w"
         :gs-h="item.h"
-        :gs-min-h="item.h"
-        :gs-no-resize="!editMode"
-        gs-resize-handles="s"
+        :gs-x="item.x"
+        :gs-y="item.y"
       >
-        <div class="grid-stack-item-content">
+        <div class="grid-stack-item-content" style="overflow: auto">
           <span
-            v-if="editMode & !item.fixed"
+            v-if="editMode && !item.fixed"
             class="remove"
             :title="strings.dashboardRemoveItem"
             @click="removeItem(item.i)"
           >
             <i class="fa fa-close"></i>
           </span>
-          <component :is="item.c" :ref="'widget-' + item.c"></component>
+          <component :is="item.c"></component>
         </div>
       </div>
     </div>
@@ -71,41 +71,55 @@
 </template>
 
 <script>
-// Core components
+import { defineAsyncComponent } from "vue";
 import MenuBar from "./components/MenuBar.vue";
 import WelcomeVideo from "./components/WelcomeVideo.vue";
 import SurveyPrompt from "./components/SurveyPrompt.vue";
 import Communication from "./utils/communication";
 
-// Widget imports - now from organized widget folders
-import AppDeadlines from "./widgets/Deadlines";
-import IndicatorDisplay from "./widgets/IndicatorDisplay";
-import ProgressChartAdaptive from "./widgets/ProgressChartAdaptive";
-import Recommendations from "./widgets/Recommendations";
-import TaskList from "./widgets/TaskList";
-import LearningStrategies from "./widgets/LearningStrategies";
-import CourseOverview from "./widgets/CourseOverview";
-import TeacherActivity from "./widgets/TeacherActivity";
-//import QuizStatistics from "./widgets/QuizStatistics";
-
 import "gridstack/dist/gridstack.min.css";
 import { GridStack } from "gridstack";
 import { mapState, mapGetters, mapActions } from "vuex";
 
+// Define async components for lazy loading
+const ProgressChartAdaptive = defineAsyncComponent(
+  () => import("./widgets/ProgressChartAdaptive/ProgressChartAdaptive.vue"),
+);
+const IndicatorDisplay = defineAsyncComponent(
+  () => import("./widgets/IndicatorDisplay/IndicatorDisplay.vue"),
+);
+const Recommendations = defineAsyncComponent(
+  () => import("./widgets/Recommendations/Recommendations.vue"),
+);
+const TaskList = defineAsyncComponent(
+  () => import("./widgets/TaskList/TaskList.vue"),
+);
+const Deadlines = defineAsyncComponent(
+  () => import("./widgets/Deadlines/Deadlines.vue"),
+);
+const CourseOverview = defineAsyncComponent(
+  () => import("./widgets/CourseOverview/CourseOverview.vue"),
+);
+const LearningStrategies = defineAsyncComponent(
+  () => import("./widgets/LearningStrategies/LearningStrategies.vue"),
+);
+const TeacherActivity = defineAsyncComponent(
+  () => import("./widgets/TeacherActivity/TeacherActivity.vue"),
+);
+
 export default {
   components: {
-    AppDeadlines: AppDeadlines.component,
-    IndicatorDisplay: IndicatorDisplay.component,
     MenuBar,
     WelcomeVideo,
     SurveyPrompt,
-    ProgressChartAdaptive: ProgressChartAdaptive.component,
-    Recommendations: Recommendations.component,
-    TaskList: TaskList.component,
-    CourseOverview: CourseOverview.component,
-    LearningStrategies: LearningStrategies.component,
-    TeacherActivity: TeacherActivity.component,
-    //QuizStatistics: QuizStatistics.component
+    ProgressChartAdaptive,
+    IndicatorDisplay,
+    Recommendations,
+    TaskList,
+    Deadlines,
+    CourseOverview,
+    LearningStrategies,
+    TeacherActivity,
   },
 
   data() {
@@ -115,13 +129,10 @@ export default {
       logger: null,
 
       grid: undefined,
-      count: 0,
-      info: "",
-      timerId: undefined,
-
       editMode: false,
-      widgetConfig: null, // Stores enabled widgets and their settings
+      widgetConfig: { success: false, widgets: [], canManage: false },
 
+      // Default layout for widgets
       defaultLayout: [
         {
           x: 0,
@@ -146,7 +157,7 @@ export default {
           y: 10,
           w: 6,
           h: 4,
-          i: "9",
+          i: "3",
           name: "Feedback",
           c: "Recommendations",
         },
@@ -155,7 +166,7 @@ export default {
           y: 10,
           w: 3,
           h: 4,
-          i: "3",
+          i: "4",
           name: "Aufgabenliste",
           c: "TaskList",
         },
@@ -164,202 +175,183 @@ export default {
           y: 10,
           w: 3,
           h: 4,
-          i: "4",
+          i: "5",
           name: "Termine",
-          c: "AppDeadlines",
+          c: "Deadlines",
         },
         {
           x: 0,
           y: 14,
           w: 12,
-          h: 5,
-          i: "12",
+          h: 3,
+          i: "6",
           name: "Kursübersicht",
           c: "CourseOverview",
         },
         {
           x: 0,
-          y: 19,
+          y: 17,
           w: 12,
-          h: 5,
-          i: "10",
-          name: "Aktivitäten der Lehrenden",
+          h: 4,
+          i: "7",
+          name: "Lehreraktivität",
           c: "TeacherActivity",
-        },
-      ],
-
-      allComponents: [
-        {
-          x: 0,
-          y: 0,
-          w: 6,
-          h: 5,
-          i: "10",
-          name: "Lehrenden Dashboard",
-          c: "TeacherActivity",
-        },
-        {
-          x: 0,
-          y: 0,
-          w: 8,
-          h: 12,
-          i: "1",
-          name: "Überblick über den Kurs und die Kurseinheiten",
-          c: "ProgressChartAdaptive",
-        },
-        {
-          x: 8,
-          y: 0,
-          w: 6,
-          h: 12,
-          i: "2",
-          name: "Lernziele",
-          c: "IndicatorDisplay",
-        },
-        {
-          x: 10,
-          y: 12,
-          w: 4,
-          h: 10,
-          i: "3",
-          name: "Aufgaben",
-          c: "TaskList",
         },
         {
           x: 6,
-          y: 12,
-          w: 4,
-          h: 10,
-          i: "4",
-          name: "Termine",
-          c: "AppDeadlines",
-        },
-        {
-          x: 0,
-          y: 12,
+          y: 17,
           w: 6,
-          h: 10,
-          i: "9",
-          name: "Feedback und Lernempfehlungen",
-          c: "Recommendations",
-        },
-
-        /*{
-                    "x": 0,
-                    "y": 0,
-                    "w": 6,
-                    "h": 12,
-                    "i": "7",
-                    "name": 'Ergebnisse',
-                    c: 'QuizStatistics',
-                    resizable: true
-                },*/
-
-        {
-          x: 0,
-          y: 0,
-          w: 12,
           h: 4,
-          i: "11",
+          i: "8",
           name: "Lernstrategien",
           c: "LearningStrategies",
         },
       ],
+
+      // All available widgets for the dropdown
+      allComponents: [
+        {
+          i: "1",
+          name: "Adaptiver Überblick",
+          c: "ProgressChartAdaptive",
+          w: 12,
+          h: 5,
+        },
+        { i: "2", name: "Lernziele", c: "IndicatorDisplay", w: 12, h: 5 },
+        { i: "3", name: "Feedback", c: "Recommendations", w: 6, h: 4 },
+        { i: "4", name: "Aufgabenliste", c: "TaskList", w: 3, h: 4 },
+        { i: "5", name: "Termine", c: "Deadlines", w: 3, h: 4 },
+        { i: "6", name: "Kursübersicht", c: "CourseOverview", w: 12, h: 3 },
+        { i: "7", name: "Lehreraktivität", c: "TeacherActivity", w: 6, h: 4 },
+        { i: "8", name: "Lernstrategien", c: "LearningStrategies", w: 6, h: 4 },
+      ],
+
+      // Current layout (reactive)
+      currentLayout: [],
     };
   },
 
   async created() {
     await this.loadWidgetConfig();
-
-    // Filter components based on enabled widgets
-    if (this.widgetConfig) {
-      const enabledWidgetIds = this.widgetConfig.widgets
-        .filter((w) => w.enabled)
-        .map((w) => w.id);
-      this.allComponents = this.allComponents.filter((component) =>
-        this.isWidgetEnabled(component.c, enabledWidgetIds),
-      );
-      this.defaultLayout = this.defaultLayout.filter((component) =>
-        this.isWidgetEnabled(component.c, enabledWidgetIds),
-      );
-    }
-
-    this.loadDashboard();
+    await this.loadDashboard();
+    this.initializeLayout();
   },
 
-  mounted: function () {
+  async mounted() {
     this.$store.commit("setResearchCondition");
-
     this.courseid = this.$store.state.courseid;
+    this.context.courseId = this.$store.state.courseid;
 
-    this.context.courseId = this.$store.state.courseid; // TODO
-
-    this.grid = GridStack.init({
-      column: 12,
-      cellHeight: 80,
-      minRow: 1,
-      animate: false, // show immediate (animate: true is nice for user dragging though)
-      columnOpts: {
-        breakpointForWindow: false, // test window vs grid size
-        //breakpoints: [{w:300, c:6},{w:400, c:8},{w:600, c:12},{w:1100, c:12}]
-        //breakpoints: [{w:220, c:1},{w:600, c:6}, {w:800, c:12}]
-        breakpoints: [{ w: 600, c: 1 }],
-      },
-      float: true,
-      disableResize: true,
-      disableMove: true,
-      resizable: {
-        handles: "e, se, s, sw, w",
-      },
-    });
-
-    // Explicitly disable dragging and resizing after grid initialization
-    this.$nextTick(function () {
-      if (this.grid) {
-        this.grid.enableMove(false);
-        this.grid.enableResize(false);
-      }
-      this.initObserver();
-    });
+    // Wait for layout data to be ready, then initialize grid
+    await this.$nextTick();
+    // Additional tick to ensure v-for has rendered
+    await this.$nextTick();
+    this.initGrid();
   },
 
   computed: {
-    filteredComponents() {
-      return this.allComponents.filter(
-        ({ i: id1 }) => !this.layout.some(({ i: id2 }) => id2 === id1),
-      );
-    },
-
-    layout() {
-      let r =
-        this.dashboardSettings && this.dashboardSettings.length > 0
-          ? this.dashboardSettings
-          : this.defaultLayout;
-
-      // Filter by widget configuration
-      if (this.widgetConfig) {
-        const enabledWidgetIds = this.widgetConfig.widgets
-          .filter((w) => w.enabled)
-          .map((w) => w.id);
-        r = r.filter((component) =>
-          this.isWidgetEnabled(component.c, enabledWidgetIds),
-        );
-      }
-
-      return r;
-    },
-
     ...mapState({
       dashboardSettings: (state) => state.dashboardSettings.dashboardSettings,
       research_condition: (state) => state.research_condition,
       isModerator: (state) => state.isModerator,
       strings: "strings",
     }),
+
+    /**
+     * Get the current layout, filtering by enabled widgets
+     */
+    layout() {
+      // Use currentLayout if available, otherwise defaultLayout
+      const baseLayout =
+        this.currentLayout.length > 0 ? this.currentLayout : this.defaultLayout;
+
+      const enabledWidgetIds = this.widgetConfig.widgets
+        .filter((w) => w.enabled)
+        .map((w) => w.id.toLowerCase());
+
+      // If no widgets are explicitly enabled (empty config), show all
+      if (enabledWidgetIds.length === 0) {
+        return baseLayout;
+      }
+
+      // Filter to only enabled widgets
+      return baseLayout.filter((item) =>
+        enabledWidgetIds.includes(item.c.toLowerCase()),
+      );
+    },
+
+    /**
+     * Get widgets not currently in layout (for add dropdown)
+     */
+    filteredComponents() {
+      const layoutIds = this.layout.map((item) => item.i);
+      return this.allComponents.filter((comp) => !layoutIds.includes(comp.i));
+    },
+  },
+
+  watch: {
+    // Re-initialize grid when layout changes
+    layout: {
+      handler() {
+        this.$nextTick(() => {
+          if (this.grid && this.layout.length > 0) {
+            this.grid.batchUpdate();
+            const items = document.querySelectorAll(
+              "#widgetGrid > .grid-stack-item",
+            );
+            items.forEach((el) => {
+              if (!el.gridstackNode) {
+                this.grid.makeWidget(el);
+              }
+            });
+            this.grid.batchUpdate(false);
+          }
+        });
+      },
+      deep: true,
+    },
   },
 
   methods: {
     ...mapGetters(["setResearchCondition"]),
     ...mapActions(["log"]),
+
+    initGrid() {
+      this.grid = GridStack.init(
+        {
+          column: 12,
+          cellHeight: 80,
+          minRow: 0,
+          animate: false,
+          columnOpts: {
+            breakpointForWindow: false,
+            breakpoints: [{ w: 600, c: 1 }],
+          },
+          float: false,
+          disableResize: !this.editMode,
+          disableDrag: !this.editMode,
+          resizable: {
+            handles: "e, se, s, sw, w",
+          },
+        },
+        "#widgetGrid",
+      );
+
+      this.initObserver();
+    },
+
+    initializeLayout() {
+      // Always use defaultLayout - ignore saved settings that may have corrupted y-values
+      // TODO: Re-enable saved layouts once the grid positioning is stable
+      this.currentLayout = [...this.defaultLayout];
+
+      // Apply research condition filter
+      if (this.research_condition === "control_group") {
+        this.currentLayout = this.currentLayout.filter(
+          (item) => item.c !== "Recommendations",
+        );
+      }
+    },
 
     async loadWidgetConfig() {
       try {
@@ -368,58 +360,30 @@ export default {
           courseid: this.$store.state.courseid,
         });
 
-        if (response.success) {
+        if (response && response.success) {
           this.widgetConfig = response;
           console.log("Widget configuration loaded:", response);
+        } else {
+          console.warn("Widget config missing, using defaults");
+          this.widgetConfig = { success: true, widgets: [], canManage: false };
         }
       } catch (error) {
         console.error("Failed to load widget configuration:", error);
-        // Continue without widget filtering if config fails to load
+        this.widgetConfig = { success: true, widgets: [], canManage: false };
       }
     },
 
-    isWidgetEnabled(componentName, enabledWidgetIds) {
-      // Map component names to widget IDs (must match backend widget IDs in lowercase)
-      const widgetMap = {
-        TaskList: "tasklist",
-        AppDeadlines: "deadlines",
-        ProgressChartAdaptive: "progresschartadaptive",
-        Recommendations: "recommendations",
-        IndicatorDisplay: "indicatordisplay",
-        LearningStrategies: "learningstrategies",
-        CourseOverview: "courseoverview",
-        TeacherActivity: "teacheractivity",
-        QuizStatistics: "quizstatistics",
-      };
-
-      const widgetId = widgetMap[componentName];
-      // If widget not in map or no enabled list, show it (fail-safe)
-      return (
-        !widgetId || !enabledWidgetIds || enabledWidgetIds.includes(widgetId)
-      );
+    async loadDashboard() {
+      await this.$store.dispatch("dashboardSettings/getDashboardSettings");
     },
 
-    async reloadWidgetConfig() {
-      // Reload the page to apply new widget configuration
-      // This is simpler than trying to dynamically update all arrays
+    reloadWidgetConfig() {
       window.location.reload();
     },
 
     refreshAllWidgets() {
-      // Iterate through all widget refs and call their loadData methods
-      Object.keys(this.$refs).forEach((refKey) => {
-        if (refKey.startsWith("widget-")) {
-          const widgetRefs = this.$refs[refKey];
-          // Handle both single and array refs
-          const widgets = Array.isArray(widgetRefs) ? widgetRefs : [widgetRefs];
-
-          widgets.forEach((widget) => {
-            if (widget && typeof widget.loadData === "function") {
-              widget.loadData();
-            }
-          });
-        }
-      });
+      // Refresh all widget data - widgets should implement loadData method
+      console.log("Refreshing all widgets...");
     },
 
     initObserver() {
@@ -428,8 +392,8 @@ export default {
         "IntersectionObserverEntry" in window &&
         "intersectionRatio" in window.IntersectionObserverEntry.prototype
       ) {
-        let _this = this;
-        let options = {
+        const _this = this;
+        const options = {
           root: null,
           rootMargin: "0px",
           threshold: [0.25, 0.5, 0.75, 1.0],
@@ -437,10 +401,9 @@ export default {
           delay: 100,
         };
 
-        let handleScrolling = function (entries) {
+        const handleScrolling = function (entries) {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              //console.log('Scroll Output: ',entry.target.id, entry.intersectionRatio);
               _this.log({
                 key: "view-dashboard-widget",
                 value: {
@@ -449,67 +412,95 @@ export default {
                 },
               });
             }
-            //   entry.boundingClientRect
-            //   entry.intersectionRatio
-            //   entry.intersectionRect
-            //   entry.isIntersecting
-            //   entry.rootBounds
-            //   entry.target
-            //   entry.time
           });
         };
 
-        let observer = new IntersectionObserver(handleScrolling, options);
-        var element = document.querySelector("#widgetGrid");
-        if (typeof element != "undefined" && element != null) {
+        const observer = new IntersectionObserver(handleScrolling, options);
+        const element = document.querySelector("#widgetGrid");
+        if (element) {
           observer.observe(element);
         }
 
         const gridItems = document.querySelectorAll(
-          "#widgetGrid .vue-grid-item",
+          "#widgetGrid .grid-stack-item",
         );
-        gridItems.forEach(function (item) {
+        gridItems.forEach((item) => {
           if (typeof item.id === "string" && item.id) {
             observer.observe(item);
           }
         });
       }
     },
+
+    toggleEditMode() {
+      this.editMode = !this.editMode;
+
+      if (this.grid) {
+        this.grid.enableMove(this.editMode);
+        this.grid.enableResize(this.editMode);
+      }
+    },
+
     addItem(e) {
       const newItem = this.allComponents.find(
         (element) => element.i === e.target.value,
       );
-      this.layout.push(newItem);
-      this.$el.querySelector("#addDashboardItems").selectedIndex = 0;
+      if (newItem) {
+        this.currentLayout.push({
+          ...newItem,
+          x: 0,
+          y: this.getMaxY() + 1,
+        });
+      }
+      e.target.selectedIndex = 0;
+    },
+
+    addItemFromDropdown(e) {
+      this.addItem(e);
+    },
+
+    getMaxY() {
+      if (this.currentLayout.length === 0) return 0;
+      return Math.max(
+        ...this.currentLayout.map((item) => (item.y || 0) + (item.h || 1)),
+      );
     },
 
     removeItem(val) {
-      const index = this.layout.map((item) => item.i).indexOf(val);
-      this.layout.splice(index, 1);
-    },
-
-    toggleEditMode() {
-      this.editMode = !this.editMode;
-      this.draggable = this.resizable = this.editMode;
-
-      // Enable or disable dragging and resizing in GridStack
-      if (this.grid) {
-        if (this.editMode) {
-          this.grid.enableMove(true);
-          this.grid.enableResize(true);
-        } else {
-          this.grid.enableMove(false);
-          this.grid.enableResize(false);
-        }
+      const index = this.currentLayout.findIndex((item) => item.i === val);
+      if (index > -1) {
+        this.currentLayout.splice(index, 1);
       }
     },
 
-    loadDashboard: function () {
-      this.$store.dispatch("dashboardSettings/getDashboardSettings");
-    },
-
     saveDashboard() {
-      const settings = JSON.stringify(this.layout);
+      if (!this.grid) {
+        console.error("Grid not initialized");
+        return;
+      }
+
+      // Get current positions from GridStack
+      const gridData = this.grid.save();
+
+      // Update currentLayout with new positions
+      const updatedLayout = this.currentLayout.map((item) => {
+        const gridItem = gridData.find(
+          (g) => g.el?.id === "widget-" + item.c || g.id === "widget-" + item.c,
+        );
+        if (gridItem) {
+          return {
+            ...item,
+            x: gridItem.x,
+            y: gridItem.y,
+            w: gridItem.w,
+            h: gridItem.h,
+          };
+        }
+        return item;
+      });
+
+      this.currentLayout = updatedLayout;
+      const settings = JSON.stringify(updatedLayout);
       this.$store.dispatch("dashboardSettings/saveDashboardSettings", settings);
       this.toggleEditMode();
     },
@@ -525,51 +516,27 @@ body#page-course-view-serial3 #region-main-box:nth-child(1) {
 .vue-grid-layout {
   background: #eee;
   position: relative;
+  min-height: auto !important;
 }
 
-.vue-grid-item:not(.vue-grid-placeholder) {
+.grid-stack {
+  background: #eee;
+  min-height: auto !important;
+}
+
+.grid-stack > .grid-stack-item {
   background: #fff;
-  border: 1px solid black;
-}
-
-.vue-grid-item .resizing {
-  opacity: 0.9;
-}
-
-.vue-grid-item .no-drag {
-  height: 100%;
-  width: 100%;
-}
-
-.grid-stack-item-content {
-  overflow: auto !important;
-  inset: 0px !important;
+  border: 1px solid #ddd;
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
   overflow: auto;
-}
-
-.vue-grid-item .minMax {
-  font-size: 12px;
-}
-
-.vue-grid-item .add {
-  cursor: pointer;
-}
-
-.vue-draggable-handle {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  top: 0;
+  padding: 10px;
   left: 0;
-  background-position: bottom right;
-  padding: 0 8px 8px 0;
-  background-repeat: no-repeat;
-  background-origin: content-box;
-  box-sizing: border-box;
-  cursor: pointer;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
 }
 
 .remove {
@@ -578,6 +545,7 @@ body#page-course-view-serial3 #region-main-box:nth-child(1) {
   top: 0;
   cursor: pointer;
   color: #666666;
+  z-index: 10;
 
   &:hover {
     color: black;

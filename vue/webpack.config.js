@@ -28,16 +28,23 @@ module.exports = (env, options) => {
         },
         {
           test: /\.(sa|sc|c)ss$/,
-          use: ["vue-style-loader", "css-loader", "sass-loader"],
+          use: [
+            "vue-style-loader",
+            "css-loader",
+            {
+              loader: "sass-loader",
+              options: {
+                api: "modern-compiler",
+                sassOptions: {
+                  silenceDeprecations: ["import"],
+                },
+              },
+            },
+          ],
         },
         {
           test: /\.vue$/,
           loader: "vue-loader",
-          options: {
-            loaders: {
-              scss: "vue-style-loader!css-loader!sass-loader",
-            },
-          },
         },
       ],
     },
