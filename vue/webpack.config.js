@@ -15,7 +15,7 @@ module.exports = (env, options) => {
       path: path.resolve(__dirname, "../amd/build"),
       publicPath: "/dist/",
       filename: "app-lazy.min.js",
-      chunkFilename: "[id].app-lazy.min.js?v=[hash]",
+      chunkFilename: "[id].app-lazy.min.js?v=[contenthash]",
       libraryTarget: "amd",
       pathinfo: false, // new
     },
@@ -34,7 +34,7 @@ module.exports = (env, options) => {
             {
               loader: "sass-loader",
               options: {
-                api: "modern-compiler",
+                api: "modern",
                 sassOptions: {
                   silenceDeprecations: ["import"],
                 },
