@@ -139,6 +139,13 @@ export default {
   },
 
   computed: {
+    /**
+     * Maps Vuex state to computed properties.
+     * - dashboardSettings: Saved widget layout configuration
+     * - research_condition: Current research condition assignment
+     * - isModerator: Whether current user has moderator privileges
+     * - strings: Localized UI strings
+     */
     ...mapState({
       dashboardSettings: (state) => state.dashboardSettings.dashboardSettings,
       research_condition: (state) => state.research_condition,
@@ -147,7 +154,9 @@ export default {
     }),
 
     /**
-     * Get list of widgets that are enabled but not currently on the grid
+     * Gets a list of widgets that are enabled but not currently on the grid.
+     * Returns widgets available for adding via the dropdown menu.
+     * @returns {Array<Object>} Array of widget objects with id, name, and component properties.
      */
     filteredComponents() {
       if (!this.widgetConfig) return [];
@@ -180,9 +189,21 @@ export default {
   },
 
   methods: {
+    /**
+     * Maps Vuex getters to component methods.
+     * - setResearchCondition: Sets the research condition in the store
+     */
     ...mapGetters(["setResearchCondition"]),
+    /**
+     * Maps Vuex actions to component methods.
+     * - log: Logs events for analytics tracking
+     */
     ...mapActions(["log"]),
 
+    /**
+     * Loads the widget configuration from the backend via webservice.
+     * Fetches enabled widgets and their settings for the current course.
+     */
     async loadWidgetConfig() {
       try {
         Communication.setPluginName("format_serial3");
@@ -217,6 +238,12 @@ export default {
       }
     },
 
+    /**
+     * Checks if a widget is enabled based on the configuration.
+     * @param {string} widgetId - The ID of the widget to check.
+     * @param {Array<string>} enabledWidgetIds - List of enabled widget IDs.
+     * @returns {boolean} True if widget is enabled or if no restrictions exist.
+     */
     isWidgetEnabled(widgetId, enabledWidgetIds) {
       // If no enabled list, show all widgets
       if (!enabledWidgetIds || enabledWidgetIds.length === 0) return true;
@@ -224,12 +251,20 @@ export default {
       return enabledWidgetIds.includes(widgetId.toLowerCase());
     },
 
+    /**
+     * Reloads the widget configuration by refreshing the page.
+     * This is simpler than trying to dynamically update all arrays.
+     */
     async reloadWidgetConfig() {
       // Reload the page to apply new widget configuration
       // This is simpler than trying to dynamically update all arrays
       window.location.reload();
     },
 
+    /**
+     * Refreshes all widgets by calling their loadData methods.
+     * Iterates through all mounted widget component instances.
+     */
     refreshAllWidgets() {
       // Iterate through all widget component instances and call their loadData methods
       Object.keys(this.widgetComponents).forEach((widgetId) => {
@@ -241,6 +276,11 @@ export default {
       });
     },
 
+    /**
+     * Initializes the IntersectionObserver for dashboard widgets.
+     * Captures scroll events to determine whether widgets have been viewed by the student.
+     * Logs widget visibility events for analytics.
+     */
     initObserver() {
       if (
         "IntersectionObserver" in window &&
@@ -293,6 +333,10 @@ export default {
       }
     },
 
+    /**
+     * Toggles the student's edit mode to arrange, move, and resize widgets.
+     * Enables or disables dragging and resizing in GridStack.
+     */
     toggleEditMode() {
       this.editMode = !this.editMode;
       this.draggable = this.resizable = this.editMode;
@@ -309,13 +353,21 @@ export default {
       }
     },
 
+    /**
+     * Loads the dashboard settings from Vuex store.
+     * Retrieves saved widget layout and positions.
+     */
     async loadDashboard() {
       await this.$store.dispatch("dashboardSettings/getDashboardSettings");
     },
 
     /**
-     * Create a GridStack widget element using WidgetWrapper component
-     * Returns a DOM element with mounted Vue component following Vue.js best practices
+     * Creates a GridStack widget element using WidgetWrapper component.
+     * Returns a DOM element with mounted Vue component following Vue.js best practices.
+     * @param {string} widgetId - The unique identifier for the widget.
+     * @param {Object} widgetInfo - Widget configuration from the registry.
+     * @param {Object|null} savedItem - Previously saved layout data (optional).
+     * @returns {Object} Object containing the widget element and GridStack options.
      */
     async createWidgetElement(widgetId, widgetInfo, savedItem = null) {
       // Create a temporary container for the WidgetWrapper component
@@ -355,6 +407,10 @@ export default {
       };
     },
 
+    /**
+     * Saves the current dashboard layout to the Vuex store and backend.
+     * Captures widget positions from GridStack and persists the configuration.
+     */
     saveDashboard() {
       if (!this.grid) {
         console.error("Grid not initialized");
@@ -401,7 +457,8 @@ export default {
     },
 
     /**
-     * Dynamically load widgets into the grid using addWidget() API
+     * Dynamically loads widgets into the grid using addWidget() API.
+     * Filters by enabled widgets and applies saved layout or default positions.
      */
     async loadWidgetsIntoGrid() {
       console.log("Loading widgets into grid...", {
@@ -539,7 +596,9 @@ export default {
     },
 
     /**
-     * Cleanup Vue component instance
+     * Cleans up a Vue component instance.
+     * Unmounts the component app and removes it from the widget registry.
+     * @param {string} widgetId - The ID of the widget to clean up.
      */
     cleanupWidget(widgetId) {
       if (this.widgetComponents[widgetId]) {
@@ -552,7 +611,9 @@ export default {
     },
 
     /**
-     * Remove a widget from the grid
+     * Removes a widget from the grid.
+     * Cleans up the component instance and removes the element from GridStack.
+     * @param {string} widgetId - The ID of the widget to remove.
      */
     removeItem(widgetId) {
       const el = this.$refs.widgetGrid?.querySelector(`#${widgetId}`);
@@ -563,7 +624,9 @@ export default {
     },
 
     /**
-     * Add a widget back to the grid
+     * Adds a widget back to the grid.
+     * Creates the widget element and registers it with GridStack.
+     * @param {string} widgetId - The ID of the widget to add.
      */
     async addItem(widgetId) {
       const widgetInfo = widgetRegistry[widgetId];
@@ -608,7 +671,9 @@ export default {
     },
 
     /**
-     * Handle dropdown change event to add widget
+     * Handles dropdown change event to add a widget.
+     * Extracts the widget ID from the event and calls addItem.
+     * @param {Event} event - The dropdown change event.
      */
     async addItemFromDropdown(event) {
       const widgetId = event.target.value;

@@ -1,0 +1,51 @@
+<template>
+  <div style="width: 100%">
+    <survey-prompt></survey-prompt>
+    <div class="d-flex justify-content-between">
+      <h2 class="main__title">{{ strings.dashboardTitle }}</h2>
+      <div v-if="isModerator" class="alert alert-success">
+        Condition: {{ research_condition }}
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="form-group d-flex align-items-center m-0">
+          <select
+            v-if="editMode"
+            id="addDashboardItems"
+            class="form-control mr-2"
+            @change="addItemFromDropdown($event)"
+          >
+            <option style="display: none">
+              {{ strings.dashboardAddItem }}
+            </option>
+            <option
+              v-for="(component, index) in filteredComponents"
+              :key="index"
+              :value="component.i"
+            >
+              {{ component.name }}
+            </option>
+          </select>
+          <button
+            v-if="editMode"
+            class="btn btn-primary btn-edit"
+            @click="saveDashboard"
+          >
+            {{ strings.save }}
+          </button>
+        </div>
+        <menu-bar
+          @editmode="toggleEditMode"
+          @widgetsUpdated="reloadWidgetConfig"
+          @refreshWidgets="refreshAllWidgets"
+        ></menu-bar>
+      </div>
+    </div>
+    <div ref="widgetGrid" id="widgetGrid" class="grid-stack vue-grid-layout">
+      <!-- Widgets will be added dynamically via grid.addWidget() -->
+    </div>
+    <welcome-video
+      v-show="new Date().getTime() < new Date('2024.04.31').getTime()"
+    ></welcome-video>
+  </div>
+</template>
+<!-- BACKUP OF BROKEN VERSION -->

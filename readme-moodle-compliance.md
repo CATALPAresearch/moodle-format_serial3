@@ -399,7 +399,7 @@ Before submission to plugins directory:
 
 - [ ] Passes `moodle-cs` (Code Checker) with 0 errors
 - [ ] Passes `moodle-local_moodlecheck` (PHPDoc Checker)
-- [ ] All strings in language files (no hardcoded text)
+-   [ ] All strings in language files (no hardcoded text)
 - [ ] PHPUnit tests written and passing
 - [ ] Behat tests for key features
 - [ ] Privacy API implemented
@@ -418,23 +418,7 @@ Before submission to plugins directory:
 - [ ] Documentation complete (README, inline comments)
 - [ ] Version number and dependencies correct in version.php
 
-## CI/CD Integration
 
-### GitHub Actions
-Set up automated testing:
-```yaml
-name: Moodle Plugin CI
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Moodle
-        uses: moodlehq/moodle-plugin-ci@v3
-      - name: Run tests
-        run: moodle-plugin-ci run
-```
 
 ## Submission Process
 

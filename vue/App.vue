@@ -32,35 +32,45 @@
           >
             {{ strings.save }}
           </button>
+          <button
+            hidden
+            class="btn btn-secondary btn-edit ml-2"
+            @click="recalculateHeight"
+            title="Recalculate grid height"
+          >
+            <i class="fa fa-arrows-v"></i>
+          </button>
         </div>
         <menu-bar
           @editmode="toggleEditMode"
           @widgetsUpdated="reloadWidgetConfig"
-          @refreshWidgets="refreshAllWidgets"
         ></menu-bar>
       </div>
     </div>
-    <div id="widgetGrid" class="grid-stack vue-grid-layout">
+    <div id="widgetGrid" class="grid-stack gs-12">
       <div
         class="grid-stack-item border"
-        v-for="item in layout"
+        v-for="item in layoutWithPositions"
         :key="item.i"
         :id="'widget-' + item.c"
+        :gs-id="'widget-' + item.c"
         :gs-w="item.w"
         :gs-h="item.h"
         :gs-x="item.x"
         :gs-y="item.y"
       >
         <div class="grid-stack-item-content" style="overflow: auto">
-          <span
-            v-if="editMode && !item.fixed"
-            class="remove"
-            :title="strings.dashboardRemoveItem"
-            @click="removeItem(item.i)"
-          >
-            <i class="fa fa-close"></i>
-          </span>
-          <component :is="item.c"></component>
+          <div>
+            <span
+              v-if="editMode && !item.fixed"
+              class="remove"
+              :title="strings.dashboardRemoveItem"
+              @click="removeItem(item.i)"
+            >
+              <i class="fa fa-close"></i>
+            </span>
+            <component :is="item.c"></component>
+          </div>
         </div>
       </div>
     </div>
@@ -107,6 +117,9 @@ const TeacherActivity = defineAsyncComponent(
   () => import("./widgets/TeacherActivity/TeacherActivity.vue"),
 );
 
+// DO NOT use ref/reactive for grid - Vue proxies break GridStack
+let grid = null;
+
 export default {
   components: {
     MenuBar,
@@ -128,15 +141,13 @@ export default {
       context: {},
       logger: null,
 
-      grid: undefined,
       editMode: false,
       widgetConfig: { success: false, widgets: [], canManage: false },
 
       // Default layout for widgets
+      grid: null,
       defaultLayout: [
         {
-          x: 0,
-          y: 0,
           w: 12,
           h: 5,
           i: "1",
@@ -144,8 +155,6 @@ export default {
           c: "ProgressChartAdaptive",
         },
         {
-          x: 0,
-          y: 5,
           w: 12,
           h: 5,
           i: "2",
@@ -153,8 +162,6 @@ export default {
           c: "IndicatorDisplay",
         },
         {
-          x: 0,
-          y: 10,
           w: 6,
           h: 4,
           i: "3",
@@ -162,8 +169,6 @@ export default {
           c: "Recommendations",
         },
         {
-          x: 6,
-          y: 10,
           w: 3,
           h: 4,
           i: "4",
@@ -171,8 +176,6 @@ export default {
           c: "TaskList",
         },
         {
-          x: 9,
-          y: 10,
           w: 3,
           h: 4,
           i: "5",
@@ -180,8 +183,6 @@ export default {
           c: "Deadlines",
         },
         {
-          x: 0,
-          y: 14,
           w: 12,
           h: 3,
           i: "6",
@@ -189,8 +190,6 @@ export default {
           c: "CourseOverview",
         },
         {
-          x: 0,
-          y: 17,
           w: 12,
           h: 4,
           i: "7",
@@ -198,8 +197,6 @@ export default {
           c: "TeacherActivity",
         },
         {
-          x: 6,
-          y: 17,
           w: 6,
           h: 4,
           i: "8",
@@ -233,8 +230,15 @@ export default {
 
   async created() {
     await this.loadWidgetConfig();
-    await this.loadDashboard();
-    this.initializeLayout();
+
+    await this.$store.dispatch("dashboardSettings/getDashboardSettings");
+
+    // Apply research condition filter
+    if (this.research_condition === "control_group") {
+      this.currentLayout = this.currentLayout.filter(
+        (item) => item.c !== "Recommendations",
+      );
+    }
   },
 
   async mounted() {
@@ -242,11 +246,21 @@ export default {
     this.courseid = this.$store.state.courseid;
     this.context.courseId = this.$store.state.courseid;
 
+    // Remove any existing style attribute from the grid container
+    const gridEl = document.getElementById("widgetGrid");
+    if (gridEl) {
+      gridEl.removeAttribute("style");
+    }
+
     // Wait for layout data to be ready, then initialize grid
     await this.$nextTick();
     // Additional tick to ensure v-for has rendered
     await this.$nextTick();
     this.initGrid();
+  },
+
+  updated() {
+    this.recalculateHeight();
   },
 
   computed: {
@@ -281,6 +295,40 @@ export default {
     },
 
     /**
+     * Layout with calculated x/y positions based on widget widths
+     * Widgets are placed left-to-right, row by row (12 column grid)
+     */
+    layoutWithPositions() {
+      const result = [];
+      let currentX = 0;
+      let currentY = 0;
+      let rowMaxHeight = 0;
+
+      for (const item of this.layout) {
+        const w = item.w || 12;
+        const h = item.h || 4;
+
+        // If widget doesn't fit in current row, move to next row
+        if (currentX + w > 12) {
+          currentY += rowMaxHeight;
+          currentX = 0;
+          rowMaxHeight = 0;
+        }
+
+        result.push({
+          ...item,
+          x: currentX,
+          y: currentY,
+        });
+
+        currentX += w;
+        rowMaxHeight = Math.max(rowMaxHeight, h);
+      }
+
+      return result;
+    },
+
+    /**
      * Get widgets not currently in layout (for add dropdown)
      */
     filteredComponents() {
@@ -289,38 +337,19 @@ export default {
     },
   },
 
-  watch: {
-    // Re-initialize grid when layout changes
-    layout: {
-      handler() {
-        this.$nextTick(() => {
-          if (this.grid && this.layout.length > 0) {
-            this.grid.batchUpdate();
-            const items = document.querySelectorAll(
-              "#widgetGrid > .grid-stack-item",
-            );
-            items.forEach((el) => {
-              if (!el.gridstackNode) {
-                this.grid.makeWidget(el);
-              }
-            });
-            this.grid.batchUpdate(false);
-          }
-        });
-      },
-      deep: true,
-    },
-  },
-
   methods: {
     ...mapGetters(["setResearchCondition"]),
     ...mapActions(["log"]),
 
+    /**
+     * Initializes the GridStack grid and sets up event listeners.
+     * Also compacts the grid and sets the height based on actual rows.
+     */
     initGrid() {
       this.grid = GridStack.init(
         {
           column: 12,
-          cellHeight: 80,
+          cellHeight: 70,
           minRow: 0,
           animate: false,
           columnOpts: {
@@ -337,22 +366,112 @@ export default {
         "#widgetGrid",
       );
 
+      // Sync position changes back to Vue data
+      this.grid.on("change", (event, items) => {
+        items.forEach((item) => {
+          const widget = this.currentLayout.find(
+            (w) => "widget-" + w.c === item.id,
+          );
+          if (widget) {
+            widget.x = item.x;
+            widget.y = item.y;
+            widget.w = item.w;
+            widget.h = item.h;
+          }
+        });
+      });
+
+      // Compact the grid to remove excess space
+      this.grid.compact();
+
+      // Get actual row count from GridStack and set precise height
+      const actualRows = this.grid.getRow();
+      const cellHeight = this.grid.getCellHeight();
+      const gridEl = document.getElementById("widgetGrid");
+      if (gridEl && actualRows > 0) {
+        gridEl.style.height = actualRows * cellHeight + "px";
+      }
+
       this.initObserver();
     },
 
-    initializeLayout() {
-      // Always use defaultLayout - ignore saved settings that may have corrupted y-values
-      // TODO: Re-enable saved layouts once the grid positioning is stable
-      this.currentLayout = [...this.defaultLayout];
+    /**
+     * Calculates and sets the total grid height based on widget positions.
+     * Ensures the grid container matches the effective height of all widgets.
+     */
+    updateGridHeight() {
+      const cellHeight = 70; // matches GridStack cellHeight option
+      let maxRow = 0;
 
-      // Apply research condition filter
-      if (this.research_condition === "control_group") {
-        this.currentLayout = this.currentLayout.filter(
-          (item) => item.c !== "Recommendations",
+      // Find the maximum row position (y + h) across all widgets
+      for (const item of this.layoutWithPositions) {
+        const bottomRow = (item.y || 0) + (item.h || 1);
+        if (bottomRow > maxRow) {
+          maxRow = bottomRow;
+        }
+      }
+
+      // Set the grid height in pixels
+      const gridEl = document.getElementById("widgetGrid");
+      if (gridEl) {
+        gridEl.style.height = maxRow * cellHeight + "px";
+      }
+    },
+
+    /**
+     * Recalculates the grid height based on actual widget content and positions.
+     * Resizes widgets to fit content and adjusts grid container height.
+     */
+    recalculateHeight() {
+      if (this.grid) {
+        const gridEl = document.getElementById("widgetGrid");
+
+        // Remove explicit height first
+        if (gridEl) {
+          gridEl.style.height = "auto";
+        }
+
+        // Resize each widget to fit its content
+        const gridItems = this.grid.getGridItems();
+        gridItems.forEach((el) => {
+          this.grid.resizeToContent(el);
+        });
+
+        // Compact the grid to remove gaps
+        this.grid.compact();
+
+        // Calculate actual maximum row from widgets
+        let maxY = 0;
+        let maxH = 0;
+        gridItems.forEach((el) => {
+          const node = el.gridstackNode;
+          if (node) {
+            const bottom = (node.y || 0) + (node.h || 0);
+            if (bottom > maxY + maxH) {
+              maxY = node.y || 0;
+              maxH = node.h || 0;
+            }
+          }
+        });
+
+        const actualRows = maxY + maxH;
+        const cellHeight = this.grid.getCellHeight();
+
+        // Set tight height based on actual content
+        if (gridEl && actualRows > 0) {
+          gridEl.style.height = actualRows * cellHeight + "px";
+        }
+
+        console.log(
+          `Grid height recalculated: ${actualRows} rows x ${cellHeight}px = ${actualRows * cellHeight}px`,
         );
       }
     },
 
+    /**
+     * Loads the widget configuration from the backend via webservice.
+     * Sets widgetConfig and handles errors.
+     */
     async loadWidgetConfig() {
       try {
         Communication.setPluginName("format_serial3");
@@ -373,19 +492,18 @@ export default {
       }
     },
 
-    async loadDashboard() {
-      await this.$store.dispatch("dashboardSettings/getDashboardSettings");
-    },
-
+    /**
+     * Reloads the widget configuration by refreshing the page.
+     * Useful for applying updated widget settings immediately.
+     */
     reloadWidgetConfig() {
       window.location.reload();
     },
 
-    refreshAllWidgets() {
-      // Refresh all widget data - widgets should implement loadData method
-      console.log("Refreshing all widgets...");
-    },
-
+    /**
+     * Initializes the IntersectionObserver for dashboard widgets.
+     * Logs widget visibility events for analytics.
+     */
     initObserver() {
       if (
         "IntersectionObserver" in window &&
@@ -432,33 +550,50 @@ export default {
       }
     },
 
+    /**
+     * Toggles edit mode for the dashboard, enabling or disabling grid move/resize.
+     */
     toggleEditMode() {
       this.editMode = !this.editMode;
-
       if (this.grid) {
         this.grid.enableMove(this.editMode);
         this.grid.enableResize(this.editMode);
       }
     },
 
+    /**
+     * Adds a new widget to the dashboard layout from the dropdown selection.
+     * Registers the widget with GridStack after rendering.
+     */
     addItem(e) {
       const newItem = this.allComponents.find(
         (element) => element.i === e.target.value,
       );
       if (newItem) {
-        this.currentLayout.push({
+        const item = {
           ...newItem,
           x: 0,
           y: this.getMaxY() + 1,
+        };
+        this.currentLayout.push(item);
+        // Wait for Vue to render, then register with GridStack
+        this.$nextTick(() => {
+          this.grid.makeWidget("#widget-" + item.c);
         });
       }
       e.target.selectedIndex = 0;
     },
 
+    /**
+     * Adds a new widget to the dashboard layout from the dropdown (alias for addItem).
+     */
     addItemFromDropdown(e) {
       this.addItem(e);
     },
 
+    /**
+     * Returns the maximum y position (bottom row) among all widgets in the current layout.
+     */
     getMaxY() {
       if (this.currentLayout.length === 0) return 0;
       return Math.max(
@@ -466,13 +601,23 @@ export default {
       );
     },
 
+    /**
+     * Removes a widget from the dashboard layout and from GridStack.
+     */
     removeItem(val) {
       const index = this.currentLayout.findIndex((item) => item.i === val);
       if (index > -1) {
+        const item = this.currentLayout[index];
+        // Remove from GridStack first, then from Vue data
+        this.grid.removeWidget("#widget-" + item.c, false);
         this.currentLayout.splice(index, 1);
       }
     },
 
+    /**
+     * Saves the current dashboard layout to the Vuex store and backend.
+     * Updates widget positions and disables edit mode.
+     */
     saveDashboard() {
       if (!this.grid) {
         console.error("Grid not initialized");
@@ -513,15 +658,15 @@ body#page-course-view-serial3 #region-main-box:nth-child(1) {
   display: inline !important;
 }
 
-.vue-grid-layout {
-  background: #eee;
+#app {
   position: relative;
-  min-height: auto !important;
+  z-index: 1;
+  display: block;
+  clear: both;
 }
 
 .grid-stack {
   background: #eee;
-  min-height: auto !important;
 }
 
 .grid-stack > .grid-stack-item {
@@ -531,7 +676,7 @@ body#page-course-view-serial3 #region-main-box:nth-child(1) {
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
   overflow: auto;
-  padding: 10px;
+  padding: 0px;
   left: 0;
   right: 0;
   top: 0;
