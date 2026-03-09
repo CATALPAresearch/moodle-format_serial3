@@ -14,13 +14,22 @@
       <button
         class="button dropdown-toggle"
         type="button"
-        :title="mockDataEnabled ? 'Mock Data Active' : 'Enable Mock Data'"
+        :title="
+          mockDataEnabled
+            ? 'Mock Data Active (Teachers only)'
+            : 'Enable Mock Data (Teachers only)'
+        "
         @click="toggleMockDropdown"
         :style="{ backgroundColor: mockDataEnabled ? '#ff9800' : '' }"
       >
         <i aria-hidden="true" class="fa fa-flask icon m-0"></i>
       </button>
-      <ul class="dropdown-menu" :class="{ show: mockDropdownOpen }" @click.stop>
+      <ul
+        v-if="isModerator"
+        class="dropdown-menu"
+        :class="{ show: mockDropdownOpen }"
+        @click.stop
+      >
         <li class="dropdown-header">Mock Data Scenarios</li>
         <li>
           <button
@@ -61,44 +70,10 @@
       class="button"
       data-target="#widgetManagementModal"
       data-toggle="modal"
-      title="Manage Widgets"
+      title="Manage Widgets (Teachers only)"
       type="button"
     >
       <i aria-hidden="true" class="fa fa-sliders icon m-0"></i>
-    </button>
-    <button
-      class="button"
-      data-target="#informationModal"
-      data-toggle="modal"
-      :title="strings.menuBarDashboardInfo"
-      type="button"
-    >
-      <i aria-hidden="true" class="fa fa-info icon m-0"></i>
-    </button>
-    <button
-      hidden
-      class="button"
-      data-target="#linkModal"
-      data-toggle="modal"
-      :title="strings.menuBarHelpfulLinks"
-      type="button"
-    >
-      <i aria-hidden="true" class="fa fa-chain icon m-0"></i>
-    </button>
-
-    <a
-      href="https://aple.fernuni-hagen.de/mod/usenet/view.php?id=5081&forceview=1"
-    >
-      <button class="button" :title="strings.menuBarViewNewsgroupPosts">
-        <i aria-hidden="true" class="fa fa-comments-o icon m-0"></i>
-      </button>
-    </a>
-    <button
-      hidden
-      class="button pr-0"
-      :title="strings.menuBarContactInstructor"
-    >
-      <i aria-hidden="true" class="fa fa-send-o icon m-0"></i>
     </button>
 
     <div
@@ -493,6 +468,10 @@ export default {
 .dropdown {
   position: relative;
   display: inline-block;
+}
+
+.dropdown-toggle::after {
+  content: none;
 }
 
 .dropdown-menu {

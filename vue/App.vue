@@ -44,6 +44,7 @@
         <menu-bar
           @editmode="toggleEditMode"
           @widgetsUpdated="reloadWidgetConfig"
+          @refreshWidgets="reloadWidgetConfig"
         ></menu-bar>
       </div>
     </div>
@@ -576,9 +577,18 @@ export default {
           y: this.getMaxY() + 1,
         };
         this.currentLayout.push(item);
+
         // Wait for Vue to render, then register with GridStack
         this.$nextTick(() => {
-          this.grid.makeWidget("#widget-" + item.c);
+          // Additional tick to ensure DOM is fully updated
+          this.$nextTick(() => {
+            const widgetEl = document.querySelector("#widget-" + item.c);
+            if (widgetEl) {
+              this.grid.makeWidget(widgetEl);
+            } else {
+              console.error(`Widget element not found: #widget-${item.c}`);
+            }
+          });
         });
       }
       e.target.selectedIndex = 0;

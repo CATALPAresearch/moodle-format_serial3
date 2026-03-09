@@ -23,6 +23,10 @@ function init(
   store.commit("setPluginName", fullPluginName);
   store.commit("setUserid", userid);
   store.commit("setPolicyAccepted", policyAccepted);
+  
+  // Initialize mock data settings from sessionStorage
+  store.commit("initMockDataFromSession");
+  
   store.dispatch("loadComponentStrings");
   store.dispatch("fetchLearnerGoal");
   store.dispatch("learnermodel/loadUserUnderstanding");
