@@ -7,12 +7,12 @@ that can be selected and arranged to the users liking.
 
 - Customizable widget-based dashboard system
 - Implemented widgets
-   - Progress Chart with adaptive learning support
-   - Learner goals and Indicators
-   - Recommendations
-   - Task List
-   - Deadlines
-   - Quiz Statistics
+  - Progress Chart with adaptive learning support
+  - Learner goals and Indicators
+  - Recommendations
+  - Task List
+  - Deadlines
+  - Quiz Statistics
 
 **Roadmap**
 
@@ -64,13 +64,17 @@ vendor/bin/phpunit course/format/serial3/tests/webservices_test.php
 - `vue/` - Vue.js application source (transpiles to `amd/`)
 - `version.php` - Increment when changing services.php
 
-**Widget development:** See [readme-widget-setup.md](readme-widget-setup.md)
+**Widget development:**
+Widgets are elements containing data visualisiations or learning support instruments that can be arranged together in a dashboard.  
+Teachers can enable/disable dashboard widgets via a modal interface (slider icon in MenuBar). From the set of enables widgets students can choose which widgets they want to see at certain position on the dashboard.
+
+See how to add a widget to the dashboard [readme-widget-setup.md](readme-widget-setup.md)
 
 **Moodle compliance:** See [readme-moodle-compliance.md](readme-moodle-compliance.md)
 
 ## Contributors
 
-- Niels Seidel
+- Niels Seidel (lead developer)
 - Marc Burchart
 - Heike Karolyi
 - Valerie Meyer

@@ -40,92 +40,37 @@ class widget_manager {
      * @return array Array of widget definitions
      */
     public static function get_available_widgets(): array {
-        return [
-            'ProgressChartAdaptive' => [
-                'name' => get_string('widget_progresschartadaptive', 'format_serial3'),
-                'description' => get_string('widget_progresschartadaptive_desc', 'format_serial3'),
-                'default_enabled' => true,
-                'requires_permission' => 'format/serial3:viewdashboard',
-                'dependencies' => ['overview', 'recommendations', 'taskList'],
-                'settings' => [],
-            ],
-            'IndicatorDisplay' => [
-                'name' => get_string('widget_indicatordisplay', 'format_serial3'),
-                'description' => get_string('widget_indicatordisplay_desc', 'format_serial3'),
-                'default_enabled' => true,
-                'requires_permission' => 'format/serial3:viewdashboard',
-                'dependencies' => ['learnermodel'],
-                'settings' => [],
-            ],
-            'Recommendations' => [
-                'name' => get_string('widget_recommendations', 'format_serial3'),
-                'description' => get_string('widget_recommendations_desc', 'format_serial3'),
-                'default_enabled' => true,
-                'requires_permission' => 'format/serial3:viewdashboard',
-                'dependencies' => ['recommendations'],
-                'settings' => [],
-            ],
-            'TaskList' => [
-                'name' => get_string('widget_tasklist', 'format_serial3'),
-                'description' => get_string('widget_tasklist_desc', 'format_serial3'),
-                'default_enabled' => true,
-                'requires_permission' => 'format/serial3:viewdashboard',
-                'dependencies' => ['taskList'],
-                'settings' => [],
-            ],
-            'LearningStrategies' => [
-                'name' => get_string('widget_learningstrategies', 'format_serial3'),
-                'description' => get_string('widget_learningstrategies_desc', 'format_serial3'),
-                'default_enabled' => true,
-                'requires_permission' => 'format/serial3:viewdashboard',
-                'dependencies' => [],
-                'settings' => [
-                    'show_categories' => [
-                        'type' => 'checkbox',
-                        'label' => get_string('widget_learningstrategies_showcategories', 'format_serial3'),
-                        'default' => 1,
-                    ],
-                ],
-            ],
-            'CourseOverview' => [
-                'name' => get_string('widget_courseoverview', 'format_serial3'),
-                'description' => get_string('widget_courseoverview_desc', 'format_serial3'),
-                'default_enabled' => true,
-                'requires_permission' => 'format/serial3:viewdashboard',
-                'dependencies' => ['overview'],
-                'settings' => [],
-            ],
-            'Deadlines' => [
-                'name' => get_string('widget_deadlines', 'format_serial3'),
-                'description' => get_string('widget_deadlines_desc', 'format_serial3'),
-                'default_enabled' => true,
-                'requires_permission' => 'format/serial3:viewdashboard',
-                'dependencies' => [],
-                'settings' => [
-                    'days_ahead' => [
-                        'type' => 'text',
-                        'label' => get_string('widget_deadlines_daysahead', 'format_serial3'),
-                        'default' => 30,
-                    ],
-                ],
-            ],
-            'TeacherActivity' => [
-                'name' => get_string('widget_teacheractivity', 'format_serial3'),
-                'description' => get_string('widget_teacheractivity_desc', 'format_serial3'),
-                'default_enabled' => false,
-                'requires_permission' => 'format/serial3:viewteacheractivity',
-                'dependencies' => [],
-                'settings' => [],
-            ],
-            'QuizStatistics' => [
-                'name' => get_string('widget_quizstatistics', 'format_serial3'),
-                'description' => get_string('widget_quizstatistics_desc', 'format_serial3'),
-                'default_enabled' => false,
-                'requires_permission' => 'format/serial3:viewdashboard',
-                'dependencies' => ['overview'],
-                'settings' => [],
-            ],
-        ];
+        global $CFG;
+        static $widgets = null;
+        
+        if ($widgets !== null) {
+            return $widgets;
+        }
+        
+        $widgets = [];
+        $widget_dir = $CFG->dirroot . '/course/format/serial3/vue/widgets';
+        
+        if (is_dir($widget_dir)) {
+            $iterator = new \DirectoryIterator($widget_dir);
+            foreach ($iterator as $item) {
+                if ($item->isDot() || !$item->isDir()) {
+                    continue;
+                }
+                
+                $widget_name = $item->getFilename();
+                // Skip registry.js
+                if ($widget_name === 'registry.js') {
+                    continue;
+                }
+                
+                $widgets[$widget_name] = [
+                    'name' => get_string('widget_' . strtolower($widget_name), 'format_serial3'),
+                    'default_enabled' => true,
+                ];
+            }
+        }
+        
+        return $widgets;
     }
 
     /**
