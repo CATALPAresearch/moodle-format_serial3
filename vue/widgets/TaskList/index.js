@@ -1,7 +1,5 @@
-import TaskList from "./TaskList.vue";
-import store from "./store";
-
 export default {
-  component: TaskList,
-  store,
+  name: "Aufgabenliste",
+  w: 3,
+  h: 4,
 };

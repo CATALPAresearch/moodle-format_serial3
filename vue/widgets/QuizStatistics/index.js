@@ -1,5 +1,5 @@
-import QuizStatistics from "./QuizStatistics.vue";
-
 export default {
-  component: QuizStatistics,
+  name: "Ergebnisse",
+  w: 12,
+  h: 4,
 };

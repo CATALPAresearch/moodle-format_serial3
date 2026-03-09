@@ -1,5 +1,5 @@
-import Deadlines from "./Deadlines.vue";
-
 export default {
-  component: Deadlines,
+  name: "Termine",
+  w: 3,
+  h: 4,
 };

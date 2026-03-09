@@ -1,5 +1,5 @@
-import TeacherActivity from "./TeacherActivity.vue";
-
 export default {
-  component: TeacherActivity,
+  name: "Lehreraktivität",
+  w: 6,
+  h: 4,
 };

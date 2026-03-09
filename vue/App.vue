@@ -82,7 +82,6 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from "vue";
 import MenuBar from "./components/MenuBar.vue";
 import WelcomeVideo from "./components/WelcomeVideo.vue";
 import SurveyPrompt from "./components/SurveyPrompt.vue";
@@ -92,31 +91,11 @@ import "gridstack/dist/gridstack.min.css";
 import { GridStack } from "gridstack";
 import { mapState, mapGetters, mapActions } from "vuex";
 
-// Define async components for lazy loading
-const ProgressChartAdaptive = defineAsyncComponent(
-  () => import("./widgets/ProgressChartAdaptive/ProgressChartAdaptive.vue"),
-);
-const IndicatorDisplay = defineAsyncComponent(
-  () => import("./widgets/IndicatorDisplay/IndicatorDisplay.vue"),
-);
-const Recommendations = defineAsyncComponent(
-  () => import("./widgets/Recommendations/Recommendations.vue"),
-);
-const TaskList = defineAsyncComponent(
-  () => import("./widgets/TaskList/TaskList.vue"),
-);
-const Deadlines = defineAsyncComponent(
-  () => import("./widgets/Deadlines/Deadlines.vue"),
-);
-const CourseOverview = defineAsyncComponent(
-  () => import("./widgets/CourseOverview/CourseOverview.vue"),
-);
-const LearningStrategies = defineAsyncComponent(
-  () => import("./widgets/LearningStrategies/LearningStrategies.vue"),
-);
-const TeacherActivity = defineAsyncComponent(
-  () => import("./widgets/TeacherActivity/TeacherActivity.vue"),
-);
+// Auto-discover all widgets from the widgets/ folder
+import { getWidgetDefinitions, getAsyncComponents } from "./widgets/registry";
+
+const widgetDefs = getWidgetDefinitions();
+const widgetComponents = getAsyncComponents();
 
 // DO NOT use ref/reactive for grid - Vue proxies break GridStack
 let grid = null;
@@ -126,14 +105,7 @@ export default {
     MenuBar,
     WelcomeVideo,
     SurveyPrompt,
-    ProgressChartAdaptive,
-    IndicatorDisplay,
-    Recommendations,
-    TaskList,
-    Deadlines,
-    CourseOverview,
-    LearningStrategies,
-    TeacherActivity,
+    ...widgetComponents,
   },
 
   data() {
@@ -145,84 +117,10 @@ export default {
       editMode: false,
       widgetConfig: { success: false, widgets: [], canManage: false },
 
-      // Default layout for widgets
+      // Default layout and available widgets — auto-populated from widget registry
       grid: null,
-      defaultLayout: [
-        {
-          w: 12,
-          h: 5,
-          i: "1",
-          name: "Adaptiver Überblick",
-          c: "ProgressChartAdaptive",
-        },
-        {
-          w: 12,
-          h: 5,
-          i: "2",
-          name: "Lernziele",
-          c: "IndicatorDisplay",
-        },
-        {
-          w: 6,
-          h: 4,
-          i: "3",
-          name: "Feedback",
-          c: "Recommendations",
-        },
-        {
-          w: 3,
-          h: 4,
-          i: "4",
-          name: "Aufgabenliste",
-          c: "TaskList",
-        },
-        {
-          w: 3,
-          h: 4,
-          i: "5",
-          name: "Termine",
-          c: "Deadlines",
-        },
-        {
-          w: 12,
-          h: 3,
-          i: "6",
-          name: "Kursübersicht",
-          c: "CourseOverview",
-        },
-        {
-          w: 12,
-          h: 4,
-          i: "7",
-          name: "Lehreraktivität",
-          c: "TeacherActivity",
-        },
-        {
-          w: 6,
-          h: 4,
-          i: "8",
-          name: "Lernstrategien",
-          c: "LearningStrategies",
-        },
-      ],
-
-      // All available widgets for the dropdown
-      allComponents: [
-        {
-          i: "1",
-          name: "Adaptiver Überblick",
-          c: "ProgressChartAdaptive",
-          w: 12,
-          h: 5,
-        },
-        { i: "2", name: "Lernziele", c: "IndicatorDisplay", w: 12, h: 5 },
-        { i: "3", name: "Feedback", c: "Recommendations", w: 6, h: 4 },
-        { i: "4", name: "Aufgabenliste", c: "TaskList", w: 3, h: 4 },
-        { i: "5", name: "Termine", c: "Deadlines", w: 3, h: 4 },
-        { i: "6", name: "Kursübersicht", c: "CourseOverview", w: 12, h: 3 },
-        { i: "7", name: "Lehreraktivität", c: "TeacherActivity", w: 6, h: 4 },
-        { i: "8", name: "Lernstrategien", c: "LearningStrategies", w: 6, h: 4 },
-      ],
+      defaultLayout: [...widgetDefs],
+      allComponents: [...widgetDefs],
 
       // Current layout (reactive)
       currentLayout: [],

@@ -1,5 +1,5 @@
-import ProgressChartAdaptive from "./ProgressChartAdaptive.vue";
-
 export default {
-  component: ProgressChartAdaptive,
+  name: "Adaptiver Überblick",
+  w: 12,
+  h: 5,
 };

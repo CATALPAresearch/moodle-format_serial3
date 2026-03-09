@@ -1,5 +1,5 @@
-import IndicatorDisplay from "./IndicatorDisplay.vue";
-
 export default {
-  component: IndicatorDisplay,
+  name: "Lernziele",
+  w: 12,
+  h: 5,
 };
