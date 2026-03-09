@@ -229,6 +229,12 @@ export default {
     };
   },
 
+  provide() {
+    return {
+      editMode: () => this.editMode,
+    };
+  },
+
   async created() {
     await this.loadWidgetConfig();
 
@@ -258,6 +264,7 @@ export default {
     // Additional tick to ensure v-for has rendered
     await this.$nextTick();
     this.initGrid();
+    this.updateGridHeight();
   },
 
   updated() {
@@ -334,7 +341,22 @@ export default {
      */
     filteredComponents() {
       const layoutIds = this.layout.map((item) => item.i);
-      return this.allComponents.filter((comp) => !layoutIds.includes(comp.i));
+
+      // Get enabled widget IDs from teacher configuration
+      const enabledWidgetIds = this.widgetConfig.widgets
+        .filter((w) => w.enabled)
+        .map((w) => w.id.toLowerCase());
+
+      // If no widgets are explicitly enabled, show all (for backward compatibility)
+      const enabledComponents =
+        enabledWidgetIds.length === 0
+          ? this.allComponents
+          : this.allComponents.filter((comp) =>
+              enabledWidgetIds.includes(comp.c.toLowerCase()),
+            );
+
+      // Return only enabled widgets that are not already in layout
+      return enabledComponents.filter((comp) => !layoutIds.includes(comp.i));
     },
   },
 
@@ -385,13 +407,10 @@ export default {
       // Compact the grid to remove excess space
       this.grid.compact();
 
-      // Get actual row count from GridStack and set precise height
-      const actualRows = this.grid.getRow();
-      const cellHeight = this.grid.getCellHeight();
-      const gridEl = document.getElementById("widgetGrid");
-      if (gridEl && actualRows > 0) {
-        gridEl.style.height = actualRows * cellHeight + "px";
-      }
+      // Calculate and set height after initialization
+      this.$nextTick(() => {
+        this.recalculateHeight();
+      });
 
       this.initObserver();
     },
@@ -401,72 +420,46 @@ export default {
      * Ensures the grid container matches the effective height of all widgets.
      */
     updateGridHeight() {
-      const cellHeight = 70; // matches GridStack cellHeight option
-      let maxRow = 0;
+      const cellHeight = 70;
+      let sum_height = 0;
 
-      // Find the maximum row position (y + h) across all widgets
       for (const item of this.layoutWithPositions) {
-        const bottomRow = (item.y || 0) + (item.h || 1);
-        if (bottomRow > maxRow) {
-          maxRow = bottomRow;
-        }
+        sum_height += item.h;
       }
 
-      // Set the grid height in pixels
       const gridEl = document.getElementById("widgetGrid");
       if (gridEl) {
-        gridEl.style.height = maxRow * cellHeight + "px";
+        gridEl.style.height = sum_height * cellHeight + "px";
       }
     },
 
     /**
-     * Recalculates the grid height based on actual widget content and positions.
-     * Resizes widgets to fit content and adjusts grid container height.
+     * Recalculates the grid height based on actual child element positions.
+     * Measures the bottom-most child and sets container height accordingly.
      */
     recalculateHeight() {
-      if (this.grid) {
-        const gridEl = document.getElementById("widgetGrid");
-
-        // Remove explicit height first
-        if (gridEl) {
-          gridEl.style.height = "auto";
-        }
-
-        // Resize each widget to fit its content
-        const gridItems = this.grid.getGridItems();
-        gridItems.forEach((el) => {
-          this.grid.resizeToContent(el);
-        });
-
-        // Compact the grid to remove gaps
-        this.grid.compact();
-
-        // Calculate actual maximum row from widgets
-        let maxY = 0;
-        let maxH = 0;
-        gridItems.forEach((el) => {
-          const node = el.gridstackNode;
-          if (node) {
-            const bottom = (node.y || 0) + (node.h || 0);
-            if (bottom > maxY + maxH) {
-              maxY = node.y || 0;
-              maxH = node.h || 0;
-            }
-          }
-        });
-
-        const actualRows = maxY + maxH;
-        const cellHeight = this.grid.getCellHeight();
-
-        // Set tight height based on actual content
-        if (gridEl && actualRows > 0) {
-          gridEl.style.height = actualRows * cellHeight + "px";
-        }
-
-        console.log(
-          `Grid height recalculated: ${actualRows} rows x ${cellHeight}px = ${actualRows * cellHeight}px`,
-        );
+      const gridEl = document.getElementById("widgetGrid");
+      if (!gridEl) {
+        return;
       }
+
+      const children = gridEl.children;
+      if (children.length === 0) {
+        gridEl.style.height = "0px";
+        return;
+      }
+
+      // Find the maximum bottom position of all child elements
+      let maxBottom = 0;
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        const bottom = child.offsetTop + child.offsetHeight;
+        maxBottom = Math.max(maxBottom, bottom);
+      }
+
+      // Set grid height with small margin
+      const finalHeight = maxBottom + 20;
+      gridEl.style.height = finalHeight + "px";
     },
 
     /**
@@ -585,6 +578,10 @@ export default {
             const widgetEl = document.querySelector("#widget-" + item.c);
             if (widgetEl) {
               this.grid.makeWidget(widgetEl);
+              // Recalculate height after adding widget
+              this.$nextTick(() => {
+                this.recalculateHeight();
+              });
             } else {
               console.error(`Widget element not found: #widget-${item.c}`);
             }
@@ -615,12 +612,49 @@ export default {
      * Removes a widget from the dashboard layout and from GridStack.
      */
     removeItem(val) {
-      const index = this.currentLayout.findIndex((item) => item.i === val);
-      if (index > -1) {
-        const item = this.currentLayout[index];
-        // Remove from GridStack first, then from Vue data
-        this.grid.removeWidget("#widget-" + item.c, false);
-        this.currentLayout.splice(index, 1);
+      if (!this.grid) {
+        console.error("Grid not initialized");
+        return;
+      }
+
+      // Find the widget in the layout to get its component name
+      const layoutItem = this.layout.find((item) => item.i === val);
+      if (!layoutItem) {
+        console.error("Widget not found in layout with id:", val);
+        return;
+      }
+
+      const elementId = "widget-" + layoutItem.c;
+
+      // Query GridStack directly for the element
+      const gridItems = this.grid.getGridItems();
+      const element = gridItems.find((el) => el.id === elementId);
+
+      if (element) {
+        // Remove from GridStack
+        this.grid.removeWidget(element, false);
+
+        // Remove from our data structures
+        // First, ensure currentLayout is populated
+        if (this.currentLayout.length === 0) {
+          this.currentLayout = [...this.defaultLayout];
+        }
+
+        // Remove from currentLayout
+        const index = this.currentLayout.findIndex((item) => item.i === val);
+        if (index > -1) {
+          this.currentLayout.splice(index, 1);
+        }
+
+        // Recalculate height after removing widget
+        this.$nextTick(() => {
+          this.recalculateHeight();
+        });
+      } else {
+        console.error(
+          "Widget element not found in GridStack with id:",
+          elementId,
+        );
       }
     },
 
@@ -658,6 +692,36 @@ export default {
       const settings = JSON.stringify(updatedLayout);
       this.$store.dispatch("dashboardSettings/saveDashboardSettings", settings);
       this.toggleEditMode();
+
+      // Recalculate height after saving
+      this.$nextTick(() => {
+        this.recalculateHeight();
+      });
+    },
+  },
+
+  watch: {
+    /**
+     * Watch for changes in dashboardSettings from the store and update currentLayout.
+     * This ensures that when settings are loaded from the backend, they populate the layout.
+     */
+    dashboardSettings: {
+      handler(newSettings) {
+        if (newSettings && newSettings.length > 0) {
+          this.currentLayout = newSettings;
+
+          // Compact and recalculate after layout changes
+          this.$nextTick(() => {
+            if (this.grid) {
+              this.grid.compact();
+              this.$nextTick(() => {
+                this.recalculateHeight();
+              });
+            }
+          });
+        }
+      },
+      immediate: true,
     },
   },
 };
