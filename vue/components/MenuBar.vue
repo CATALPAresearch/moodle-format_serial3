@@ -20,7 +20,7 @@
             : 'Enable Mock Data (Teachers only)'
         "
         @click="toggleMockDropdown"
-        :style="{ backgroundColor: mockDataEnabled ? '#ff9800' : '' }"
+        :style="{ backgroundColor: mockDataEnabled ? '#b1d9f9' : '' }"
       >
         <i aria-hidden="true" class="fa fa-flask icon m-0"></i>
       </button>
@@ -417,7 +417,6 @@ export default {
   width: 35px;
   height: 35px;
   font-size: 22px;
-  border: 1px solid $light-grey;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -538,7 +537,7 @@ export default {
 
   &.active {
     color: #fff;
-    background-color: #007bff;
+    background-color: #b1d9f9;
 
     .text-muted {
       color: rgba(255, 255, 255, 0.7) !important;
