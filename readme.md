@@ -10,7 +10,7 @@ Serial 3 is a _Learning Analytics Dashboard_ for Moodle courses. The dashboard p
   - Learner goals and indicators
   - Recommendations
   - Task list
-  - Deadlines:
+  - Deadlines
   - Teacher Activity: Visualizes
   - Quiz statistics
 
@@ -101,6 +101,12 @@ This software uses the following open source packages:
 
 **Peer-reviewed papers**
 
+- Seidel, N., Meyer, V., & Radović, S. (2024). Co-Design of an Adaptive Personalized Learner Dashboard. IEEE International Conference on Advanced Learning Technologies (ICALT), 26–28. https://doi.org/10.1109/ICALT61570.2024.00014
+- Seidel, N. (2025). Architecture for Gradually AI-teamed Adaptation Rules in Learning Management Systems. Proceedings of the 17th International Conference on Computer Supported Education - Volume 1: CSEDU, 243–254. https://doi.org/10.5220/0013215800003932
+- Radović, S., & Seidel, N. (2024). Self-regulated learning support in technology enhanced learning environments: A reliability analysis of the SRL-S Rubric. Journal of Assessment Tools in Education, 11(4), 675–698. https://doi.org/10.21449/ijate.1502786
+- Radović, S., Seidel, N., Menze, D., & Kasakowskij, R. (2024). Investigating the effects of different levels of students’ regulation support on learning process and outcome: In search of the optimal level of support for self-regulated learning. Computers & Education, 215(105041). https://doi.org/10.1016/j.compedu.2024.105041
+- Seidel, N., Karolyi, H., Burchart, M., & de Witt, C. (2021). Approaching Adaptive Support for Self-regulated Learning. In D. Guralnick, M. E. Auer, & A. Poce (Eds), Innovations in Learning and Technology for the Workplace and Higher Education. TLIC 2021. Lecture Notes in Networks and Systems (pp. 409–424). Springer International Publishing. https://doi.org/10.1007/978-3-030-90677-1_39
+
 ## You may also like ...
 
 - [mod_longpage](https//github.com/catalparesearch/mod_longpage) - Supporting reading of long texts.
@@ -111,10 +117,9 @@ This software uses the following open source packages:
 ## Contributors
 
 - Niels Seidel (project lead)
-- Marc Burchart
-- Heike Karolyi
 - Valerie Meyer
 - Slavisa Radovic
+- Marc Burchart
 
 ## Licence
 
