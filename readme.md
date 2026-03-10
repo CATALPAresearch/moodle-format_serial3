@@ -1,29 +1,32 @@
 # SERIAL 3 - SElf Regulation induced by Adaptive Learning, version 3
 
-Serial 3 is a _Learning Analytics Dashboard_ for Moodle courses. The dashboard provides several widgets that the teacher can enable. From this set of widgets students can choose their widgets and arrange and configure them in a dashboard.
+Serial 3 is a Learning Analytics Dashboard for Moodle. It offers a set of widgets that teachers can enable for their courses. Students then select, arrange, and configure the widgets that are most relevant to them, creating a personalized dashboard.
 
 **Features**
 
 - Customizable widget-based dashboard system
 - Implemented widgets
-  - Progress chart with adaptive learning support
-  - Learner goals and indicators
-  - Recommendations
-  - Task list
-  - Deadlines
-  - Teacher Activity: Visualizes
-  - Quiz statistics
+  - **Progress Chart:** Visualizes individual course activities (e.g. quizzes, assignments, self-assessments, longpages) as colored squares arranged in a row per course unit. The color indicates the student's self-reported level of understanding. Clicking a square opens a popover where the student can rate how well they understand the associated learning material. The popover also provides a direct link to the course activity and a button to add it to the task list.
+  - **Learner Goals and Indicators:** Displays bullet charts that track progress toward a student's chosen learning goal (overview, passing, mastery, or practice) across five indicators from the learner model: knowledge gain, competency, assessment results, time management, and social interaction. Different color tones represent the performance ranges of poor, average, and above average.
+  - **Feedback:** Delivers adaptive feedback to support self-regulated learning strategies. Feedback scenarios are defined through adaptation rules using an additional Moodle plugin called the Adaptation Rule Interface (ARI).
+  - **Task List:** Allows students to plan individual goals and tasks with optional due dates. Completed tasks can be ticked off and archived.
+  - **Deadlines:** Aggregates due dates from the task list and appointments from the Moodle course calendar into a single view.
+  - **Quiz Statistics:** Reference implementation demonstrating how assessment results can be visualized. Still work in progress.
+  - **Course Overview:** Provides a simplified overview of course activities per section, including reflection prompts.
+  - **Learning Strategies:** Offers information about learning strategies related to self-regulation. Students can bookmark strategies, and individual strategies can be referenced from other widgets or parts of the course.
+  - **Teacher Activity:** Work-in-progress widget showing teacher activity within the course, including forum posts, pending corrections, and updated material.
 
 **Roadmap**
 
-- Add the resource list
-- Add a time tracking tool and display
+- Finnishing UI
+- Submit as an official Moodle plugin
+- Integrate the Moodle AI Provider as a service for widgets
 
 # Installation
 
-1. `git clone` the repository to /your-moodle/course/format/
+1. Go to `/your-moodle/course/format/` and run: `git clone https://github.com/CATALPAresearch/format_serial3.git serial3`
 2. Open the page https://<moodle>/admin/index.php?cache=1 and follow the install instructions for the plugin.
-3. Open a course of you choice and go to the _course settings_ (watch out for the little cog-icon). Set the 'course
+3. Open a course of you choice and go to the _course settings_. Set the 'course
    format' to 'Serial 3'.
 
 ```bash
