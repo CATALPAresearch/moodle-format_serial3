@@ -1,18 +1,18 @@
 # SERIAL 3 - SElf Regulation induced by Adaptive Learning, version 3
 
-Serial 3 is a _Learning Analytics Dashboard_ for Moodle courses. The dashboard consists of several widgets
-that can be selected and arranged to the users liking.
+Serial 3 is a _Learning Analytics Dashboard_ for Moodle courses. The dashboard provides several widgets that the teacher can enable. From this set of widgets students can choose their widgets and arrange and configure them in a dashboard.
 
 **Features**
 
 - Customizable widget-based dashboard system
 - Implemented widgets
-  - Progress Chart with adaptive learning support
-  - Learner goals and Indicators
+  - Progress chart with adaptive learning support
+  - Learner goals and indicators
   - Recommendations
-  - Task List
-  - Deadlines
-  - Quiz Statistics
+  - Task list
+  - Deadlines:
+  - Teacher Activity: Visualizes
+  - Quiz statistics
 
 **Roadmap**
 
@@ -72,10 +72,55 @@ See how to add a widget to the dashboard [readme-widget-setup.md](readme-widget-
 
 **Moodle compliance:** See [readme-moodle-compliance.md](readme-moodle-compliance.md)
 
+## Credits
+
+This software uses the following open source packages:
+[vue.js](https://vuejs.org/),
+[vuex](https://vuex.vuejs.org/),
+[vue-router](https://router.vuejs.org/),
+
+## Related Moodle Plugins
+
+- tba
+
+## Citation
+
+**Cite this software:**
+
+```bibtex
+@misc{Seidel2024-MoodleSerial3,
+  title = {{{SERIAL3}} - {{A}} Course Format Plugin Supporting Adaptive Self-Regulated Learning in {{Moodle}}},
+  author = {Seidel, Niels and Meyer, Valerie},
+  date = {2024},
+  doi = {10.17605/OSF.IO/9TKPS},
+  url = {https://github.com/CATALPAresearch/format_serial3}
+}
+```
+
+## Research articles and datasets about Longpage
+
+**Peer-reviewed papers**
+
+## You may also like ...
+
+- [mod_longpage](https//github.com/catalparesearch/mod_longpage) - Supporting reading of long texts.
+- [mod_usenet](https//github.com/catalparesearch/mod_usenet) - Usenet client for Moodle
+- [local_ari](https//github.com/catalparesearch/local_ari) - Adaptation Rule Interface
+- [mod_openchat](https://github.com/nise/mod_openchat) - LLM and agent chat plugin
+
 ## Contributors
 
-- Niels Seidel (lead developer)
+- Niels Seidel (project lead)
 - Marc Burchart
 - Heike Karolyi
 - Valerie Meyer
 - Slavisa Radovic
+
+## Licence
+
+[GNU GPL v3 or later](http://www.gnu.org/copyleft/gpl.html)
+
+---
+
+<a href="https://www.fernuni-hagen.de/english/research/clusters/catalpa/"><img src="pix/catalpa.jpg" width="300" /></a>
+<a href="https://www.fernuni-hagen.de/"><img src="pix/fernuni.jpg" width="250" /></a>
