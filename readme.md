@@ -1,6 +1,6 @@
 # SERIAL 3 - SElf Regulation induced by Adaptive Learning, version 3
 
-Serial 3 is a Learning Analytics Dashboard for Moodle. It offers a set of widgets that teachers can enable for their courses. Students then select, arrange, and configure the widgets that are most relevant to them, creating a personalized dashboard.
+SERIAL 3 is a Learning Analytics Dashboard for Moodle. It offers a set of widgets that teachers can enable for their courses. Students then select, arrange, and configure the widgets that are most relevant to them, creating a personalized dashboard.
 
 **Features**
 
@@ -27,7 +27,7 @@ Serial 3 is a Learning Analytics Dashboard for Moodle. It offers a set of widget
 1. Go to `/your-moodle/course/format/` and run: `git clone https://github.com/CATALPAresearch/format_serial3.git serial3`
 2. Open the page https://<moodle>/admin/index.php?cache=1 and follow the install instructions for the plugin.
 3. Open a course of you choice and go to the _course settings_. Set the 'course
-   format' to 'Serial 3'.
+   format' to 'SERIAL 3'.
 
 ```bash
 # push code to test system
