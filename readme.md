@@ -31,7 +31,7 @@ SERIAL 3 is a Learning Analytics Dashboard for Moodle. It offers a set of widget
 
 ```bash
 # push code to test system
-rsync -r ./* aple-test:/var/moodle/htdocs/moodle/course/format/serial3 --exclude={'.env','node_modules','*.git','.DS_Store','.gitignore','.vscode'}
+rsync -r ./* aple.moodle.staging.fernuni-hagen.de:/var/moodle/htdocs/moodle/course/format/serial3 --exclude={'.env','node_modules','*.git','.DS_Store','.gitignore','.vscode'}
 
 ```
 
